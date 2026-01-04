@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package view;
+import java.awt.BorderLayout;
 
 /**
  *
@@ -99,7 +100,10 @@ public class Beranda extends javax.swing.JFrame {
 
     private void jMenu2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu2MouseClicked
         // TODO add your handling code here:
-        lblWelcome.setText("Master Data PC");
+        contentPanel.removeAll();
+        contentPanel.add(new MasterData(), BorderLayout.CENTER);
+        contentPanel.revalidate();
+        contentPanel.repaint();
     }//GEN-LAST:event_jMenu2MouseClicked
 
     private void jMenu3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu3MouseClicked
