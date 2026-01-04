@@ -145,7 +145,8 @@ public class Login extends javax.swing.JFrame {
         String password = new String(txtPassword.getPassword());
 
         if (username.equals("admin") && password.equals("admin")) {
-            lblStatus.setText("Login berhasil");
+            new Beranda().setVisible(true);
+            this.dispose();
         } else {
             lblStatus.setText("Username atau Password salah");
         }
