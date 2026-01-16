@@ -27,6 +27,11 @@ public class Login extends javax.swing.JFrame {
     private void initComponents() {
 
         btnLogin = new javax.swing.JButton();
+        txtUsername = new javax.swing.JTextField();
+        lblInformasi = new javax.swing.JLabel();
+        txtPassword = new javax.swing.JPasswordField();
+        lblUser = new javax.swing.JLabel();
+        lblPass = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -37,21 +42,52 @@ public class Login extends javax.swing.JFrame {
             }
         });
 
+        lblInformasi.setText("jLabel1");
+
+        lblUser.setText("Username");
+
+        lblPass.setText("Password");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(118, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lblUser)
+                    .addComponent(lblPass))
+                .addGap(47, 47, 47)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(txtPassword, javax.swing.GroupLayout.DEFAULT_SIZE, 102, Short.MAX_VALUE)
+                    .addComponent(txtUsername))
+                .addGap(80, 80, 80))
             .addGroup(layout.createSequentialGroup()
-                .addGap(156, 156, 156)
-                .addComponent(btnLogin)
-                .addContainerGap(172, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(33, 33, 33)
+                        .addComponent(lblInformasi))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(163, 163, 163)
+                        .addComponent(btnLogin)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(163, Short.MAX_VALUE)
+                .addContainerGap(89, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblUser)
+                    .addComponent(txtUsername, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblPass))
+                .addGap(29, 29, 29)
                 .addComponent(btnLogin)
-                .addGap(114, 114, 114))
+                .addGap(34, 34, 34)
+                .addComponent(lblInformasi)
+                .addGap(53, 53, 53))
         );
 
         pack();
@@ -60,17 +96,33 @@ public class Login extends javax.swing.JFrame {
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
         // TODO add your handling code here:
         try {
-            // Baris ini memanggil jembatan yang kita buat tadi
-            java.sql.Connection conn = Koneksi.configDB();
+            // 1. Ambil teks dari inputan user
+            String user = txtUsername.getText();
+            String pass = String.valueOf(txtPassword.getPassword()); // Khusus JPasswordField
 
-            if (conn != null) {
-                // Jika berhasil, muncul pop-up pesan ini
-                javax.swing.JOptionPane.showMessageDialog(null, "Mantap! Koneksi ke MySQL Berhasil.");
-                System.out.println("Koneksi Berhasil!"); 
+            // 2. Query SQL untuk mencari admin
+            String sql = "SELECT * FROM users WHERE username='" + user + "' AND password='" + pass + "'";
+
+            // 3. Eksekusi query
+            java.sql.Connection conn = Koneksi.configDB();
+            java.sql.Statement stm = conn.createStatement();
+            java.sql.ResultSet res = stm.executeQuery(sql);
+
+            // 4. Cek hasil
+            if (res.next()) {
+                // JIKA LOGIN BENAR
+                javax.swing.JOptionPane.showMessageDialog(null, "Login Berhasil!");
+
+                // Pindah ke Laman B (Beranda)
+                new Beranda().setVisible(true); 
+                this.dispose(); // Tutup layar login
+            } else {
+                // JIKA LOGIN SALAH (Sesuai konsepmu: tampil di bawah tombol)
+                lblInformasi.setText("Username atau Password salah!");
+                lblInformasi.setForeground(java.awt.Color.RED);
             }
         } catch (Exception e) {
-            // Jika gagal (XAMPP mati atau driver lupa dipasang)
-            javax.swing.JOptionPane.showMessageDialog(null, "Waduh, Gagal Konek: " + e.getMessage());
+            javax.swing.JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
         }
     }//GEN-LAST:event_btnLoginActionPerformed
 
@@ -111,5 +163,10 @@ public class Login extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnLogin;
+    private javax.swing.JLabel lblInformasi;
+    private javax.swing.JLabel lblPass;
+    private javax.swing.JLabel lblUser;
+    private javax.swing.JPasswordField txtPassword;
+    private javax.swing.JTextField txtUsername;
     // End of variables declaration//GEN-END:variables
 }
