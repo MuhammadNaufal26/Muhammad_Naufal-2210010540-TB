@@ -7,6 +7,8 @@ package wfo;
 import java.awt.CardLayout;
 import java.awt.Image;
 import javax.swing.ImageIcon;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.JOptionPane; // Untuk notifikasi sederhana
 
 /**
  *
@@ -53,7 +55,19 @@ public class Beranda extends javax.swing.JFrame {
         // Atur skala/size
         aturSkala(instagramlogo, "/assets/instagram.png", 20, 20);
         aturSkala(anime, "/assets/kiriya aoi.png", 395, 533);
+        
+        // Menambah data dummy ke tabel
+        DefaultTableModel model = (DefaultTableModel) tabelPC.getModel();
+    
+        // BARIS SAKTI: Menghapus semua baris bawaan NetBeans yang kosong
+        model.setRowCount(0); 
+
+        // Baru kemudian isi data dummy
+        model.addRow(new Object[]{"PC26001", "Asus", "Intel i5", "10000"});
+        model.addRow(new Object[]{"PC26002", "Acer", "Intel i3", "8000"});
     }
+    
+    //*-----------------ini luar constructor
     
     private void pindahMenu(String namaKartu) {
         java.awt.CardLayout card = (java.awt.CardLayout) panelUtama.getLayout();
@@ -97,6 +111,28 @@ public class Beranda extends javax.swing.JFrame {
         jTextArea1 = new javax.swing.JTextArea();
         anime = new javax.swing.JLabel();
         panelMenuPC = new javax.swing.JPanel();
+        judulPC = new javax.swing.JLabel();
+        head = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        txtID = new javax.swing.JTextField();
+        txtMerek = new javax.swing.JTextField();
+        txtProcessor = new javax.swing.JTextField();
+        btnCetak = new javax.swing.JButton();
+        btnDaftar = new javax.swing.JButton();
+        btnEdit = new javax.swing.JButton();
+        btnHapus = new javax.swing.JButton();
+        jPanel1 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tabelPC = new javax.swing.JTable();
+        jLabel7 = new javax.swing.JLabel();
+        txtCari = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
+        btnPilih = new javax.swing.JLabel();
+        btnBatal = new javax.swing.JButton();
+        jLabel11 = new javax.swing.JLabel();
+        txtTarif = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         panelMenuPelanggan = new javax.swing.JPanel();
         btnBeranda6 = new javax.swing.JLabel();
@@ -141,9 +177,9 @@ public class Beranda extends javax.swing.JFrame {
         panelHeaderLayout.setHorizontalGroup(
             panelHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelHeaderLayout.createSequentialGroup()
-                .addContainerGap(258, Short.MAX_VALUE)
+                .addContainerGap(285, Short.MAX_VALUE)
                 .addComponent(lblAlamat)
-                .addGap(175, 175, 175)
+                .addGap(148, 148, 148)
                 .addGroup(panelHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel6)
                     .addComponent(lblTanggal, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -151,16 +187,16 @@ public class Beranda extends javax.swing.JFrame {
         );
         panelHeaderLayout.setVerticalGroup(
             panelHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelHeaderLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(lblAlamat)
-                .addGap(23, 23, 23))
             .addGroup(panelHeaderLayout.createSequentialGroup()
                 .addGap(15, 15, 15)
                 .addComponent(jLabel6)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblTanggal, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(15, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelHeaderLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lblAlamat)
+                .addGap(26, 26, 26))
         );
 
         getContentPane().add(panelHeader, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1000, 80));
@@ -312,26 +348,183 @@ public class Beranda extends javax.swing.JFrame {
         panelUtama.add(panelMenuBeranda, "menu_beranda");
 
         panelMenuPC.setBackground(new java.awt.Color(51, 51, 51));
+        panelMenuPC.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel2.setText("DATA PC");
+        judulPC.setFont(new java.awt.Font("Comic Sans MS", 1, 18)); // NOI18N
+        judulPC.setForeground(new java.awt.Color(255, 255, 255));
+        judulPC.setText("DATA PC");
+        panelMenuPC.add(judulPC, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 20, -1, 50));
 
-        javax.swing.GroupLayout panelMenuPCLayout = new javax.swing.GroupLayout(panelMenuPC);
-        panelMenuPC.setLayout(panelMenuPCLayout);
-        panelMenuPCLayout.setHorizontalGroup(
-            panelMenuPCLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelMenuPCLayout.createSequentialGroup()
-                .addGap(145, 145, 145)
-                .addComponent(jLabel2)
-                .addContainerGap(596, Short.MAX_VALUE))
-        );
-        panelMenuPCLayout.setVerticalGroup(
-            panelMenuPCLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelMenuPCLayout.createSequentialGroup()
-                .addGap(42, 42, 42)
-                .addComponent(jLabel2)
-                .addContainerGap(562, Short.MAX_VALUE))
-        );
+        head.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/head.png"))); // NOI18N
+        panelMenuPC.add(head, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 20, -1, 50));
+
+        jLabel8.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
+        jLabel8.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel8.setText("ID :");
+        panelMenuPC.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 60, 150, -1));
+
+        jLabel9.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
+        jLabel9.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel9.setText("Merek :");
+        panelMenuPC.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 90, 150, -1));
+
+        jLabel10.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
+        jLabel10.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel10.setText("Processor :");
+        panelMenuPC.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 120, 150, -1));
+
+        txtID.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtIDActionPerformed(evt);
+            }
+        });
+        panelMenuPC.add(txtID, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 60, 250, -1));
+
+        txtMerek.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtMerekActionPerformed(evt);
+            }
+        });
+        panelMenuPC.add(txtMerek, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 90, 250, -1));
+        panelMenuPC.add(txtProcessor, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 120, 250, -1));
+
+        btnCetak.setBackground(new java.awt.Color(204, 204, 204));
+        btnCetak.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        btnCetak.setText("Cetak");
+        btnCetak.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        panelMenuPC.add(btnCetak, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 470, 80, 30));
+
+        btnDaftar.setBackground(new java.awt.Color(51, 102, 255));
+        btnDaftar.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        btnDaftar.setForeground(new java.awt.Color(255, 255, 255));
+        btnDaftar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/person_add.png"))); // NOI18N
+        btnDaftar.setText("Daftar");
+        btnDaftar.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        btnDaftar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnDaftarMouseClicked(evt);
+            }
+        });
+        btnDaftar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDaftarActionPerformed(evt);
+            }
+        });
+        panelMenuPC.add(btnDaftar, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 231, 150, 20));
+
+        btnEdit.setBackground(new java.awt.Color(51, 102, 255));
+        btnEdit.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        btnEdit.setForeground(new java.awt.Color(255, 255, 255));
+        btnEdit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/edit.png"))); // NOI18N
+        btnEdit.setText("Edit");
+        btnEdit.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        btnEdit.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnEditMouseClicked(evt);
+            }
+        });
+        panelMenuPC.add(btnEdit, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 231, 150, 20));
+
+        btnHapus.setBackground(new java.awt.Color(51, 102, 255));
+        btnHapus.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        btnHapus.setForeground(new java.awt.Color(255, 255, 255));
+        btnHapus.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/buang.png"))); // NOI18N
+        btnHapus.setText("Hapus");
+        btnHapus.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        btnHapus.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnHapusMouseClicked(evt);
+            }
+        });
+        panelMenuPC.add(btnHapus, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 231, 150, 20));
+
+        jPanel1.setBackground(new java.awt.Color(25, 25, 25));
+        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        tabelPC.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "ID", "Merek", "Processor", "Tarif"
+            }
+        ));
+        tabelPC.setFillsViewportHeight(true);
+        tabelPC.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tabelPCMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tabelPC);
+
+        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 40, 620, 150));
+
+        jLabel7.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel7.setText("Cari PC :");
+        jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 10, 320, -1));
+
+        txtCari.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtCariActionPerformed(evt);
+            }
+        });
+        jPanel1.add(txtCari, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 10, 260, -1));
+
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/search.png"))); // NOI18N
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 10, -1, 20));
+
+        panelMenuPC.add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 260, 660, 200));
+
+        btnPilih.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/btn_pilihtr_off.png"))); // NOI18N
+        btnPilih.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnPilih.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnPilihMouseClicked(evt);
+            }
+        });
+        panelMenuPC.add(btnPilih, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 480, -1, -1));
+
+        btnBatal.setBackground(new java.awt.Color(51, 102, 255));
+        btnBatal.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        btnBatal.setForeground(new java.awt.Color(255, 255, 255));
+        btnBatal.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/batal.png"))); // NOI18N
+        btnBatal.setText("Batal");
+        btnBatal.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        btnBatal.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnBatalMouseClicked(evt);
+            }
+        });
+        panelMenuPC.add(btnBatal, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 231, 150, 20));
+
+        jLabel11.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
+        jLabel11.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel11.setText("Tarif / jam :");
+        panelMenuPC.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 150, 150, -1));
+
+        txtTarif.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtTarifActionPerformed(evt);
+            }
+        });
+        txtTarif.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtTarifKeyTyped(evt);
+            }
+        });
+        panelMenuPC.add(txtTarif, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 150, 250, -1));
+
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/print.png"))); // NOI18N
+        panelMenuPC.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 470, -1, 30));
 
         panelUtama.add(panelMenuPC, "menu_pc");
 
@@ -521,6 +714,153 @@ public class Beranda extends javax.swing.JFrame {
         btnAlarm.repaint();
     }//GEN-LAST:event_btnAlarmMouseExited
 
+    private void txtCariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCariActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtCariActionPerformed
+
+    private void txtTarifActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTarifActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtTarifActionPerformed
+
+    private void txtIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtIDActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtIDActionPerformed
+
+    private void txtMerekActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtMerekActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtMerekActionPerformed
+
+    private void tabelPCMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelPCMouseClicked
+        // TODO add your handling code here:
+        int baris = tabelPC.getSelectedRow();
+    
+        // Penjaga: Jika baris yang diklik valid (bukan -1) 
+        // dan datanya tidak kosong
+        if (baris != -1 && tabelPC.getValueAt(baris, 0) != null) {
+            try {
+                txtID.setText(tabelPC.getValueAt(baris, 0).toString());
+                txtMerek.setText(tabelPC.getValueAt(baris, 1).toString());
+                txtProcessor.setText(tabelPC.getValueAt(baris, 2).toString());
+                txtTarif.setText(tabelPC.getValueAt(baris, 3).toString());
+            } catch (Exception e) {
+                // Jika ada error tipe data, aplikasi tidak akan crash
+                System.out.println("Error klik tabel: " + e.getMessage());
+            }
+        }
+    }//GEN-LAST:event_tabelPCMouseClicked
+
+    private void btnDaftarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDaftarActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnDaftarActionPerformed
+
+    private void btnDaftarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnDaftarMouseClicked
+        // TODO add your handling code here:
+        // Validasi: Cek apakah SEMUA field kosong (0/4)
+        if (txtID.getText().isEmpty() && txtMerek.getText().isEmpty() && 
+            txtProcessor.getText().isEmpty() && txtTarif.getText().isEmpty()) {
+
+            // Jika 0/4 diisi, munculkan peringatan
+            JOptionPane.showMessageDialog(this, "Minimal isi salah satu data (ID, Merek, Processor, atau Tarif)!", "Peringatan", JOptionPane.WARNING_MESSAGE);
+
+        } else {
+            // Jika minimal 1/4 diisi, data masuk ke tabel
+            DefaultTableModel model = (DefaultTableModel) tabelPC.getModel();
+            model.addRow(new Object[]{
+                txtID.getText(), 
+                txtMerek.getText(), 
+                txtProcessor.getText(), 
+                txtTarif.getText()
+            });
+
+            JOptionPane.showMessageDialog(this, "Data PC Berhasil Didaftarkan!", "Sukses", JOptionPane.INFORMATION_MESSAGE);
+
+            // Opsional: Kosongkan field setelah daftar agar bisa input data baru
+            btnBatalMouseClicked(null); 
+        }
+    }//GEN-LAST:event_btnDaftarMouseClicked
+
+    private void btnEditMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnEditMouseClicked
+        // TODO add your handling code here:
+        int i = tabelPC.getSelectedRow();
+        DefaultTableModel model = (DefaultTableModel) tabelPC.getModel();
+
+        if (i >= 0) {
+            model.setValueAt(txtID.getText(), i, 0);
+            model.setValueAt(txtMerek.getText(), i, 1);
+            model.setValueAt(txtProcessor.getText(), i, 2);
+            model.setValueAt(txtTarif.getText(), i, 3);
+
+            JOptionPane.showMessageDialog(this, "Data PC Berhasil Diperbarui!", "Update Sukses", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(this, "Pilih baris yang ingin diedit di tabel terlebih dahulu!", "Kesalahan", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnEditMouseClicked
+
+    private void btnHapusMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnHapusMouseClicked
+        // TODO add your handling code here:
+        int i = tabelPC.getSelectedRow();
+        DefaultTableModel model = (DefaultTableModel) tabelPC.getModel();
+
+        if (i >= 0) {
+            // Tanya konfirmasi
+            int tanya = JOptionPane.showConfirmDialog(this, "Yakin ingin menghapus data PC ini?", "Konfirmasi Hapus", JOptionPane.YES_NO_OPTION);
+
+            if (tanya == JOptionPane.YES_OPTION) {
+                model.removeRow(i);
+                JOptionPane.showMessageDialog(this, "Data Berhasil Dihapus.");
+                btnBatalMouseClicked(null);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Pilih data yang mau dihapus!");
+        }
+    }//GEN-LAST:event_btnHapusMouseClicked
+
+    private void btnBatalMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnBatalMouseClicked
+        // TODO add your handling code here:
+        txtID.setText("");
+        txtMerek.setText("");
+        txtProcessor.setText("");
+        txtTarif.setText("");
+        tabelPC.clearSelection();
+    }//GEN-LAST:event_btnBatalMouseClicked
+
+    private void btnPilihMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnPilihMouseClicked
+        // TODO add your handling code here:
+        /*if (txtID.getText().equals("")) {
+            JOptionPane.showMessageDialog(null, "Pilih data PC terlebih dahulu!");
+        } else {
+            // 1. Ambil data dari textfield
+            String idTerpilih = txtID.getText();
+            String tarifTerpilih = txtTarif.getText();
+
+            // 2. Set ke Label di Laman Transaksi (Asumsi nama variabel label di Laman Transaksi)
+            lblIDTransaksi.setText(idTerpilih);
+            lblTarifTransaksi.setText(tarifTerpilih);
+
+            // 3. Pindah ke Laman Transaksi
+            java.awt.CardLayout card = (java.awt.CardLayout) panelUtama.getLayout();
+            card.show(panelUtama, "kartu_transaksi");
+
+            // Jangan lupa reset tombol sidebar agar sesuai menu yang aktif
+            resetTombol();
+            btnTransaksi.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/btn_transaksi_on.png")));
+        }
+        */
+    }//GEN-LAST:event_btnPilihMouseClicked
+
+    private void txtTarifKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTarifKeyTyped
+        // TODO add your handling code here:
+        char c = evt.getKeyChar();
+    
+        // Cek jika yang diketik bukan angka DAN bukan tombol hapus
+        if (!Character.isDigit(c) && c != java.awt.event.KeyEvent.VK_BACK_SPACE) {
+            evt.consume(); // Hapus inputannya
+
+            // Munculkan pesan peringatan
+            JOptionPane.showMessageDialog(this, "Input salah! Kolom Tarif hanya boleh diisi dengan angka.", "Peringatan Input", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_txtTarifKeyTyped
+
     /**
      * @param args the command line arguments
      */
@@ -559,20 +899,36 @@ public class Beranda extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel anime;
     private javax.swing.JLabel btnAlarm;
+    private javax.swing.JButton btnBatal;
     private javax.swing.JLabel btnBeranda;
     private javax.swing.JLabel btnBeranda6;
     private javax.swing.JLabel btnBeranda8;
+    private javax.swing.JButton btnCetak;
+    private javax.swing.JButton btnDaftar;
+    private javax.swing.JButton btnEdit;
+    private javax.swing.JButton btnHapus;
     private javax.swing.JLabel btnLogout;
     private javax.swing.JLabel btnPC;
     private javax.swing.JLabel btnPelanggan;
+    private javax.swing.JLabel btnPilih;
     private javax.swing.JLabel btnTransaksi;
+    private javax.swing.JLabel head;
     private javax.swing.JLabel instagramlogo;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JLabel judulPC;
     private javax.swing.JLabel lblAlamat;
     private javax.swing.JLabel lblBackground;
     private javax.swing.JLabel lblTanggal;
@@ -587,5 +943,11 @@ public class Beranda extends javax.swing.JFrame {
     private javax.swing.JPanel panelMenuPelanggan;
     private javax.swing.JPanel panelMenuTransaksi;
     private javax.swing.JPanel panelUtama;
+    private javax.swing.JTable tabelPC;
+    private javax.swing.JTextField txtCari;
+    private javax.swing.JTextField txtID;
+    private javax.swing.JTextField txtMerek;
+    private javax.swing.JTextField txtProcessor;
+    private javax.swing.JTextField txtTarif;
     // End of variables declaration//GEN-END:variables
 }
