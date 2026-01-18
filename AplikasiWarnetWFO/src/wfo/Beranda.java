@@ -169,34 +169,70 @@ public class Beranda extends javax.swing.JFrame {
         jLabel19 = new javax.swing.JLabel();
         jLabel21 = new javax.swing.JLabel();
         jLabel23 = new javax.swing.JLabel();
-        panelMenuTransaksi = new javax.swing.JPanel();
+        panelMenuTransaksi3 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         panelMenuAlarm = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
-        panelMenuPC1 = new javax.swing.JPanel();
+        panelMenuTransaksi = new javax.swing.JPanel();
         jdlTransaksi = new javax.swing.JLabel();
         head2 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
         jLabel20 = new javax.swing.JLabel();
         jLabel22 = new javax.swing.JLabel();
-        txtID1 = new javax.swing.JTextField();
-        txtMerek1 = new javax.swing.JTextField();
-        txtProcessor1 = new javax.swing.JTextField();
+        txtTrTanggal = new javax.swing.JTextField();
+        txtTrDtkMulai = new javax.swing.JTextField();
         btnCetak1 = new javax.swing.JButton();
-        btnDaftar1 = new javax.swing.JButton();
-        btnEdit1 = new javax.swing.JButton();
-        btnHapus1 = new javax.swing.JButton();
+        btnTrDaftar = new javax.swing.JButton();
+        btnTrEdit = new javax.swing.JButton();
+        btnTrHapus = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
-        tabelPC1 = new javax.swing.JTable();
+        tabelTr = new javax.swing.JTable();
         jLabel24 = new javax.swing.JLabel();
-        txtPCCari1 = new javax.swing.JTextField();
+        txtTrCari = new javax.swing.JTextField();
         jLabel25 = new javax.swing.JLabel();
         btnPilih1 = new javax.swing.JLabel();
-        btnBatal1 = new javax.swing.JButton();
+        btnTrBatal = new javax.swing.JButton();
         jLabel26 = new javax.swing.JLabel();
-        txtTarif1 = new javax.swing.JTextField();
         jLabel27 = new javax.swing.JLabel();
+        jLabel28 = new javax.swing.JLabel();
+        jLabel29 = new javax.swing.JLabel();
+        txtTrBiaya = new javax.swing.JTextField();
+        txtTrID = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        btnTrBiaya = new javax.swing.JButton();
+        btnTrDurasi = new javax.swing.JButton();
+        btnTrJam = new javax.swing.JButton();
+        jLabel30 = new javax.swing.JLabel();
+        jPanel4 = new javax.swing.JPanel();
+        jButton4 = new javax.swing.JButton();
+        jLabel31 = new javax.swing.JLabel();
+        txtTrNama = new javax.swing.JTextField();
+        jLabel32 = new javax.swing.JLabel();
+        txtTrTelpon = new javax.swing.JTextField();
+        jPanel5 = new javax.swing.JPanel();
+        jButton5 = new javax.swing.JButton();
+        txtTrTarif = new javax.swing.JTextField();
+        txtTrMerek = new javax.swing.JTextField();
+        jLabel34 = new javax.swing.JLabel();
+        jLabel33 = new javax.swing.JLabel();
+        txtTrJamMulai = new javax.swing.JTextField();
+        txtTrMntMulai = new javax.swing.JTextField();
+        txtTrJamSelesai = new javax.swing.JTextField();
+        txtTrMntSelesai = new javax.swing.JTextField();
+        txtTrDtkSelesai = new javax.swing.JTextField();
+        jLabel35 = new javax.swing.JLabel();
+        jLabel36 = new javax.swing.JLabel();
+        jLabel37 = new javax.swing.JLabel();
+        jLabel38 = new javax.swing.JLabel();
+        jLabel39 = new javax.swing.JLabel();
+        jLabel40 = new javax.swing.JLabel();
+        txtTrJamDurasi = new javax.swing.JTextField();
+        txtTrMntDurasi = new javax.swing.JTextField();
+        txtTrDtkDurasi = new javax.swing.JTextField();
+        jLabel41 = new javax.swing.JLabel();
+        jLabel42 = new javax.swing.JLabel();
+        jLabel43 = new javax.swing.JLabel();
         lblBackground = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -803,29 +839,29 @@ public class Beranda extends javax.swing.JFrame {
 
         panelUtama.add(panelMenuPelanggan, "menu_pelanggan");
 
-        panelMenuTransaksi.setBackground(new java.awt.Color(51, 51, 51));
+        panelMenuTransaksi3.setBackground(new java.awt.Color(51, 51, 51));
 
         jLabel4.setForeground(new java.awt.Color(255, 255, 255));
         jLabel4.setText("TRANSAKSI");
 
-        javax.swing.GroupLayout panelMenuTransaksiLayout = new javax.swing.GroupLayout(panelMenuTransaksi);
-        panelMenuTransaksi.setLayout(panelMenuTransaksiLayout);
-        panelMenuTransaksiLayout.setHorizontalGroup(
-            panelMenuTransaksiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelMenuTransaksiLayout.createSequentialGroup()
+        javax.swing.GroupLayout panelMenuTransaksi3Layout = new javax.swing.GroupLayout(panelMenuTransaksi3);
+        panelMenuTransaksi3.setLayout(panelMenuTransaksi3Layout);
+        panelMenuTransaksi3Layout.setHorizontalGroup(
+            panelMenuTransaksi3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelMenuTransaksi3Layout.createSequentialGroup()
                 .addGap(31, 31, 31)
                 .addComponent(jLabel4)
                 .addContainerGap(698, Short.MAX_VALUE))
         );
-        panelMenuTransaksiLayout.setVerticalGroup(
-            panelMenuTransaksiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelMenuTransaksiLayout.createSequentialGroup()
+        panelMenuTransaksi3Layout.setVerticalGroup(
+            panelMenuTransaksi3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelMenuTransaksi3Layout.createSequentialGroup()
                 .addGap(32, 32, 32)
                 .addComponent(jLabel4)
                 .addContainerGap(572, Short.MAX_VALUE))
         );
 
-        panelUtama.add(panelMenuTransaksi, "menu_transaksi3");
+        panelUtama.add(panelMenuTransaksi3, "menu_transaksi3");
 
         panelMenuAlarm.setBackground(new java.awt.Color(51, 51, 51));
 
@@ -851,192 +887,529 @@ public class Beranda extends javax.swing.JFrame {
 
         panelUtama.add(panelMenuAlarm, "menu_alarm");
 
-        panelMenuPC1.setBackground(new java.awt.Color(51, 51, 51));
-        panelMenuPC1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        panelMenuTransaksi.setBackground(new java.awt.Color(51, 51, 51));
+        panelMenuTransaksi.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jdlTransaksi.setFont(new java.awt.Font("Comic Sans MS", 1, 18)); // NOI18N
         jdlTransaksi.setForeground(new java.awt.Color(255, 255, 255));
         jdlTransaksi.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jdlTransaksi.setText("TRANSAKSI");
-        panelMenuPC1.add(jdlTransaksi, new org.netbeans.lib.awtextra.AbsoluteConstraints(1, 20, 200, 50));
+        panelMenuTransaksi.add(jdlTransaksi, new org.netbeans.lib.awtextra.AbsoluteConstraints(1, 20, 200, 50));
 
         head2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/head.png"))); // NOI18N
-        panelMenuPC1.add(head2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 20, -1, 50));
+        panelMenuTransaksi.add(head2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 20, -1, 50));
 
         jLabel12.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
         jLabel12.setForeground(new java.awt.Color(255, 255, 255));
         jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel12.setText("ID :");
-        panelMenuPC1.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 60, 150, -1));
+        jLabel12.setText("Pilih Tangal :");
+        panelMenuTransaksi.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(-40, 100, 150, -1));
 
         jLabel20.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
         jLabel20.setForeground(new java.awt.Color(255, 255, 255));
         jLabel20.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel20.setText("Merek :");
-        panelMenuPC1.add(jLabel20, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 90, 150, -1));
+        jLabel20.setText("Jam Mulai  :");
+        panelMenuTransaksi.add(jLabel20, new org.netbeans.lib.awtextra.AbsoluteConstraints(-40, 130, 150, -1));
 
         jLabel22.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
         jLabel22.setForeground(new java.awt.Color(255, 255, 255));
         jLabel22.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel22.setText("Processor :");
-        panelMenuPC1.add(jLabel22, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 120, 150, -1));
+        jLabel22.setText("Jam Selesai :");
+        panelMenuTransaksi.add(jLabel22, new org.netbeans.lib.awtextra.AbsoluteConstraints(-40, 160, 150, -1));
 
-        txtID1.addActionListener(new java.awt.event.ActionListener() {
+        txtTrTanggal.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtID1ActionPerformed(evt);
+                txtTrTanggalActionPerformed(evt);
             }
         });
-        panelMenuPC1.add(txtID1, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 60, 250, -1));
+        panelMenuTransaksi.add(txtTrTanggal, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 100, 100, -1));
 
-        txtMerek1.addActionListener(new java.awt.event.ActionListener() {
+        txtTrDtkMulai.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtMerek1ActionPerformed(evt);
+                txtTrDtkMulaiActionPerformed(evt);
             }
         });
-        panelMenuPC1.add(txtMerek1, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 90, 250, -1));
-        panelMenuPC1.add(txtProcessor1, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 120, 250, -1));
+        txtTrDtkMulai.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtTrDtkMulaiKeyTyped(evt);
+            }
+        });
+        panelMenuTransaksi.add(txtTrDtkMulai, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 130, 30, -1));
 
         btnCetak1.setBackground(new java.awt.Color(204, 204, 204));
         btnCetak1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         btnCetak1.setText("Cetak");
         btnCetak1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        panelMenuPC1.add(btnCetak1, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 470, 80, 30));
+        panelMenuTransaksi.add(btnCetak1, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 470, 80, 30));
 
-        btnDaftar1.setBackground(new java.awt.Color(51, 102, 255));
-        btnDaftar1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        btnDaftar1.setForeground(new java.awt.Color(255, 255, 255));
-        btnDaftar1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/person_add.png"))); // NOI18N
-        btnDaftar1.setText("Daftar");
-        btnDaftar1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        btnDaftar1.addMouseListener(new java.awt.event.MouseAdapter() {
+        btnTrDaftar.setBackground(new java.awt.Color(51, 102, 255));
+        btnTrDaftar.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        btnTrDaftar.setForeground(new java.awt.Color(255, 255, 255));
+        btnTrDaftar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/person_add.png"))); // NOI18N
+        btnTrDaftar.setText("Daftar");
+        btnTrDaftar.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        btnTrDaftar.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnDaftar1MouseClicked(evt);
+                btnTrDaftarMouseClicked(evt);
             }
         });
-        btnDaftar1.addActionListener(new java.awt.event.ActionListener() {
+        btnTrDaftar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnDaftar1ActionPerformed(evt);
+                btnTrDaftarActionPerformed(evt);
             }
         });
-        panelMenuPC1.add(btnDaftar1, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 231, 150, 20));
+        panelMenuTransaksi.add(btnTrDaftar, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 231, 150, 20));
 
-        btnEdit1.setBackground(new java.awt.Color(51, 102, 255));
-        btnEdit1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        btnEdit1.setForeground(new java.awt.Color(255, 255, 255));
-        btnEdit1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/edit.png"))); // NOI18N
-        btnEdit1.setText("Edit");
-        btnEdit1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        btnEdit1.addMouseListener(new java.awt.event.MouseAdapter() {
+        btnTrEdit.setBackground(new java.awt.Color(51, 102, 255));
+        btnTrEdit.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        btnTrEdit.setForeground(new java.awt.Color(255, 255, 255));
+        btnTrEdit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/edit.png"))); // NOI18N
+        btnTrEdit.setText("Edit");
+        btnTrEdit.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        btnTrEdit.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnEdit1MouseClicked(evt);
+                btnTrEditMouseClicked(evt);
             }
         });
-        panelMenuPC1.add(btnEdit1, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 231, 150, 20));
+        panelMenuTransaksi.add(btnTrEdit, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 231, 150, 20));
 
-        btnHapus1.setBackground(new java.awt.Color(51, 102, 255));
-        btnHapus1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        btnHapus1.setForeground(new java.awt.Color(255, 255, 255));
-        btnHapus1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/buang.png"))); // NOI18N
-        btnHapus1.setText("Hapus");
-        btnHapus1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        btnHapus1.addMouseListener(new java.awt.event.MouseAdapter() {
+        btnTrHapus.setBackground(new java.awt.Color(51, 102, 255));
+        btnTrHapus.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        btnTrHapus.setForeground(new java.awt.Color(255, 255, 255));
+        btnTrHapus.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/buang.png"))); // NOI18N
+        btnTrHapus.setText("Hapus");
+        btnTrHapus.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        btnTrHapus.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnHapus1MouseClicked(evt);
+                btnTrHapusMouseClicked(evt);
             }
         });
-        panelMenuPC1.add(btnHapus1, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 231, 150, 20));
+        panelMenuTransaksi.add(btnTrHapus, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 231, 150, 20));
 
         jPanel3.setBackground(new java.awt.Color(25, 25, 25));
         jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        tabelPC1.setModel(new javax.swing.table.DefaultTableModel(
+        tabelTr.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "ID", "Merek", "Processor", "Tarif"
+                "ID", "Tanggal", "Nama", "Merek PC", "Tarif/jam", "Jam Mulai", "Jam Selesai", "Durasi", "Biaya"
             }
         ));
-        tabelPC1.setFillsViewportHeight(true);
-        tabelPC1.addMouseListener(new java.awt.event.MouseAdapter() {
+        tabelTr.setFillsViewportHeight(true);
+        tabelTr.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tabelPC1MouseClicked(evt);
+                tabelTrMouseClicked(evt);
             }
         });
-        jScrollPane3.setViewportView(tabelPC1);
+        jScrollPane3.setViewportView(tabelTr);
 
         jPanel3.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 40, 620, 150));
 
         jLabel24.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
         jLabel24.setForeground(new java.awt.Color(255, 255, 255));
         jLabel24.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel24.setText("Cari PC :");
+        jLabel24.setText("Cari Transaksi :");
         jPanel3.add(jLabel24, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 10, 320, -1));
 
-        txtPCCari1.addActionListener(new java.awt.event.ActionListener() {
+        txtTrCari.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtPCCari1ActionPerformed(evt);
+                txtTrCariActionPerformed(evt);
             }
         });
-        txtPCCari1.addKeyListener(new java.awt.event.KeyAdapter() {
+        txtTrCari.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
-                txtPCCari1KeyReleased(evt);
+                txtTrCariKeyReleased(evt);
             }
         });
-        jPanel3.add(txtPCCari1, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 10, 260, -1));
+        jPanel3.add(txtTrCari, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 10, 260, -1));
 
         jLabel25.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/search.png"))); // NOI18N
         jPanel3.add(jLabel25, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 10, -1, 20));
 
-        panelMenuPC1.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 260, 660, 200));
+        panelMenuTransaksi.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 260, 660, 200));
 
-        btnPilih1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/btn_pilihtr_off.png"))); // NOI18N
+        btnPilih1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/btn_pilihalarm_off.png"))); // NOI18N
         btnPilih1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnPilih1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnPilih1MouseClicked(evt);
             }
         });
-        panelMenuPC1.add(btnPilih1, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 480, -1, -1));
+        panelMenuTransaksi.add(btnPilih1, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 480, -1, -1));
 
-        btnBatal1.setBackground(new java.awt.Color(51, 102, 255));
-        btnBatal1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        btnBatal1.setForeground(new java.awt.Color(255, 255, 255));
-        btnBatal1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/batal.png"))); // NOI18N
-        btnBatal1.setText("Batal");
-        btnBatal1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        btnBatal1.addMouseListener(new java.awt.event.MouseAdapter() {
+        btnTrBatal.setBackground(new java.awt.Color(51, 102, 255));
+        btnTrBatal.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        btnTrBatal.setForeground(new java.awt.Color(255, 255, 255));
+        btnTrBatal.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/batal.png"))); // NOI18N
+        btnTrBatal.setText("Batal");
+        btnTrBatal.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        btnTrBatal.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnBatal1MouseClicked(evt);
+                btnTrBatalMouseClicked(evt);
             }
         });
-        panelMenuPC1.add(btnBatal1, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 231, 150, 20));
+        panelMenuTransaksi.add(btnTrBatal, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 231, 150, 20));
 
         jLabel26.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
         jLabel26.setForeground(new java.awt.Color(255, 255, 255));
         jLabel26.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel26.setText("Tarif / jam :");
-        panelMenuPC1.add(jLabel26, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 150, 150, -1));
-
-        txtTarif1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtTarif1ActionPerformed(evt);
-            }
-        });
-        txtTarif1.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                txtTarif1KeyTyped(evt);
-            }
-        });
-        panelMenuPC1.add(txtTarif1, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 150, 250, -1));
+        jLabel26.setText("Durasi  :");
+        panelMenuTransaksi.add(jLabel26, new org.netbeans.lib.awtextra.AbsoluteConstraints(-40, 190, 150, -1));
 
         jLabel27.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/print.png"))); // NOI18N
-        panelMenuPC1.add(jLabel27, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 470, -1, 30));
+        panelMenuTransaksi.add(jLabel27, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 470, -1, 30));
 
-        panelUtama.add(panelMenuPC1, "menu_transaksi");
+        jLabel28.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
+        jLabel28.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel28.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel28.setText("ID Transaksi  :");
+        panelMenuTransaksi.add(jLabel28, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 140, 110, -1));
+
+        jLabel29.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
+        jLabel29.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel29.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel29.setText("Biaya :");
+        panelMenuTransaksi.add(jLabel29, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 170, 60, -1));
+        panelMenuTransaksi.add(txtTrBiaya, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 170, 170, -1));
+
+        txtTrID.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtTrIDActionPerformed(evt);
+            }
+        });
+        panelMenuTransaksi.add(txtTrID, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 140, 170, -1));
+
+        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/transaksi.png"))); // NOI18N
+        panelMenuTransaksi.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(660, 90, -1, -1));
+
+        btnTrBiaya.setBackground(new java.awt.Color(255, 153, 0));
+        btnTrBiaya.setFont(new java.awt.Font("Comic Sans MS", 1, 12)); // NOI18N
+        btnTrBiaya.setForeground(new java.awt.Color(255, 255, 255));
+        btnTrBiaya.setText("Biaya");
+        btnTrBiaya.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        btnTrBiaya.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnTrBiayaMouseClicked(evt);
+            }
+        });
+        panelMenuTransaksi.add(btnTrBiaya, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 190, 70, -1));
+
+        btnTrDurasi.setBackground(new java.awt.Color(255, 153, 0));
+        btnTrDurasi.setFont(new java.awt.Font("Comic Sans MS", 1, 12)); // NOI18N
+        btnTrDurasi.setForeground(new java.awt.Color(255, 255, 255));
+        btnTrDurasi.setText("Durasi");
+        btnTrDurasi.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        btnTrDurasi.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnTrDurasiMouseClicked(evt);
+            }
+        });
+        panelMenuTransaksi.add(btnTrDurasi, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 160, 70, -1));
+
+        btnTrJam.setBackground(new java.awt.Color(255, 153, 0));
+        btnTrJam.setFont(new java.awt.Font("Comic Sans MS", 1, 12)); // NOI18N
+        btnTrJam.setForeground(new java.awt.Color(255, 255, 255));
+        btnTrJam.setText("Jam");
+        btnTrJam.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        btnTrJam.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnTrJamMouseClicked(evt);
+            }
+        });
+        panelMenuTransaksi.add(btnTrJam, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 130, 70, -1));
+
+        jLabel30.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel30.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel30.setText("Hitung by:");
+        panelMenuTransaksi.add(jLabel30, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 110, 70, -1));
+
+        jPanel4.setBackground(new java.awt.Color(25, 25, 25));
+        jPanel4.setForeground(new java.awt.Color(255, 255, 255));
+
+        jButton4.setBackground(new java.awt.Color(255, 153, 0));
+        jButton4.setFont(new java.awt.Font("Comic Sans MS", 0, 14)); // NOI18N
+        jButton4.setForeground(new java.awt.Color(255, 255, 255));
+        jButton4.setText("Pilih Pelanggan");
+        jButton4.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+
+        jLabel31.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
+        jLabel31.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel31.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel31.setText("Nama  :");
+
+        txtTrNama.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtTrNamaActionPerformed(evt);
+            }
+        });
+
+        jLabel32.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
+        jLabel32.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel32.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel32.setText("Telpon  :");
+
+        txtTrTelpon.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtTrTelponActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addComponent(jLabel31, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtTrNama))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                        .addComponent(jLabel32, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtTrTelpon, javax.swing.GroupLayout.DEFAULT_SIZE, 104, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jButton4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel31)
+                    .addComponent(txtTrNama, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel32)
+                    .addComponent(txtTrTelpon, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(15, Short.MAX_VALUE))
+        );
+
+        panelMenuTransaksi.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 10, 180, 110));
+
+        jPanel5.setBackground(new java.awt.Color(25, 25, 25));
+        jPanel5.setForeground(new java.awt.Color(255, 255, 255));
+
+        jButton5.setBackground(new java.awt.Color(255, 153, 0));
+        jButton5.setFont(new java.awt.Font("Comic Sans MS", 0, 14)); // NOI18N
+        jButton5.setForeground(new java.awt.Color(255, 255, 255));
+        jButton5.setText("Pilih PC");
+        jButton5.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+
+        txtTrTarif.setText("10000");
+        txtTrTarif.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtTrTarifActionPerformed(evt);
+            }
+        });
+
+        txtTrMerek.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtTrMerekActionPerformed(evt);
+            }
+        });
+
+        jLabel34.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
+        jLabel34.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel34.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel34.setText("Tarif  :");
+
+        jLabel33.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
+        jLabel33.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel33.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel33.setText("Merek  :");
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, 168, Short.MAX_VALUE)
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addComponent(jLabel33, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtTrMerek))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                        .addComponent(jLabel34, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtTrTarif, javax.swing.GroupLayout.DEFAULT_SIZE, 104, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jButton5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel33)
+                    .addComponent(txtTrMerek, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel34)
+                    .addComponent(txtTrTarif, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(15, Short.MAX_VALUE))
+        );
+
+        panelMenuTransaksi.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 10, -1, 110));
+
+        txtTrJamMulai.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtTrJamMulaiActionPerformed(evt);
+            }
+        });
+        txtTrJamMulai.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtTrJamMulaiKeyTyped(evt);
+            }
+        });
+        panelMenuTransaksi.add(txtTrJamMulai, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 130, 30, -1));
+
+        txtTrMntMulai.setToolTipText("Maksimal 59");
+        txtTrMntMulai.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtTrMntMulaiActionPerformed(evt);
+            }
+        });
+        txtTrMntMulai.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtTrMntMulaiKeyTyped(evt);
+            }
+        });
+        panelMenuTransaksi.add(txtTrMntMulai, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 130, 30, -1));
+
+        txtTrJamSelesai.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtTrJamSelesaiActionPerformed(evt);
+            }
+        });
+        txtTrJamSelesai.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtTrJamSelesaiKeyTyped(evt);
+            }
+        });
+        panelMenuTransaksi.add(txtTrJamSelesai, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 160, 30, -1));
+
+        txtTrMntSelesai.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtTrMntSelesaiActionPerformed(evt);
+            }
+        });
+        txtTrMntSelesai.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtTrMntSelesaiKeyTyped(evt);
+            }
+        });
+        panelMenuTransaksi.add(txtTrMntSelesai, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 160, 30, -1));
+
+        txtTrDtkSelesai.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtTrDtkSelesaiActionPerformed(evt);
+            }
+        });
+        txtTrDtkSelesai.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtTrDtkSelesaiKeyTyped(evt);
+            }
+        });
+        panelMenuTransaksi.add(txtTrDtkSelesai, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 160, 30, -1));
+
+        jLabel35.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
+        jLabel35.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel35.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel35.setText("Jam");
+        panelMenuTransaksi.add(jLabel35, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 160, 30, -1));
+
+        jLabel36.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
+        jLabel36.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel36.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel36.setText("Mnt");
+        panelMenuTransaksi.add(jLabel36, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 160, 30, -1));
+
+        jLabel37.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
+        jLabel37.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel37.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel37.setText("Jam");
+        panelMenuTransaksi.add(jLabel37, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 130, 30, -1));
+
+        jLabel38.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
+        jLabel38.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel38.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel38.setText("Dtk");
+        panelMenuTransaksi.add(jLabel38, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 160, 30, -1));
+
+        jLabel39.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
+        jLabel39.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel39.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel39.setText("Mnt");
+        panelMenuTransaksi.add(jLabel39, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 130, 30, -1));
+
+        jLabel40.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
+        jLabel40.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel40.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel40.setText("Dtk");
+        panelMenuTransaksi.add(jLabel40, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 130, 30, -1));
+
+        txtTrJamDurasi.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtTrJamDurasiActionPerformed(evt);
+            }
+        });
+        panelMenuTransaksi.add(txtTrJamDurasi, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 190, 30, -1));
+
+        txtTrMntDurasi.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtTrMntDurasiActionPerformed(evt);
+            }
+        });
+        txtTrMntDurasi.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtTrMntDurasiKeyTyped(evt);
+            }
+        });
+        panelMenuTransaksi.add(txtTrMntDurasi, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 190, 30, -1));
+
+        txtTrDtkDurasi.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtTrDtkDurasiActionPerformed(evt);
+            }
+        });
+        txtTrDtkDurasi.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtTrDtkDurasiKeyTyped(evt);
+            }
+        });
+        panelMenuTransaksi.add(txtTrDtkDurasi, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 190, 30, -1));
+
+        jLabel41.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
+        jLabel41.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel41.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel41.setText("Jam");
+        panelMenuTransaksi.add(jLabel41, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 190, 30, -1));
+
+        jLabel42.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
+        jLabel42.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel42.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel42.setText("Mnt");
+        panelMenuTransaksi.add(jLabel42, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 190, 30, -1));
+
+        jLabel43.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
+        jLabel43.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel43.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel43.setText("Dtk");
+        panelMenuTransaksi.add(jLabel43, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 190, 30, -1));
+
+        panelUtama.add(panelMenuTransaksi, "menu_transaksi");
 
         getContentPane().add(panelUtama, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 80, 790, 620));
         getContentPane().add(lblBackground, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1000, 700));
@@ -1439,57 +1812,197 @@ public class Beranda extends javax.swing.JFrame {
         sorter.setRowFilter(RowFilter.regexFilter("(?i)" + txtPCCari.getText()));
     }//GEN-LAST:event_txtPCCariKeyReleased
 
-    private void txtID1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtID1ActionPerformed
+    private void txtTrTanggalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTrTanggalActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtID1ActionPerformed
+    }//GEN-LAST:event_txtTrTanggalActionPerformed
 
-    private void txtMerek1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtMerek1ActionPerformed
+    private void txtTrDtkMulaiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTrDtkMulaiActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtMerek1ActionPerformed
+    }//GEN-LAST:event_txtTrDtkMulaiActionPerformed
 
-    private void btnDaftar1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnDaftar1MouseClicked
+    private void btnTrDaftarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnTrDaftarMouseClicked
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnDaftar1MouseClicked
+    }//GEN-LAST:event_btnTrDaftarMouseClicked
 
-    private void btnDaftar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDaftar1ActionPerformed
+    private void btnTrDaftarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTrDaftarActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnDaftar1ActionPerformed
+    }//GEN-LAST:event_btnTrDaftarActionPerformed
 
-    private void btnEdit1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnEdit1MouseClicked
+    private void btnTrEditMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnTrEditMouseClicked
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnEdit1MouseClicked
+    }//GEN-LAST:event_btnTrEditMouseClicked
 
-    private void btnHapus1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnHapus1MouseClicked
+    private void btnTrHapusMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnTrHapusMouseClicked
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnHapus1MouseClicked
+    }//GEN-LAST:event_btnTrHapusMouseClicked
 
-    private void tabelPC1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelPC1MouseClicked
+    private void tabelTrMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelTrMouseClicked
         // TODO add your handling code here:
-    }//GEN-LAST:event_tabelPC1MouseClicked
+    }//GEN-LAST:event_tabelTrMouseClicked
 
-    private void txtPCCari1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPCCari1ActionPerformed
+    private void txtTrCariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTrCariActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtPCCari1ActionPerformed
+    }//GEN-LAST:event_txtTrCariActionPerformed
 
-    private void txtPCCari1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPCCari1KeyReleased
+    private void txtTrCariKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTrCariKeyReleased
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtPCCari1KeyReleased
+    }//GEN-LAST:event_txtTrCariKeyReleased
 
     private void btnPilih1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnPilih1MouseClicked
         // TODO add your handling code here:
     }//GEN-LAST:event_btnPilih1MouseClicked
 
-    private void btnBatal1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnBatal1MouseClicked
+    private void btnTrBatalMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnTrBatalMouseClicked
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnBatal1MouseClicked
+    }//GEN-LAST:event_btnTrBatalMouseClicked
 
-    private void txtTarif1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTarif1ActionPerformed
+    private void txtTrIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTrIDActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtTarif1ActionPerformed
+    }//GEN-LAST:event_txtTrIDActionPerformed
 
-    private void txtTarif1KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTarif1KeyTyped
+    private void txtTrNamaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTrNamaActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtTarif1KeyTyped
+    }//GEN-LAST:event_txtTrNamaActionPerformed
+
+    private void txtTrTelponActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTrTelponActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtTrTelponActionPerformed
+
+    private void txtTrMerekActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTrMerekActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtTrMerekActionPerformed
+
+    private void txtTrTarifActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTrTarifActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtTrTarifActionPerformed
+
+    private void txtTrJamMulaiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTrJamMulaiActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtTrJamMulaiActionPerformed
+
+    private void txtTrMntMulaiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTrMntMulaiActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtTrMntMulaiActionPerformed
+
+    private void txtTrJamSelesaiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTrJamSelesaiActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtTrJamSelesaiActionPerformed
+
+    private void txtTrMntSelesaiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTrMntSelesaiActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtTrMntSelesaiActionPerformed
+
+    private void txtTrDtkSelesaiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTrDtkSelesaiActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtTrDtkSelesaiActionPerformed
+
+    private void txtTrJamDurasiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTrJamDurasiActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtTrJamDurasiActionPerformed
+
+    private void txtTrMntDurasiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTrMntDurasiActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtTrMntDurasiActionPerformed
+
+    private void txtTrDtkDurasiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTrDtkDurasiActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtTrDtkDurasiActionPerformed
+
+    private void btnTrJamMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnTrJamMouseClicked
+        // TODO add your handling code here:
+        long mulai = keDetik(txtTrJamMulai.getText(), txtTrMntMulai.getText(), txtTrDtkMulai.getText());
+        long selesai = keDetik(txtTrJamSelesai.getText(), txtTrMntSelesai.getText(), txtTrDtkSelesai.getText());
+
+        if (selesai < mulai) {
+            JOptionPane.showMessageDialog(this, "Sistem ini hanya mendukung durasi dalam 1 hari yang sama (Max 24 Jam).");
+            return;
+        }
+
+        long selisih = selesai - mulai;
+        keField(selisih, txtTrJamDurasi, txtTrMntDurasi, txtTrDtkDurasi);
+
+        int biaya = (int) ((double) selisih / 3600 * 10000);
+        txtTrBiaya.setText(String.valueOf(biaya));
+    }//GEN-LAST:event_btnTrJamMouseClicked
+
+    private void btnTrDurasiMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnTrDurasiMouseClicked
+        // TODO add your handling code here:
+        long mulai = keDetik(txtTrJamMulai.getText(), txtTrMntMulai.getText(), txtTrDtkMulai.getText());
+        long durasi = (Long.parseLong(txtTrJamDurasi.getText()) * 3600) + 
+                      (Long.parseLong(txtTrMntDurasi.getText()) * 60) + 
+                       Long.parseLong(txtTrDtkDurasi.getText());
+
+        long selesai = mulai + durasi;
+
+        // Rata kanan: Jika lewat jam 24:00, mentokkan di 23:59:59
+        if (selesai > 86399) { // 86399 adalah total detik dalam 23:59:59
+            selesai = 86399;
+            JOptionPane.showMessageDialog(this, "Durasi melebihi hari ini. Jam Selesai diset ke 23:59:59");
+        }
+
+        keField(selesai, txtTrJamSelesai, txtTrMntSelesai, txtTrDtkSelesai);
+
+        int biaya = (int) ((double) durasi / 3600 * 10000);
+        txtTrBiaya.setText(String.valueOf(biaya));
+    }//GEN-LAST:event_btnTrDurasiMouseClicked
+
+    private void btnTrBiayaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnTrBiayaMouseClicked
+        // TODO add your handling code here:
+        try {
+            int uang = Integer.parseInt(txtTrBiaya.getText());
+            long mulai = keDetik(txtTrJamMulai.getText(), txtTrMntMulai.getText(), txtTrDtkMulai.getText());
+
+            // Cari durasi: (Uang / 10000) * 3600 detik
+            long durasi = (long) ((double) uang / 10000 * 3600);
+            long selesai = mulai + durasi;
+
+            keField(durasi, txtTrJamDurasi, txtTrMntDurasi, txtTrDtkDurasi);
+            keField(selesai, txtTrJamSelesai, txtTrMntSelesai, txtTrDtkSelesai);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Masukkan jumlah biaya dalam angka!");
+        }
+    }//GEN-LAST:event_btnTrBiayaMouseClicked
+
+    private void txtTrJamMulaiKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTrJamMulaiKeyTyped
+        // TODO add your handling code here:
+        satpamInput(evt, txtTrJamMulai, 23);
+    }//GEN-LAST:event_txtTrJamMulaiKeyTyped
+
+    private void txtTrMntMulaiKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTrMntMulaiKeyTyped
+        // TODO add your handling code here:
+        satpamInput(evt, txtTrMntMulai, 59);
+    }//GEN-LAST:event_txtTrMntMulaiKeyTyped
+
+    private void txtTrDtkMulaiKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTrDtkMulaiKeyTyped
+        // TODO add your handling code here:
+        satpamInput(evt, txtTrDtkMulai, 59);
+    }//GEN-LAST:event_txtTrDtkMulaiKeyTyped
+
+    private void txtTrJamSelesaiKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTrJamSelesaiKeyTyped
+        // TODO add your handling code here:
+        satpamInput(evt, txtTrJamSelesai, 23);
+    }//GEN-LAST:event_txtTrJamSelesaiKeyTyped
+
+    private void txtTrMntSelesaiKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTrMntSelesaiKeyTyped
+        // TODO add your handling code here:
+        satpamInput(evt, txtTrMntSelesai, 59);
+    }//GEN-LAST:event_txtTrMntSelesaiKeyTyped
+
+    private void txtTrDtkSelesaiKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTrDtkSelesaiKeyTyped
+        // TODO add your handling code here:
+        satpamInput(evt, txtTrDtkSelesai, 59);
+    }//GEN-LAST:event_txtTrDtkSelesaiKeyTyped
+
+    private void txtTrMntDurasiKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTrMntDurasiKeyTyped
+        // TODO add your handling code here:
+        satpamInput(evt, txtTrMntDurasi, 59);
+    }//GEN-LAST:event_txtTrMntDurasiKeyTyped
+
+    private void txtTrDtkDurasiKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTrDtkDurasiKeyTyped
+        // TODO add your handling code here:
+        satpamInput(evt, txtTrDtkDurasi, 59);
+    }//GEN-LAST:event_txtTrDtkDurasiKeyTyped
+    
     //buat menghindari duplikasi data di tabel pelanggan
     private boolean isPelangganExist(String namaBaru, String telpBaru) {
         for (int i = 0; i < tabelPL.getRowCount(); i++) {
@@ -1504,7 +2017,57 @@ public class Beranda extends javax.swing.JFrame {
         return false;
     }
     
+    // Fungsi mengubah Jam, Menit, Detik ke total Detik
+    private long keDetik(String h, String m, String s) {
+        try {
+            long hh = h.isEmpty() ? 0 : Long.parseLong(h);
+            long mm = m.isEmpty() ? 0 : Long.parseLong(m);
+            long ss = s.isEmpty() ? 0 : Long.parseLong(s);
+
+            // Penjaga: Menit dan Detik max 59
+            if (mm > 59) mm = 59;
+            if (ss > 59) ss = 59;
+
+            // Penjaga: Jam max 23 (untuk Jam Mulai & Selesai)
+            if (hh > 23) hh = 23;
+
+            return (hh * 3600) + (mm * 60) + ss;
+        } catch (Exception e) { return 0; }
+    }
+
+    // Fungsi memecah total Detik kembali ke 3 TextField
+    private void keField(long totalDetik, javax.swing.JTextField fH, javax.swing.JTextField fM, javax.swing.JTextField fS) {
+        long hh = totalDetik / 3600;
+        long mm = (totalDetik % 3600) / 60;
+        long ss = totalDetik % 60;
+        fH.setText(String.valueOf(hh));
+        fM.setText(String.valueOf(mm));
+        fS.setText(String.valueOf(ss));
+    }
     
+    // Fungsi Satpam Universal untuk membatasi input angka pada menu Transaksi
+    private void satpamInput(java.awt.event.KeyEvent evt, javax.swing.JTextField field, int maxNilai) {
+        char c = evt.getKeyChar();
+        String teksSekarang = field.getText();
+
+        // 1. Cek apakah yang diketik itu angka
+        if (!Character.isDigit(c)) {
+            evt.consume();
+            return;
+        }
+
+        // 2. Cek jika digabung dengan angka baru, apakah melebihi maxNilai atau lebih dari 2 digit
+        try {
+            String teksBaru = teksSekarang + c;
+            int nilai = Integer.parseInt(teksBaru);
+
+            if (nilai > maxNilai || teksBaru.length() > 2) {
+                evt.consume();
+            }
+        } catch (Exception e) {
+            evt.consume();
+        }
+    }
     /**
      * @param args the command line arguments
      */
@@ -1544,16 +2107,12 @@ public class Beranda extends javax.swing.JFrame {
     private javax.swing.JLabel anime;
     private javax.swing.JLabel btnAlarm;
     private javax.swing.JButton btnBatal;
-    private javax.swing.JButton btnBatal1;
     private javax.swing.JLabel btnBeranda;
     private javax.swing.JButton btnCetak;
     private javax.swing.JButton btnCetak1;
     private javax.swing.JButton btnDaftar;
-    private javax.swing.JButton btnDaftar1;
     private javax.swing.JButton btnEdit;
-    private javax.swing.JButton btnEdit1;
     private javax.swing.JButton btnHapus;
-    private javax.swing.JButton btnHapus1;
     private javax.swing.JLabel btnLogout;
     private javax.swing.JLabel btnPC;
     private javax.swing.JLabel btnPelanggan;
@@ -1565,12 +2124,21 @@ public class Beranda extends javax.swing.JFrame {
     private javax.swing.JButton btnPlEdit;
     private javax.swing.JButton btnPlHapus;
     private javax.swing.JLabel btnPlPilih;
+    private javax.swing.JButton btnTrBatal;
+    private javax.swing.JButton btnTrBiaya;
+    private javax.swing.JButton btnTrDaftar;
+    private javax.swing.JButton btnTrDurasi;
+    private javax.swing.JButton btnTrEdit;
+    private javax.swing.JButton btnTrHapus;
+    private javax.swing.JButton btnTrJam;
     private javax.swing.JLabel btnTransaksi;
     private javax.swing.JComboBox<String> cmbPlGender;
     private javax.swing.JLabel head;
     private javax.swing.JLabel head1;
     private javax.swing.JLabel head2;
     private javax.swing.JLabel instagramlogo;
+    private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -1591,7 +2159,24 @@ public class Beranda extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel25;
     private javax.swing.JLabel jLabel26;
     private javax.swing.JLabel jLabel27;
+    private javax.swing.JLabel jLabel28;
+    private javax.swing.JLabel jLabel29;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel30;
+    private javax.swing.JLabel jLabel31;
+    private javax.swing.JLabel jLabel32;
+    private javax.swing.JLabel jLabel33;
+    private javax.swing.JLabel jLabel34;
+    private javax.swing.JLabel jLabel35;
+    private javax.swing.JLabel jLabel36;
+    private javax.swing.JLabel jLabel37;
+    private javax.swing.JLabel jLabel38;
+    private javax.swing.JLabel jLabel39;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel40;
+    private javax.swing.JLabel jLabel41;
+    private javax.swing.JLabel jLabel42;
+    private javax.swing.JLabel jLabel43;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
@@ -1600,6 +2185,8 @@ public class Beranda extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
@@ -1618,19 +2205,16 @@ public class Beranda extends javax.swing.JFrame {
     private javax.swing.JPanel panelMenuAlarm;
     private javax.swing.JPanel panelMenuBeranda;
     private javax.swing.JPanel panelMenuPC;
-    private javax.swing.JPanel panelMenuPC1;
     private javax.swing.JPanel panelMenuPelanggan;
     private javax.swing.JPanel panelMenuTransaksi;
+    private javax.swing.JPanel panelMenuTransaksi3;
     private javax.swing.JPanel panelUtama;
     private javax.swing.JTable tabelPC;
-    private javax.swing.JTable tabelPC1;
     private javax.swing.JTable tabelPL;
+    private javax.swing.JTable tabelTr;
     private javax.swing.JTextField txtID;
-    private javax.swing.JTextField txtID1;
     private javax.swing.JTextField txtMerek;
-    private javax.swing.JTextField txtMerek1;
     private javax.swing.JTextField txtPCCari;
-    private javax.swing.JTextField txtPCCari1;
     private javax.swing.JTextField txtPlAlamat;
     private javax.swing.JTextField txtPlCari;
     private javax.swing.JTextField txtPlEmail;
@@ -1638,8 +2222,23 @@ public class Beranda extends javax.swing.JFrame {
     private javax.swing.JTextField txtPlNama;
     private javax.swing.JTextField txtPlTelpon;
     private javax.swing.JTextField txtProcessor;
-    private javax.swing.JTextField txtProcessor1;
     private javax.swing.JTextField txtTarif;
-    private javax.swing.JTextField txtTarif1;
+    private javax.swing.JTextField txtTrBiaya;
+    private javax.swing.JTextField txtTrCari;
+    private javax.swing.JTextField txtTrDtkDurasi;
+    private javax.swing.JTextField txtTrDtkMulai;
+    private javax.swing.JTextField txtTrDtkSelesai;
+    private javax.swing.JTextField txtTrID;
+    private javax.swing.JTextField txtTrJamDurasi;
+    private javax.swing.JTextField txtTrJamMulai;
+    private javax.swing.JTextField txtTrJamSelesai;
+    private javax.swing.JTextField txtTrMerek;
+    private javax.swing.JTextField txtTrMntDurasi;
+    private javax.swing.JTextField txtTrMntMulai;
+    private javax.swing.JTextField txtTrMntSelesai;
+    private javax.swing.JTextField txtTrNama;
+    private javax.swing.JTextField txtTrTanggal;
+    private javax.swing.JTextField txtTrTarif;
+    private javax.swing.JTextField txtTrTelpon;
     // End of variables declaration//GEN-END:variables
 }
