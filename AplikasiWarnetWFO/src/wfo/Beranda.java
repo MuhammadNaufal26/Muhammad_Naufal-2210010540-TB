@@ -4,6 +4,8 @@
  */
 package wfo;
 
+import java.awt.CardLayout;
+
 /**
  *
  * @author Sudirwo
@@ -32,8 +34,17 @@ public class Beranda extends javax.swing.JFrame {
         // Alpha 0-255 (makin kecil makin transparan)   
         panelKiri.setBackground(new java.awt.Color(33, 33, 33, 200));        // Hitam transparan
 
+        java.time.LocalDate tgl = java.time.LocalDate.now();
+        java.time.format.DateTimeFormatter format = java.time.format.DateTimeFormatter.ofPattern("dd MMM yyyy");
+        lblTanggal.setText(tgl.format(format));
     }
-
+    
+    private void pindahMenu(String namaKartu) {
+        java.awt.CardLayout card = (java.awt.CardLayout) panelUtama.getLayout();
+        card.show(panelUtama, namaKartu);
+        panelUtama.revalidate();
+        panelUtama.repaint();
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -43,23 +54,31 @@ public class Beranda extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        btnBeranda7 = new javax.swing.JLabel();
+        logo = new javax.swing.JLabel();
         panelHeader = new javax.swing.JPanel();
+        lblTanggal = new javax.swing.JLabel();
+        lblAlamat = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
         panelKiri = new javax.swing.JPanel();
         btnBeranda = new javax.swing.JLabel();
-        btnBeranda1 = new javax.swing.JLabel();
-        btnBeranda2 = new javax.swing.JLabel();
-        btnBeranda3 = new javax.swing.JLabel();
-        btnBeranda4 = new javax.swing.JLabel();
-        btnBeranda5 = new javax.swing.JLabel();
+        btnPC = new javax.swing.JLabel();
+        btnPelanggan = new javax.swing.JLabel();
+        btnTransaksi = new javax.swing.JLabel();
+        btnAlarm = new javax.swing.JLabel();
+        btnLogout = new javax.swing.JLabel();
         panelUtama = new javax.swing.JPanel();
         panelMenuBeranda = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
         panelMenuPC = new javax.swing.JPanel();
+        jLabel2 = new javax.swing.JLabel();
         panelMenuPelanggan = new javax.swing.JPanel();
         btnBeranda6 = new javax.swing.JLabel();
         btnBeranda8 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
         panelMenuTransaksi = new javax.swing.JPanel();
+        jLabel4 = new javax.swing.JLabel();
         panelMenuAlarm = new javax.swing.JPanel();
+        jLabel5 = new javax.swing.JLabel();
         lblBackground = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -70,22 +89,47 @@ public class Beranda extends javax.swing.JFrame {
         setSize(new java.awt.Dimension(1000, 650));
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        btnBeranda7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/logowfo.png"))); // NOI18N
-        btnBeranda7.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        getContentPane().add(btnBeranda7, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 7, -1, -1));
+        logo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/logowfo.png"))); // NOI18N
+        logo.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        getContentPane().add(logo, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 7, -1, -1));
 
         panelHeader.setBackground(new java.awt.Color(0, 0, 0));
         panelHeader.setPreferredSize(new java.awt.Dimension(1000, 80));
+
+        lblTanggal.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lblTanggal.setForeground(new java.awt.Color(255, 255, 255));
+
+        lblAlamat.setFont(new java.awt.Font("Tw Cen MT", 0, 18)); // NOI18N
+        lblAlamat.setForeground(new java.awt.Color(255, 255, 255));
+        lblAlamat.setText("Jl. Antara Ada dan Tiada, Desa Air, Banjarmasin");
+
+        jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel6.setText("Date :");
 
         javax.swing.GroupLayout panelHeaderLayout = new javax.swing.GroupLayout(panelHeader);
         panelHeader.setLayout(panelHeaderLayout);
         panelHeaderLayout.setHorizontalGroup(
             panelHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1000, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelHeaderLayout.createSequentialGroup()
+                .addContainerGap(258, Short.MAX_VALUE)
+                .addComponent(lblAlamat)
+                .addGap(147, 147, 147)
+                .addComponent(jLabel6)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(lblTanggal, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         panelHeaderLayout.setVerticalGroup(
             panelHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 80, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelHeaderLayout.createSequentialGroup()
+                .addContainerGap(33, Short.MAX_VALUE)
+                .addGroup(panelHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lblTanggal, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(panelHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(lblAlamat)
+                        .addComponent(jLabel6)))
+                .addGap(23, 23, 23))
         );
 
         getContentPane().add(panelHeader, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1000, 80));
@@ -94,21 +138,76 @@ public class Beranda extends javax.swing.JFrame {
 
         btnBeranda.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/btn_beranda_off.png"))); // NOI18N
         btnBeranda.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnBeranda.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnBerandaMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btnBerandaMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                btnBerandaMouseExited(evt);
+            }
+        });
 
-        btnBeranda1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/btn_pc_off.png"))); // NOI18N
-        btnBeranda1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnPC.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/btn_pc_off.png"))); // NOI18N
+        btnPC.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnPC.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnPCMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btnPCMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                btnPCMouseExited(evt);
+            }
+        });
 
-        btnBeranda2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/btn_pelanggan_off.png"))); // NOI18N
-        btnBeranda2.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnPelanggan.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/btn_pelanggan_off.png"))); // NOI18N
+        btnPelanggan.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnPelanggan.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnPelangganMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btnPelangganMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                btnPelangganMouseExited(evt);
+            }
+        });
 
-        btnBeranda3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/btn_transaksi_off.png"))); // NOI18N
-        btnBeranda3.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnTransaksi.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/btn_transaksi_off.png"))); // NOI18N
+        btnTransaksi.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnTransaksi.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnTransaksiMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btnTransaksiMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                btnTransaksiMouseExited(evt);
+            }
+        });
 
-        btnBeranda4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/btn_alarm_off.png"))); // NOI18N
-        btnBeranda4.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnAlarm.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/btn_alarm_off.png"))); // NOI18N
+        btnAlarm.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnAlarm.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnAlarmMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btnAlarmMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                btnAlarmMouseExited(evt);
+            }
+        });
 
-        btnBeranda5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/btn_logout_off.png"))); // NOI18N
-        btnBeranda5.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnLogout.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/btn_logout_off.png"))); // NOI18N
+        btnLogout.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
         javax.swing.GroupLayout panelKiriLayout = new javax.swing.GroupLayout(panelKiri);
         panelKiri.setLayout(panelKiriLayout);
@@ -121,12 +220,12 @@ public class Beranda extends javax.swing.JFrame {
                         .addComponent(btnBeranda, javax.swing.GroupLayout.Alignment.TRAILING)
                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelKiriLayout.createSequentialGroup()
                             .addGroup(panelKiriLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(btnBeranda4)
-                                .addComponent(btnBeranda5))
+                                .addComponent(btnAlarm)
+                                .addComponent(btnLogout))
                             .addGap(24, 24, 24)))
-                    .addComponent(btnBeranda1)
-                    .addComponent(btnBeranda2)
-                    .addComponent(btnBeranda3))
+                    .addComponent(btnPC)
+                    .addComponent(btnPelanggan)
+                    .addComponent(btnTransaksi))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panelKiriLayout.setVerticalGroup(
@@ -135,15 +234,15 @@ public class Beranda extends javax.swing.JFrame {
                 .addGap(36, 36, 36)
                 .addComponent(btnBeranda)
                 .addGap(18, 18, 18)
-                .addComponent(btnBeranda1)
+                .addComponent(btnPC)
                 .addGap(18, 18, 18)
-                .addComponent(btnBeranda2)
+                .addComponent(btnPelanggan)
                 .addGap(18, 18, 18)
-                .addComponent(btnBeranda3)
+                .addComponent(btnTransaksi)
                 .addGap(55, 55, 55)
-                .addComponent(btnBeranda4)
+                .addComponent(btnAlarm)
                 .addGap(67, 67, 67)
-                .addComponent(btnBeranda5)
+                .addComponent(btnLogout)
                 .addContainerGap(138, Short.MAX_VALUE))
         );
 
@@ -154,30 +253,48 @@ public class Beranda extends javax.swing.JFrame {
 
         panelMenuBeranda.setBackground(new java.awt.Color(51, 51, 51));
 
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setText("SELAMAT DATANG!!");
+
         javax.swing.GroupLayout panelMenuBerandaLayout = new javax.swing.GroupLayout(panelMenuBeranda);
         panelMenuBeranda.setLayout(panelMenuBerandaLayout);
         panelMenuBerandaLayout.setHorizontalGroup(
             panelMenuBerandaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 790, Short.MAX_VALUE)
+            .addGroup(panelMenuBerandaLayout.createSequentialGroup()
+                .addGap(58, 58, 58)
+                .addComponent(jLabel1)
+                .addContainerGap(623, Short.MAX_VALUE))
         );
         panelMenuBerandaLayout.setVerticalGroup(
             panelMenuBerandaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 620, Short.MAX_VALUE)
+            .addGroup(panelMenuBerandaLayout.createSequentialGroup()
+                .addGap(53, 53, 53)
+                .addComponent(jLabel1)
+                .addContainerGap(551, Short.MAX_VALUE))
         );
 
         panelUtama.add(panelMenuBeranda, "menu_beranda");
 
         panelMenuPC.setBackground(new java.awt.Color(51, 51, 51));
 
+        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel2.setText("DATA PC");
+
         javax.swing.GroupLayout panelMenuPCLayout = new javax.swing.GroupLayout(panelMenuPC);
         panelMenuPC.setLayout(panelMenuPCLayout);
         panelMenuPCLayout.setHorizontalGroup(
             panelMenuPCLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 790, Short.MAX_VALUE)
+            .addGroup(panelMenuPCLayout.createSequentialGroup()
+                .addGap(145, 145, 145)
+                .addComponent(jLabel2)
+                .addContainerGap(596, Short.MAX_VALUE))
         );
         panelMenuPCLayout.setVerticalGroup(
             panelMenuPCLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 620, Short.MAX_VALUE)
+            .addGroup(panelMenuPCLayout.createSequentialGroup()
+                .addGap(42, 42, 42)
+                .addComponent(jLabel2)
+                .addContainerGap(562, Short.MAX_VALUE))
         );
 
         panelUtama.add(panelMenuPC, "menu_pc");
@@ -190,6 +307,9 @@ public class Beranda extends javax.swing.JFrame {
         btnBeranda8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/btn_pilihtr_off.png"))); // NOI18N
         btnBeranda8.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
+        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel3.setText("PELANGGAN");
+
         javax.swing.GroupLayout panelMenuPelangganLayout = new javax.swing.GroupLayout(panelMenuPelanggan);
         panelMenuPelanggan.setLayout(panelMenuPelangganLayout);
         panelMenuPelangganLayout.setHorizontalGroup(
@@ -198,14 +318,21 @@ public class Beranda extends javax.swing.JFrame {
                 .addComponent(btnBeranda8)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(panelMenuPelangganLayout.createSequentialGroup()
-                .addGap(107, 107, 107)
-                .addComponent(btnBeranda6)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGroup(panelMenuPelangganLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelMenuPelangganLayout.createSequentialGroup()
+                        .addGap(107, 107, 107)
+                        .addComponent(btnBeranda6))
+                    .addGroup(panelMenuPelangganLayout.createSequentialGroup()
+                        .addGap(38, 38, 38)
+                        .addComponent(jLabel3)))
+                .addGap(0, 564, Short.MAX_VALUE))
         );
         panelMenuPelangganLayout.setVerticalGroup(
             panelMenuPelangganLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelMenuPelangganLayout.createSequentialGroup()
-                .addContainerGap(464, Short.MAX_VALUE)
+                .addGap(37, 37, 37)
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 411, Short.MAX_VALUE)
                 .addGroup(panelMenuPelangganLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(btnBeranda6)
                     .addComponent(btnBeranda8))
@@ -216,30 +343,48 @@ public class Beranda extends javax.swing.JFrame {
 
         panelMenuTransaksi.setBackground(new java.awt.Color(51, 51, 51));
 
+        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel4.setText("TRANSAKSI");
+
         javax.swing.GroupLayout panelMenuTransaksiLayout = new javax.swing.GroupLayout(panelMenuTransaksi);
         panelMenuTransaksi.setLayout(panelMenuTransaksiLayout);
         panelMenuTransaksiLayout.setHorizontalGroup(
             panelMenuTransaksiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 790, Short.MAX_VALUE)
+            .addGroup(panelMenuTransaksiLayout.createSequentialGroup()
+                .addGap(31, 31, 31)
+                .addComponent(jLabel4)
+                .addContainerGap(698, Short.MAX_VALUE))
         );
         panelMenuTransaksiLayout.setVerticalGroup(
             panelMenuTransaksiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 620, Short.MAX_VALUE)
+            .addGroup(panelMenuTransaksiLayout.createSequentialGroup()
+                .addGap(32, 32, 32)
+                .addComponent(jLabel4)
+                .addContainerGap(572, Short.MAX_VALUE))
         );
 
         panelUtama.add(panelMenuTransaksi, "menu_transaksi");
 
         panelMenuAlarm.setBackground(new java.awt.Color(51, 51, 51));
 
+        jLabel5.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel5.setText("ALARM");
+
         javax.swing.GroupLayout panelMenuAlarmLayout = new javax.swing.GroupLayout(panelMenuAlarm);
         panelMenuAlarm.setLayout(panelMenuAlarmLayout);
         panelMenuAlarmLayout.setHorizontalGroup(
             panelMenuAlarmLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 790, Short.MAX_VALUE)
+            .addGroup(panelMenuAlarmLayout.createSequentialGroup()
+                .addGap(71, 71, 71)
+                .addComponent(jLabel5)
+                .addContainerGap(679, Short.MAX_VALUE))
         );
         panelMenuAlarmLayout.setVerticalGroup(
             panelMenuAlarmLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 620, Short.MAX_VALUE)
+            .addGroup(panelMenuAlarmLayout.createSequentialGroup()
+                .addGap(45, 45, 45)
+                .addComponent(jLabel5)
+                .addContainerGap(559, Short.MAX_VALUE))
         );
 
         panelUtama.add(panelMenuAlarm, "menu_alarm");
@@ -249,6 +394,96 @@ public class Beranda extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnBerandaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnBerandaMouseClicked
+        // TODO add your handling code here:
+        pindahMenu("menu_beranda");
+    }//GEN-LAST:event_btnBerandaMouseClicked
+
+    private void btnPCMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnPCMouseClicked
+        // TODO add your handling code here:
+        pindahMenu("menu_pc");
+    }//GEN-LAST:event_btnPCMouseClicked
+
+    private void btnPelangganMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnPelangganMouseClicked
+        // TODO add your handling code here:
+        pindahMenu("menu_pelanggan");
+    }//GEN-LAST:event_btnPelangganMouseClicked
+
+    private void btnTransaksiMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnTransaksiMouseClicked
+        // TODO add your handling code here:
+        pindahMenu("menu_transaksi");
+    }//GEN-LAST:event_btnTransaksiMouseClicked
+
+    private void btnAlarmMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAlarmMouseClicked
+        // TODO add your handling code here:
+        pindahMenu("menu_alarm");
+    }//GEN-LAST:event_btnAlarmMouseClicked
+
+    private void btnBerandaMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnBerandaMouseEntered
+        // TODO add your handling code here:
+        btnBeranda.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/btn_beranda_on.png")));
+        // Repaint memastikan gambar berubah instan tanpa jeda
+        btnBeranda.repaint();
+    }//GEN-LAST:event_btnBerandaMouseEntered
+
+    private void btnBerandaMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnBerandaMouseExited
+        // TODO add your handling code here:
+        btnBeranda.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/btn_beranda_off.png")));
+        btnBeranda.repaint();
+    }//GEN-LAST:event_btnBerandaMouseExited
+
+    private void btnPCMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnPCMouseEntered
+        // TODO add your handling code here:
+        btnPC.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/btn_pc_on.png")));
+        // Repaint memastikan gambar berubah instan tanpa jeda
+        btnPC.repaint();
+    }//GEN-LAST:event_btnPCMouseEntered
+
+    private void btnPCMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnPCMouseExited
+        // TODO add your handling code here:
+        btnPC.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/btn_pc_off.png")));
+        btnPC.repaint();
+    }//GEN-LAST:event_btnPCMouseExited
+
+    private void btnPelangganMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnPelangganMouseEntered
+        // TODO add your handling code here:
+        btnPelanggan.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/btn_pelanggan_on.png")));
+        // Repaint memastikan gambar berubah instan tanpa jeda
+        btnPelanggan.repaint();
+    }//GEN-LAST:event_btnPelangganMouseEntered
+
+    private void btnPelangganMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnPelangganMouseExited
+        // TODO add your handling code here:
+        btnPelanggan.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/btn_pelanggan_off.png")));
+        btnPelanggan.repaint();
+    }//GEN-LAST:event_btnPelangganMouseExited
+
+    private void btnTransaksiMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnTransaksiMouseEntered
+        // TODO add your handling code here:
+        btnTransaksi.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/btn_transaksi_on.png")));
+        // Repaint memastikan gambar berubah instan tanpa jeda
+        btnTransaksi.repaint();
+    }//GEN-LAST:event_btnTransaksiMouseEntered
+
+    private void btnTransaksiMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnTransaksiMouseExited
+        // TODO add your handling code here:
+        btnTransaksi.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/btn_transaksi_off.png")));
+        btnTransaksi.repaint();
+    }//GEN-LAST:event_btnTransaksiMouseExited
+
+    private void btnAlarmMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAlarmMouseEntered
+        // TODO add your handling code here:
+        btnAlarm.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/btn_alarm_on.png")));
+        // Repaint memastikan gambar berubah instan tanpa jeda
+        btnAlarm.repaint();
+    }//GEN-LAST:event_btnAlarmMouseEntered
+
+    private void btnAlarmMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAlarmMouseExited
+        // TODO add your handling code here:
+        btnAlarm.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/btn_alarm_off.png")));
+        btnAlarm.repaint();
+    }//GEN-LAST:event_btnAlarmMouseExited
 
     /**
      * @param args the command line arguments
@@ -286,16 +521,24 @@ public class Beranda extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel btnAlarm;
     private javax.swing.JLabel btnBeranda;
-    private javax.swing.JLabel btnBeranda1;
-    private javax.swing.JLabel btnBeranda2;
-    private javax.swing.JLabel btnBeranda3;
-    private javax.swing.JLabel btnBeranda4;
-    private javax.swing.JLabel btnBeranda5;
     private javax.swing.JLabel btnBeranda6;
-    private javax.swing.JLabel btnBeranda7;
     private javax.swing.JLabel btnBeranda8;
+    private javax.swing.JLabel btnLogout;
+    private javax.swing.JLabel btnPC;
+    private javax.swing.JLabel btnPelanggan;
+    private javax.swing.JLabel btnTransaksi;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel lblAlamat;
     private javax.swing.JLabel lblBackground;
+    private javax.swing.JLabel lblTanggal;
+    private javax.swing.JLabel logo;
     private javax.swing.JPanel panelHeader;
     private javax.swing.JPanel panelKiri;
     private javax.swing.JPanel panelMenuAlarm;
