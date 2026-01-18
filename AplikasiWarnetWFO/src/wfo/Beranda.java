@@ -5,6 +5,8 @@
 package wfo;
 
 import java.awt.CardLayout;
+import java.awt.Image;
+import javax.swing.ImageIcon;
 
 /**
  *
@@ -34,9 +36,23 @@ public class Beranda extends javax.swing.JFrame {
         // Alpha 0-255 (makin kecil makin transparan)   
         panelKiri.setBackground(new java.awt.Color(33, 33, 33, 200));        // Hitam transparan
 
+        // Menambahkan waktu di panel Atas
         java.time.LocalDate tgl = java.time.LocalDate.now();
         java.time.format.DateTimeFormatter format = java.time.format.DateTimeFormatter.ofPattern("dd MMM yyyy");
         lblTanggal.setText(tgl.format(format));
+        
+        // Menghilangkan background putih pada JTextArea
+        jTextArea1.setBackground(new java.awt.Color(0, 0, 0, 0)); 
+
+        // Menghilangkan background dan border pada JScrollPane (wadahnya)
+        paneText.setOpaque(false);
+        paneText.getViewport().setOpaque(false);
+        paneText.setBorder(null);
+        paneText.setViewportBorder(null);
+        
+        // Atur skala/size
+        aturSkala(instagramlogo, "/assets/instagram.png", 20, 20);
+        aturSkala(anime, "/assets/kiriya aoi.png", 395, 533);
     }
     
     private void pindahMenu(String namaKartu) {
@@ -44,6 +60,13 @@ public class Beranda extends javax.swing.JFrame {
         card.show(panelUtama, namaKartu);
         panelUtama.revalidate();
         panelUtama.repaint();
+    }
+    
+    //atur size gambar jLabel
+    private void aturSkala(javax.swing.JLabel label, String path, int w, int h) {
+        ImageIcon icon = new ImageIcon(getClass().getResource(path));
+        Image img = icon.getImage().getScaledInstance(w, h, Image.SCALE_SMOOTH);
+        label.setIcon(new ImageIcon(img));
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -68,7 +91,11 @@ public class Beranda extends javax.swing.JFrame {
         btnLogout = new javax.swing.JLabel();
         panelUtama = new javax.swing.JPanel();
         panelMenuBeranda = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
+        instagramlogo = new javax.swing.JLabel();
+        lblWelcome = new javax.swing.JLabel();
+        paneText = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
+        anime = new javax.swing.JLabel();
         panelMenuPC = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         panelMenuPelanggan = new javax.swing.JPanel();
@@ -98,6 +125,8 @@ public class Beranda extends javax.swing.JFrame {
 
         lblTanggal.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         lblTanggal.setForeground(new java.awt.Color(255, 255, 255));
+        lblTanggal.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblTanggal.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
 
         lblAlamat.setFont(new java.awt.Font("Tw Cen MT", 0, 18)); // NOI18N
         lblAlamat.setForeground(new java.awt.Color(255, 255, 255));
@@ -114,22 +143,24 @@ public class Beranda extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelHeaderLayout.createSequentialGroup()
                 .addContainerGap(258, Short.MAX_VALUE)
                 .addComponent(lblAlamat)
-                .addGap(147, 147, 147)
-                .addComponent(jLabel6)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(lblTanggal, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGap(175, 175, 175)
+                .addGroup(panelHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel6)
+                    .addComponent(lblTanggal, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(29, 29, 29))
         );
         panelHeaderLayout.setVerticalGroup(
             panelHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelHeaderLayout.createSequentialGroup()
-                .addContainerGap(33, Short.MAX_VALUE)
-                .addGroup(panelHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(lblTanggal, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(panelHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(lblAlamat)
-                        .addComponent(jLabel6)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lblAlamat)
                 .addGap(23, 23, 23))
+            .addGroup(panelHeaderLayout.createSequentialGroup()
+                .addGap(15, 15, 15)
+                .addComponent(jLabel6)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblTanggal, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(15, Short.MAX_VALUE))
         );
 
         getContentPane().add(panelHeader, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1000, 80));
@@ -226,7 +257,7 @@ public class Beranda extends javax.swing.JFrame {
                     .addComponent(btnPC)
                     .addComponent(btnPelanggan)
                     .addComponent(btnTransaksi))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(16, Short.MAX_VALUE))
         );
         panelKiriLayout.setVerticalGroup(
             panelKiriLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -252,26 +283,31 @@ public class Beranda extends javax.swing.JFrame {
         panelUtama.setLayout(new java.awt.CardLayout());
 
         panelMenuBeranda.setBackground(new java.awt.Color(51, 51, 51));
+        panelMenuBeranda.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setText("SELAMAT DATANG!!");
+        instagramlogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/instagram.png"))); // NOI18N
+        panelMenuBeranda.add(instagramlogo, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 310, 20, 20));
 
-        javax.swing.GroupLayout panelMenuBerandaLayout = new javax.swing.GroupLayout(panelMenuBeranda);
-        panelMenuBeranda.setLayout(panelMenuBerandaLayout);
-        panelMenuBerandaLayout.setHorizontalGroup(
-            panelMenuBerandaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelMenuBerandaLayout.createSequentialGroup()
-                .addGap(58, 58, 58)
-                .addComponent(jLabel1)
-                .addContainerGap(623, Short.MAX_VALUE))
-        );
-        panelMenuBerandaLayout.setVerticalGroup(
-            panelMenuBerandaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelMenuBerandaLayout.createSequentialGroup()
-                .addGap(53, 53, 53)
-                .addComponent(jLabel1)
-                .addContainerGap(551, Short.MAX_VALUE))
-        );
+        lblWelcome.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        lblWelcome.setForeground(new java.awt.Color(255, 255, 255));
+        lblWelcome.setText("SELAMAT DATANG!!");
+        panelMenuBeranda.add(lblWelcome, new org.netbeans.lib.awtextra.AbsoluteConstraints(66, 53, -1, -1));
+
+        jTextArea1.setEditable(false);
+        jTextArea1.setBackground(new java.awt.Color(0, 0, 0));
+        jTextArea1.setColumns(20);
+        jTextArea1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jTextArea1.setForeground(new java.awt.Color(153, 153, 153));
+        jTextArea1.setLineWrap(true);
+        jTextArea1.setRows(5);
+        jTextArea1.setText("Di sini menyediakan penyewaan PC dengan harga yang terjangkau se-Banjarmasin.\n\nMau :\n- Ngegame\n- Internetan\n- Nugas\n- Ngetik\ndan lain-lain.\n\nWFO tempatnya. Yuk ramaikan keseruanmu di sosial media, dan tag\n        @WarnetFO\n\nKami usahakan memberikan pelayanan yang terbaik. Anda sopan kami senang.\nTerima kasih\n");
+        jTextArea1.setWrapStyleWord(true);
+        jTextArea1.setFocusable(false);
+        jTextArea1.setOpaque(false);
+        paneText.setViewportView(jTextArea1);
+
+        panelMenuBeranda.add(paneText, new org.netbeans.lib.awtextra.AbsoluteConstraints(58, 103, 651, 348));
+        panelMenuBeranda.add(anime, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 90, 395, 533));
 
         panelUtama.add(panelMenuBeranda, "menu_beranda");
 
@@ -521,6 +557,7 @@ public class Beranda extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel anime;
     private javax.swing.JLabel btnAlarm;
     private javax.swing.JLabel btnBeranda;
     private javax.swing.JLabel btnBeranda6;
@@ -529,16 +566,19 @@ public class Beranda extends javax.swing.JFrame {
     private javax.swing.JLabel btnPC;
     private javax.swing.JLabel btnPelanggan;
     private javax.swing.JLabel btnTransaksi;
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel instagramlogo;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JLabel lblAlamat;
     private javax.swing.JLabel lblBackground;
     private javax.swing.JLabel lblTanggal;
+    private javax.swing.JLabel lblWelcome;
     private javax.swing.JLabel logo;
+    private javax.swing.JScrollPane paneText;
     private javax.swing.JPanel panelHeader;
     private javax.swing.JPanel panelKiri;
     private javax.swing.JPanel panelMenuAlarm;
