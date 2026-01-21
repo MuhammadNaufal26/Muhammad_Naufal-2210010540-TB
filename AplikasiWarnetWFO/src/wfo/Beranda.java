@@ -11,13 +11,17 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.JOptionPane; // Untuk notifikasi sederhana
 import javax.swing.RowFilter;
 import javax.swing.table.TableRowSorter;
+import java.text.SimpleDateFormat;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
 
 /**
  *
  * @author Sudirwo
  */
 public class Beranda extends javax.swing.JFrame {
-
+    int nomorUrut = 1; // Variabel untuk menyimpan urutan (mulai dari 1)
     /**
      * Creates new form Beranda
      */
@@ -41,9 +45,23 @@ public class Beranda extends javax.swing.JFrame {
         panelKiri.setBackground(new java.awt.Color(33, 33, 33, 200));        // Hitam transparan
 
         // Menambahkan waktu di panel Atas
+        // 1. Format untuk Jam (Contoh: 20:45:01)
+        java.time.format.DateTimeFormatter formatJam = java.time.format.DateTimeFormatter.ofPattern("HH:mm:ss");
+
+        // 2. Setup Timer untuk update lblTime setiap 1 detik (1000 ms)
+        javax.swing.Timer timerJam = new javax.swing.Timer(1000, e -> {
+            java.time.LocalTime sekarang = java.time.LocalTime.now();
+            lblTime.setText(sekarang.format(formatJam));
+        });
+
+        // 3. Jalankan Timernya
+        timerJam.start();
+        
+        // 4. Date
         java.time.LocalDate tgl = java.time.LocalDate.now();
         java.time.format.DateTimeFormatter format = java.time.format.DateTimeFormatter.ofPattern("dd MMM yyyy");
         lblTanggal.setText(tgl.format(format));
+        
         
         // Menghilangkan background putih pada JTextArea
         jTextArea1.setBackground(new java.awt.Color(0, 0, 0, 0)); 
@@ -60,21 +78,35 @@ public class Beranda extends javax.swing.JFrame {
         
         // Menambah data dummy ke tabel
         DefaultTableModel model = (DefaultTableModel) tabelPC.getModel();
-    
+        DefaultTableModel modelTr = (DefaultTableModel) tabelTr.getModel();
+        
         // BARIS SAKTI: Menghapus semua baris bawaan NetBeans yang kosong
         model.setRowCount(0); 
+        modelTr.setRowCount(0);
 
         // Baru kemudian isi data dummy
-        model.addRow(new Object[]{"PC26001", "Asus", "Intel i5", "10000"});
-        model.addRow(new Object[]{"PC26002", "Acer", "Intel i3", "8000"});
+        model.addRow(new Object[]{"PC26001", "Asus", "Intel i5", "Rp. 10.000"});
+        model.addRow(new Object[]{"PC26002", "Acer", "Intel i3", "Rp. 8.000"});
         
         //tabel pelanggan
         DefaultTableModel modelP = (DefaultTableModel) tabelPL.getModel();
         modelP.setRowCount(0); // Membersihkan baris kosong bawaan
-        modelP.addRow(new Object[]{"PLG001", "Adinata", "Laki-laki", "0812345678", "Jl. Jalan Didu Tamol, Banjarmasin", "adiadita@gmail.com"});
+        modelP.addRow(new Object[]{"PLG001", "Adinata", "Laki-laki", "081234567890", "Jl. Jalan Didu Tamol, Banjarmasin", "adiadita@gmail.com"});
+    
+        //tabel transaksi
+        modelTr.addRow(new Object[]{"TR26010001", "19-Jan-2026", "Adinata", "Asus", "Rp. 10.000", "10:00:00", "12:00:00", "02:00:00", "Rp. 20.000", "081234567890"}); 
+
+        // Set Tanggal Hari Ini ke JDateChooser
+        jdTrTanggal.setDate(new java.util.Date()); 
+        
+        // Transaksi
+        nomorUrut = 2;
+        generateIDOtomatis();
+        
+        
     }
     
-    //*-----------------ini luar constructor
+    //*-----------------ini sdh luar constructor--------------------------------------------------------------
     
     private void pindahMenu(String namaKartu) {
         java.awt.CardLayout card = (java.awt.CardLayout) panelUtama.getLayout();
@@ -89,6 +121,169 @@ public class Beranda extends javax.swing.JFrame {
         Image img = icon.getImage().getScaledInstance(w, h, Image.SCALE_SMOOTH);
         label.setIcon(new ImageIcon(img));
     }
+    
+    // Fungsi ini akan dipanggil oleh Laman Pelanggan
+    public void setDataPelanggan(String nama, String telp) {
+        txtTrNama.setText(nama);
+        txtTrTelpon.setText(telp);
+    }
+
+    // Fungsi ini akan dipanggil oleh Laman PC
+    public void setDataPC(String merek, String tarif) {
+        txtTrMerek.setText(merek);
+        txtTrTarif.setText(tarif);
+    }
+   
+    public void generateIDOtomatis() {
+        // Ambil Tahun (26) dan Bulan (01)
+        String tahunBulan = new java.text.SimpleDateFormat("yyMM").format(new java.util.Date());
+        
+        // Format angka jadi 4 digit (0001)
+        String formatUrut = String.format("%04d", nomorUrut);
+        
+        // Set ke kotak ID
+        txtTrID.setText("TR" + tahunBulan + formatUrut);
+    }
+    
+    private String formatDuaDigit(String teks) {
+            if (teks.length() == 1) {
+                return "0" + teks; // "9" jadi "09"
+            } else if (teks.length() == 0) {
+                return "00"; // Kosong jadi "00"
+            }
+            return teks; // Sudah 2 digit (misal "12") tetap "12"
+        }
+    
+    public void buatSlotAlarmOtomatis(String id, String nama, String pc, String jamSelesai) {
+        // 1. Desain Kotak Slot
+        JPanel slot = new JPanel();
+        int lebarSlot = 345;
+        int tinggiSlot = 220;
+        slot.setPreferredSize(new java.awt.Dimension(lebarSlot, tinggiSlot));
+        slot.setBackground(new java.awt.Color(25, 25, 25));
+        slot.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(100, 100, 100), 2));
+        slot.setLayout(null); 
+
+        // ANTI-GLITCH: Agar tidak mencuri kontrol scroll
+        slot.setFocusable(false);
+
+        // 2. Label & Data
+        JLabel lblID = new JLabel("ID Transaksi            :  " + id);
+        lblID.setForeground(java.awt.Color.WHITE); lblID.setBounds(15, 15, 250, 20);
+        JLabel lblNama = new JLabel("Nama Pelanggan   :  " + nama);
+        lblNama.setForeground(java.awt.Color.WHITE); lblNama.setBounds(15, 45, 250, 20);
+        JLabel lblPC = new JLabel("Merek PC                  :  " + pc);
+        lblPC.setForeground(java.awt.Color.WHITE); lblPC.setBounds(15, 75, 250, 20);
+        JLabel lblJam = new JLabel("Jam Selesai            : " + jamSelesai);
+        lblJam.setForeground(java.awt.Color.WHITE); lblJam.setBounds(15, 105, 200, 20);
+
+        JLabel lblSisa = new JLabel("sisa 00 jam 00 menit 00 detik", javax.swing.SwingConstants.CENTER);
+        lblSisa.setForeground(new java.awt.Color(255, 204, 0));
+        lblSisa.setFont(new java.awt.Font("Segoe UI", 1, 12));
+        lblSisa.setBounds(0, 140, lebarSlot, 25); 
+
+        JButton btnDelete = new JButton("Hapus");
+        btnDelete.setBounds((lebarSlot - 150) / 2, 175, 150, 30);
+        btnDelete.setBackground(new java.awt.Color(140, 0, 155));
+        btnDelete.setForeground(java.awt.Color.WHITE);
+
+        // 3. TIMER
+        javax.swing.Timer timerAlarm = new javax.swing.Timer(1000, e -> {
+            try {
+                java.time.LocalTime sekarang = java.time.LocalTime.now();
+                java.time.LocalTime akhir = java.time.LocalTime.parse(jamSelesai);
+                java.time.Duration durasi = java.time.Duration.between(sekarang, akhir);
+                long detik = durasi.getSeconds();
+                if (detik > 0) {
+                    long h = detik / 3600; long m = (detik % 3600) / 60; long s = detik % 60;
+                    lblSisa.setText(String.format("sisa %02d jam %02d menit %02d detik", h, m, s));
+                } else {
+                    ((javax.swing.Timer)e.getSource()).stop();
+                    lblSisa.setText("WAKTU HABIS!");
+                    lblSisa.setForeground(java.awt.Color.RED);
+                    // Efek Bunyi atau Pop-up bisa ditaruh di sini
+                    javax.swing.JOptionPane.showMessageDialog(null, "Waktu Selesai: " + nama + " (PC: " + pc + ")");
+                }
+            } catch (Exception ex) { }
+        });
+        timerAlarm.start();
+
+        // 4. LOGIKA DELETE
+        btnDelete.addActionListener(e -> {
+            timerAlarm.stop();
+            panelWadahSlot.remove(slot);
+            refreshScroll(); // Panggil fungsi hitung manual
+        });
+
+        // 5. Rakit
+        slot.add(lblID); slot.add(lblNama); slot.add(lblPC); 
+        slot.add(lblJam); slot.add(lblSisa); slot.add(btnDelete);
+        panelWadahSlot.add(slot);
+
+        // 6. Jalankan Formula Scroll Manual
+        refreshScroll();
+
+        // Scroll otomatis ke bawah agar slot baru terlihat
+        javax.swing.SwingUtilities.invokeLater(() -> {
+            jScrollPaneAlarm.getVerticalScrollBar().setValue(jScrollPaneAlarm.getVerticalScrollBar().getMaximum());
+        });
+    }
+    
+    private void refreshScroll() {
+        int jumlahSlot = panelWadahSlot.getComponentCount();
+        int tinggiBingkai = jScrollPaneAlarm.getHeight();
+        if (tinggiBingkai <= 0) tinggiBingkai = 400; // Ukuran default jika belum tampil
+
+        int lebarTetap = 740; // Sesuaikan dengan lebar JScrollPane kamu
+        
+        // Tampilkan ke label jumlah
+        lblHtnSlt.setText("Jumlah : " + jumlahSlot);
+
+        if (jumlahSlot <= 0) {
+            // Jika kosong, set ukuran pas dengan bingkai agar scrollbar hilang
+            panelWadahSlot.setPreferredSize(new java.awt.Dimension(lebarTetap, tinggiBingkai - 10));
+        } else {
+            // MATEMATIKA MANUAL
+            int tinggiSatuSlot = 220; // Tinggi slot baru kamu
+            int gapVertikal = 15;
+            int jumlahBaris = (int) Math.ceil(jumlahSlot / 2.0); // 2 Kolom
+
+            int totalTinggi = (jumlahBaris * tinggiSatuSlot) + ((jumlahBaris + 1) * gapVertikal);
+
+            // Jika tinggi konten masih muat di bingkai, jangan munculkan scrollbar
+            if (totalTinggi < tinggiBingkai) {
+                panelWadahSlot.setPreferredSize(new java.awt.Dimension(lebarTetap, tinggiBingkai - 10));
+            } else {
+                panelWadahSlot.setPreferredSize(new java.awt.Dimension(lebarTetap, totalTinggi + 20));
+            }
+        }
+
+        // Refresh UI secara paksa
+        panelWadahSlot.revalidate();
+        panelWadahSlot.repaint();
+
+        // Update Viewport agar JScrollPane sadar ada perubahan ukuran kertas
+        jScrollPaneAlarm.setViewportView(panelWadahSlot);
+        jScrollPaneAlarm.revalidate();
+         
+    }
+    
+    private String toRupiah(int angka) {
+        java.text.DecimalFormat kursIndonesia = (java.text.DecimalFormat) java.text.DecimalFormat.getCurrencyInstance();
+        java.text.DecimalFormatSymbols formatRp = new java.text.DecimalFormatSymbols();
+
+        formatRp.setCurrencySymbol("Rp. ");
+        formatRp.setMonetaryDecimalSeparator(',');
+        formatRp.setGroupingSeparator('.');
+
+        kursIndonesia.setDecimalFormatSymbols(formatRp);
+
+        // --- TAMBAHKAN BARIS INI ---
+        kursIndonesia.setMaximumFractionDigits(0); // Menghilangkan ,00 di belakang
+
+        return kursIndonesia.format(angka);
+    }
+    //*------------------------------------------------------------------------------------------------
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -103,6 +298,9 @@ public class Beranda extends javax.swing.JFrame {
         lblTanggal = new javax.swing.JLabel();
         lblAlamat = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
+        lblTime = new javax.swing.JLabel();
+        jLabel30 = new javax.swing.JLabel();
+        lblAlamat1 = new javax.swing.JLabel();
         panelKiri = new javax.swing.JPanel();
         btnBeranda = new javax.swing.JLabel();
         btnPC = new javax.swing.JLabel();
@@ -169,17 +367,12 @@ public class Beranda extends javax.swing.JFrame {
         jLabel19 = new javax.swing.JLabel();
         jLabel21 = new javax.swing.JLabel();
         jLabel23 = new javax.swing.JLabel();
-        panelMenuTransaksi3 = new javax.swing.JPanel();
-        jLabel4 = new javax.swing.JLabel();
-        panelMenuAlarm = new javax.swing.JPanel();
-        jLabel5 = new javax.swing.JLabel();
         panelMenuTransaksi = new javax.swing.JPanel();
         jdlTransaksi = new javax.swing.JLabel();
         head2 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
         jLabel20 = new javax.swing.JLabel();
         jLabel22 = new javax.swing.JLabel();
-        txtTrTanggal = new javax.swing.JTextField();
         txtTrDtkMulai = new javax.swing.JTextField();
         btnCetak1 = new javax.swing.JButton();
         btnTrDaftar = new javax.swing.JButton();
@@ -199,11 +392,9 @@ public class Beranda extends javax.swing.JFrame {
         jLabel29 = new javax.swing.JLabel();
         txtTrBiaya = new javax.swing.JTextField();
         txtTrID = new javax.swing.JTextField();
-        jLabel3 = new javax.swing.JLabel();
         btnTrBiaya = new javax.swing.JButton();
         btnTrDurasi = new javax.swing.JButton();
         btnTrJam = new javax.swing.JButton();
-        jLabel30 = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         jButton4 = new javax.swing.JButton();
         jLabel31 = new javax.swing.JLabel();
@@ -233,6 +424,18 @@ public class Beranda extends javax.swing.JFrame {
         jLabel41 = new javax.swing.JLabel();
         jLabel42 = new javax.swing.JLabel();
         jLabel43 = new javax.swing.JLabel();
+        jLabel44 = new javax.swing.JLabel();
+        jdTrTanggal = new com.toedter.calendar.JDateChooser();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        jTextArea2 = new javax.swing.JTextArea();
+        panelMenuAlarm = new javax.swing.JPanel();
+        judulPC1 = new javax.swing.JLabel();
+        head3 = new javax.swing.JLabel();
+        panelListAlarm = new javax.swing.JPanel();
+        jScrollPaneAlarm = new javax.swing.JScrollPane();
+        panelWadahSlot = new javax.swing.JPanel();
+        btnKeTransaksi = new javax.swing.JButton();
+        lblHtnSlt = new javax.swing.JLabel();
         lblBackground = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -263,31 +466,58 @@ public class Beranda extends javax.swing.JFrame {
         jLabel6.setForeground(new java.awt.Color(255, 255, 255));
         jLabel6.setText("Date :");
 
+        lblTime.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lblTime.setForeground(new java.awt.Color(255, 255, 255));
+        lblTime.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblTime.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
+
+        jLabel30.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel30.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel30.setText("Time :");
+
+        lblAlamat1.setFont(new java.awt.Font("Simplified Arabic Fixed", 1, 36)); // NOI18N
+        lblAlamat1.setForeground(new java.awt.Color(255, 255, 255));
+        lblAlamat1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblAlamat1.setText("WARNET FAL OPAL");
+
         javax.swing.GroupLayout panelHeaderLayout = new javax.swing.GroupLayout(panelHeader);
         panelHeader.setLayout(panelHeaderLayout);
         panelHeaderLayout.setHorizontalGroup(
             panelHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelHeaderLayout.createSequentialGroup()
-                .addContainerGap(285, Short.MAX_VALUE)
-                .addComponent(lblAlamat)
-                .addGap(148, 148, 148)
+                .addContainerGap(281, Short.MAX_VALUE)
+                .addGroup(panelHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(lblAlamat1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblAlamat, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(99, 99, 99)
                 .addGroup(panelHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel6)
-                    .addComponent(lblTanggal, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelHeaderLayout.createSequentialGroup()
+                        .addComponent(jLabel6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(lblTanggal, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelHeaderLayout.createSequentialGroup()
+                        .addComponent(jLabel30)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(lblTime, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(29, 29, 29))
         );
         panelHeaderLayout.setVerticalGroup(
             panelHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelHeaderLayout.createSequentialGroup()
-                .addGap(15, 15, 15)
-                .addComponent(jLabel6)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblTanggal, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(11, 11, 11)
+                .addGroup(panelHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblAlamat1)
+                    .addGroup(panelHeaderLayout.createSequentialGroup()
+                        .addGroup(panelHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblTime, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel30))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(panelHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(panelHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel6)
+                                .addComponent(lblAlamat))
+                            .addComponent(lblTanggal, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(15, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelHeaderLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(lblAlamat)
-                .addGap(26, 26, 26))
         );
 
         getContentPane().add(panelHeader, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1000, 80));
@@ -366,6 +596,11 @@ public class Beranda extends javax.swing.JFrame {
 
         btnLogout.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/btn_logout_off.png"))); // NOI18N
         btnLogout.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnLogout.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnLogoutMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout panelKiriLayout = new javax.swing.GroupLayout(panelKiri);
         panelKiri.setLayout(panelKiriLayout);
@@ -424,7 +659,7 @@ public class Beranda extends javax.swing.JFrame {
         jTextArea1.setBackground(new java.awt.Color(0, 0, 0));
         jTextArea1.setColumns(20);
         jTextArea1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jTextArea1.setForeground(new java.awt.Color(153, 153, 153));
+        jTextArea1.setForeground(new java.awt.Color(204, 204, 204));
         jTextArea1.setLineWrap(true);
         jTextArea1.setRows(5);
         jTextArea1.setText("Di sini menyediakan penyewaan PC dengan harga yang terjangkau se-Banjarmasin.\n\nMau :\n- Ngegame\n- Internetan\n- Nugas\n- Ngetik\ndan lain-lain.\n\nWFO tempatnya. Yuk ramaikan keseruanmu di sosial media, dan tag\n        @WarnetFO\n\nKami usahakan memberikan pelayanan yang terbaik. Anda sopan kami senang.\nTerima kasih\n");
@@ -433,7 +668,7 @@ public class Beranda extends javax.swing.JFrame {
         jTextArea1.setOpaque(false);
         paneText.setViewportView(jTextArea1);
 
-        panelMenuBeranda.add(paneText, new org.netbeans.lib.awtextra.AbsoluteConstraints(58, 103, 651, 348));
+        panelMenuBeranda.add(paneText, new org.netbeans.lib.awtextra.AbsoluteConstraints(58, 101, 651, 350));
         panelMenuBeranda.add(anime, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 90, 395, 533));
 
         panelUtama.add(panelMenuBeranda, "menu_beranda");
@@ -839,54 +1074,6 @@ public class Beranda extends javax.swing.JFrame {
 
         panelUtama.add(panelMenuPelanggan, "menu_pelanggan");
 
-        panelMenuTransaksi3.setBackground(new java.awt.Color(51, 51, 51));
-
-        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel4.setText("TRANSAKSI");
-
-        javax.swing.GroupLayout panelMenuTransaksi3Layout = new javax.swing.GroupLayout(panelMenuTransaksi3);
-        panelMenuTransaksi3.setLayout(panelMenuTransaksi3Layout);
-        panelMenuTransaksi3Layout.setHorizontalGroup(
-            panelMenuTransaksi3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelMenuTransaksi3Layout.createSequentialGroup()
-                .addGap(31, 31, 31)
-                .addComponent(jLabel4)
-                .addContainerGap(698, Short.MAX_VALUE))
-        );
-        panelMenuTransaksi3Layout.setVerticalGroup(
-            panelMenuTransaksi3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelMenuTransaksi3Layout.createSequentialGroup()
-                .addGap(32, 32, 32)
-                .addComponent(jLabel4)
-                .addContainerGap(572, Short.MAX_VALUE))
-        );
-
-        panelUtama.add(panelMenuTransaksi3, "menu_transaksi3");
-
-        panelMenuAlarm.setBackground(new java.awt.Color(51, 51, 51));
-
-        jLabel5.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel5.setText("ALARM");
-
-        javax.swing.GroupLayout panelMenuAlarmLayout = new javax.swing.GroupLayout(panelMenuAlarm);
-        panelMenuAlarm.setLayout(panelMenuAlarmLayout);
-        panelMenuAlarmLayout.setHorizontalGroup(
-            panelMenuAlarmLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelMenuAlarmLayout.createSequentialGroup()
-                .addGap(71, 71, 71)
-                .addComponent(jLabel5)
-                .addContainerGap(679, Short.MAX_VALUE))
-        );
-        panelMenuAlarmLayout.setVerticalGroup(
-            panelMenuAlarmLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelMenuAlarmLayout.createSequentialGroup()
-                .addGap(45, 45, 45)
-                .addComponent(jLabel5)
-                .addContainerGap(559, Short.MAX_VALUE))
-        );
-
-        panelUtama.add(panelMenuAlarm, "menu_alarm");
-
         panelMenuTransaksi.setBackground(new java.awt.Color(51, 51, 51));
         panelMenuTransaksi.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -917,13 +1104,7 @@ public class Beranda extends javax.swing.JFrame {
         jLabel22.setText("Jam Selesai :");
         panelMenuTransaksi.add(jLabel22, new org.netbeans.lib.awtextra.AbsoluteConstraints(-40, 160, 150, -1));
 
-        txtTrTanggal.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtTrTanggalActionPerformed(evt);
-            }
-        });
-        panelMenuTransaksi.add(txtTrTanggal, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 100, 100, -1));
-
+        txtTrDtkMulai.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtTrDtkMulai.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtTrDtkMulaiActionPerformed(evt);
@@ -991,15 +1172,23 @@ public class Beranda extends javax.swing.JFrame {
 
         tabelTr.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null}
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "ID", "Tanggal", "Nama", "Merek PC", "Tarif/jam", "Jam Mulai", "Jam Selesai", "Durasi", "Biaya"
+                "ID", "Tanggal", "Nama", "Merek PC", "Tarif/jam", "Jam Mulai", "Jam Selesai", "Durasi", "Biaya", "No. Telp"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                true, true, true, true, true, true, true, true, true, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         tabelTr.setFillsViewportHeight(true);
         tabelTr.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -1007,6 +1196,11 @@ public class Beranda extends javax.swing.JFrame {
             }
         });
         jScrollPane3.setViewportView(tabelTr);
+        if (tabelTr.getColumnModel().getColumnCount() > 0) {
+            tabelTr.getColumnModel().getColumn(9).setMinWidth(0);
+            tabelTr.getColumnModel().getColumn(9).setPreferredWidth(0);
+            tabelTr.getColumnModel().getColumn(9).setMaxWidth(0);
+        }
 
         jPanel3.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 40, 620, 150));
 
@@ -1048,9 +1242,9 @@ public class Beranda extends javax.swing.JFrame {
         btnTrBatal.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/batal.png"))); // NOI18N
         btnTrBatal.setText("Batal");
         btnTrBatal.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        btnTrBatal.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnTrBatalMouseClicked(evt);
+        btnTrBatal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTrBatalActionPerformed(evt);
             }
         });
         panelMenuTransaksi.add(btnTrBatal, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 231, 150, 20));
@@ -1077,6 +1271,7 @@ public class Beranda extends javax.swing.JFrame {
         panelMenuTransaksi.add(jLabel29, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 170, 60, -1));
         panelMenuTransaksi.add(txtTrBiaya, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 170, 170, -1));
 
+        txtTrID.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtTrID.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtTrIDActionPerformed(evt);
@@ -1084,17 +1279,14 @@ public class Beranda extends javax.swing.JFrame {
         });
         panelMenuTransaksi.add(txtTrID, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 140, 170, -1));
 
-        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/transaksi.png"))); // NOI18N
-        panelMenuTransaksi.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(660, 90, -1, -1));
-
         btnTrBiaya.setBackground(new java.awt.Color(255, 153, 0));
         btnTrBiaya.setFont(new java.awt.Font("Comic Sans MS", 1, 12)); // NOI18N
         btnTrBiaya.setForeground(new java.awt.Color(255, 255, 255));
         btnTrBiaya.setText("Biaya");
         btnTrBiaya.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        btnTrBiaya.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnTrBiayaMouseClicked(evt);
+        btnTrBiaya.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTrBiayaActionPerformed(evt);
             }
         });
         panelMenuTransaksi.add(btnTrBiaya, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 190, 70, -1));
@@ -1104,9 +1296,9 @@ public class Beranda extends javax.swing.JFrame {
         btnTrDurasi.setForeground(new java.awt.Color(255, 255, 255));
         btnTrDurasi.setText("Durasi");
         btnTrDurasi.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        btnTrDurasi.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnTrDurasiMouseClicked(evt);
+        btnTrDurasi.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTrDurasiActionPerformed(evt);
             }
         });
         panelMenuTransaksi.add(btnTrDurasi, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 160, 70, -1));
@@ -1116,17 +1308,12 @@ public class Beranda extends javax.swing.JFrame {
         btnTrJam.setForeground(new java.awt.Color(255, 255, 255));
         btnTrJam.setText("Jam");
         btnTrJam.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        btnTrJam.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnTrJamMouseClicked(evt);
+        btnTrJam.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTrJamActionPerformed(evt);
             }
         });
         panelMenuTransaksi.add(btnTrJam, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 130, 70, -1));
-
-        jLabel30.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel30.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel30.setText("Hitung by:");
-        panelMenuTransaksi.add(jLabel30, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 110, 70, -1));
 
         jPanel4.setBackground(new java.awt.Color(25, 25, 25));
         jPanel4.setForeground(new java.awt.Color(255, 255, 255));
@@ -1136,28 +1323,21 @@ public class Beranda extends javax.swing.JFrame {
         jButton4.setForeground(new java.awt.Color(255, 255, 255));
         jButton4.setText("Pilih Pelanggan");
         jButton4.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
 
         jLabel31.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
         jLabel31.setForeground(new java.awt.Color(255, 255, 255));
         jLabel31.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel31.setText("Nama  :");
 
-        txtTrNama.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtTrNamaActionPerformed(evt);
-            }
-        });
-
         jLabel32.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
         jLabel32.setForeground(new java.awt.Color(255, 255, 255));
         jLabel32.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel32.setText("Telpon  :");
-
-        txtTrTelpon.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtTrTelponActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -1193,7 +1373,7 @@ public class Beranda extends javax.swing.JFrame {
                 .addContainerGap(15, Short.MAX_VALUE))
         );
 
-        panelMenuTransaksi.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 10, 180, 110));
+        panelMenuTransaksi.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 10, 180, 110));
 
         jPanel5.setBackground(new java.awt.Color(25, 25, 25));
         jPanel5.setForeground(new java.awt.Color(255, 255, 255));
@@ -1203,19 +1383,13 @@ public class Beranda extends javax.swing.JFrame {
         jButton5.setForeground(new java.awt.Color(255, 255, 255));
         jButton5.setText("Pilih PC");
         jButton5.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
-
-        txtTrTarif.setText("10000");
-        txtTrTarif.addActionListener(new java.awt.event.ActionListener() {
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtTrTarifActionPerformed(evt);
+                jButton5ActionPerformed(evt);
             }
         });
 
-        txtTrMerek.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtTrMerekActionPerformed(evt);
-            }
-        });
+        txtTrTarif.setHorizontalAlignment(javax.swing.JTextField.CENTER);
 
         jLabel34.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
         jLabel34.setForeground(new java.awt.Color(255, 255, 255));
@@ -1261,8 +1435,9 @@ public class Beranda extends javax.swing.JFrame {
                 .addContainerGap(15, Short.MAX_VALUE))
         );
 
-        panelMenuTransaksi.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 10, -1, 110));
+        panelMenuTransaksi.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 10, -1, 110));
 
+        txtTrJamMulai.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtTrJamMulai.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtTrJamMulaiActionPerformed(evt);
@@ -1275,6 +1450,7 @@ public class Beranda extends javax.swing.JFrame {
         });
         panelMenuTransaksi.add(txtTrJamMulai, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 130, 30, -1));
 
+        txtTrMntMulai.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtTrMntMulai.setToolTipText("Maksimal 59");
         txtTrMntMulai.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1288,6 +1464,7 @@ public class Beranda extends javax.swing.JFrame {
         });
         panelMenuTransaksi.add(txtTrMntMulai, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 130, 30, -1));
 
+        txtTrJamSelesai.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtTrJamSelesai.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtTrJamSelesaiActionPerformed(evt);
@@ -1300,6 +1477,7 @@ public class Beranda extends javax.swing.JFrame {
         });
         panelMenuTransaksi.add(txtTrJamSelesai, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 160, 30, -1));
 
+        txtTrMntSelesai.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtTrMntSelesai.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtTrMntSelesaiActionPerformed(evt);
@@ -1312,6 +1490,7 @@ public class Beranda extends javax.swing.JFrame {
         });
         panelMenuTransaksi.add(txtTrMntSelesai, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 160, 30, -1));
 
+        txtTrDtkSelesai.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtTrDtkSelesai.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtTrDtkSelesaiActionPerformed(evt);
@@ -1360,13 +1539,15 @@ public class Beranda extends javax.swing.JFrame {
         jLabel40.setText("Dtk");
         panelMenuTransaksi.add(jLabel40, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 130, 30, -1));
 
+        txtTrJamDurasi.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtTrJamDurasi.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtTrJamDurasiActionPerformed(evt);
             }
         });
-        panelMenuTransaksi.add(txtTrJamDurasi, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 190, 30, -1));
+        panelMenuTransaksi.add(txtTrJamDurasi, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 190, 30, -1));
 
+        txtTrMntDurasi.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtTrMntDurasi.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtTrMntDurasiActionPerformed(evt);
@@ -1377,8 +1558,9 @@ public class Beranda extends javax.swing.JFrame {
                 txtTrMntDurasiKeyTyped(evt);
             }
         });
-        panelMenuTransaksi.add(txtTrMntDurasi, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 190, 30, -1));
+        panelMenuTransaksi.add(txtTrMntDurasi, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 190, 30, -1));
 
+        txtTrDtkDurasi.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtTrDtkDurasi.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtTrDtkDurasiActionPerformed(evt);
@@ -1389,27 +1571,96 @@ public class Beranda extends javax.swing.JFrame {
                 txtTrDtkDurasiKeyTyped(evt);
             }
         });
-        panelMenuTransaksi.add(txtTrDtkDurasi, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 190, 30, -1));
+        panelMenuTransaksi.add(txtTrDtkDurasi, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 190, 30, -1));
 
         jLabel41.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
         jLabel41.setForeground(new java.awt.Color(255, 255, 255));
         jLabel41.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel41.setText("Jam");
-        panelMenuTransaksi.add(jLabel41, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 190, 30, -1));
+        panelMenuTransaksi.add(jLabel41, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 190, 30, -1));
 
         jLabel42.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
         jLabel42.setForeground(new java.awt.Color(255, 255, 255));
         jLabel42.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel42.setText("Mnt");
-        panelMenuTransaksi.add(jLabel42, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 190, 30, -1));
+        panelMenuTransaksi.add(jLabel42, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 190, 30, -1));
 
         jLabel43.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
         jLabel43.setForeground(new java.awt.Color(255, 255, 255));
         jLabel43.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel43.setText("Dtk");
-        panelMenuTransaksi.add(jLabel43, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 190, 30, -1));
+        panelMenuTransaksi.add(jLabel43, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 190, 30, -1));
+
+        jLabel44.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel44.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/transaksi.png"))); // NOI18N
+        panelMenuTransaksi.add(jLabel44, new org.netbeans.lib.awtextra.AbsoluteConstraints(720, 160, 30, -1));
+        panelMenuTransaksi.add(jdTrTanggal, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 100, 210, -1));
+
+        jScrollPane4.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        jScrollPane4.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+
+        jTextArea2.setBackground(new java.awt.Color(255, 204, 0));
+        jTextArea2.setColumns(20);
+        jTextArea2.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jTextArea2.setForeground(new java.awt.Color(255, 255, 255));
+        jTextArea2.setLineWrap(true);
+        jTextArea2.setRows(6);
+        jTextArea2.setWrapStyleWord(true);
+        jTextArea2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        jScrollPane4.setViewportView(jTextArea2);
+
+        panelMenuTransaksi.add(jScrollPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(720, 140, 30, 60));
 
         panelUtama.add(panelMenuTransaksi, "menu_transaksi");
+
+        panelMenuAlarm.setBackground(new java.awt.Color(51, 51, 51));
+        panelMenuAlarm.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        judulPC1.setFont(new java.awt.Font("Comic Sans MS", 1, 18)); // NOI18N
+        judulPC1.setForeground(new java.awt.Color(255, 255, 255));
+        judulPC1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        judulPC1.setText("ALARM");
+        panelMenuAlarm.add(judulPC1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1, 20, 200, 50));
+
+        head3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/head.png"))); // NOI18N
+        panelMenuAlarm.add(head3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 20, -1, 50));
+
+        panelListAlarm.setBackground(new java.awt.Color(21, 21, 21));
+        panelListAlarm.setPreferredSize(new java.awt.Dimension(740, 420));
+        panelListAlarm.setLayout(new java.awt.BorderLayout());
+
+        jScrollPaneAlarm.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        jScrollPaneAlarm.setMaximumSize(new java.awt.Dimension(740, 32767));
+        jScrollPaneAlarm.setPreferredSize(new java.awt.Dimension(740, 100));
+        jScrollPaneAlarm.setViewportView(panelWadahSlot);
+
+        panelWadahSlot.setBackground(new java.awt.Color(30, 30, 30));
+        panelWadahSlot.setMaximumSize(new java.awt.Dimension(740, 32767));
+        panelWadahSlot.setPreferredSize(new java.awt.Dimension(740, 420));
+        panelWadahSlot.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 10, 10));
+        jScrollPaneAlarm.setViewportView(panelWadahSlot);
+
+        panelListAlarm.add(jScrollPaneAlarm, java.awt.BorderLayout.CENTER);
+
+        panelMenuAlarm.add(panelListAlarm, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 80, 740, 420));
+
+        btnKeTransaksi.setBackground(new java.awt.Color(255, 153, 0));
+        btnKeTransaksi.setFont(new java.awt.Font("Comic Sans MS", 0, 14)); // NOI18N
+        btnKeTransaksi.setForeground(new java.awt.Color(255, 255, 255));
+        btnKeTransaksi.setText("+ Alarm");
+        btnKeTransaksi.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        btnKeTransaksi.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnKeTransaksiActionPerformed(evt);
+            }
+        });
+        panelMenuAlarm.add(btnKeTransaksi, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 40, 140, -1));
+
+        lblHtnSlt.setForeground(new java.awt.Color(255, 255, 255));
+        lblHtnSlt.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        panelMenuAlarm.add(lblHtnSlt, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 10, 140, 20));
+
+        panelUtama.add(panelMenuAlarm, "menu_alarm");
 
         getContentPane().add(panelUtama, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 80, 790, 620));
         getContentPane().add(lblBackground, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1000, 700));
@@ -1558,11 +1809,24 @@ public class Beranda extends javax.swing.JFrame {
         } else {
             // Jika minimal 1/4 diisi, data masuk ke tabel
             DefaultTableModel model = (DefaultTableModel) tabelPC.getModel();
+            // --- PROSES RUPIAH ---
+            String tarifInput = txtTarif.getText();
+            String tarifTampilan;
+
+            try {
+                // Cek apakah tarif diisi angka. Jika iya, format ke Rupiah
+                int angkaTarif = Integer.parseInt(tarifInput);
+                tarifTampilan = toRupiah(angkaTarif); 
+            } catch (Exception e) {
+                // Jika tarif kosong atau bukan angka, biarkan sesuai input user
+                tarifTampilan = tarifInput;
+            }
+
             model.addRow(new Object[]{
                 txtID.getText(), 
                 txtMerek.getText(), 
                 txtProcessor.getText(), 
-                txtTarif.getText()
+                tarifTampilan // <-- Sekarang tampilannya cantik "Rp. 5.000"
             });
 
             JOptionPane.showMessageDialog(this, "Data PC Berhasil Didaftarkan!", "Sukses", JOptionPane.INFORMATION_MESSAGE);
@@ -1619,26 +1883,22 @@ public class Beranda extends javax.swing.JFrame {
 
     private void btnPilihMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnPilihMouseClicked
         // TODO add your handling code here:
-        /*if (txtID.getText().equals("")) {
-            JOptionPane.showMessageDialog(null, "Pilih data PC terlebih dahulu!");
+        int row = tabelPC.getSelectedRow(); // Pastikan nama tabel PC kamu benar
+        if (row != -1) {
+            // Ambil data Merek dan Tarif dari tabel PC
+            String merek = tabelPC.getValueAt(row, 1).toString();
+            String tarif = tabelPC.getValueAt(row, 3).toString();
+
+            // Panggil fungsi yang sudah kamu buat tadi
+            setDataPC(merek, tarif);
+
+            // Pindah ke tampilan transaksi
+            java.awt.CardLayout cl = (java.awt.CardLayout) panelUtama.getLayout();
+            cl.show(panelUtama, "menu_transaksi"); 
+
         } else {
-            // 1. Ambil data dari textfield
-            String idTerpilih = txtID.getText();
-            String tarifTerpilih = txtTarif.getText();
-
-            // 2. Set ke Label di Laman Transaksi (Asumsi nama variabel label di Laman Transaksi)
-            lblIDTransaksi.setText(idTerpilih);
-            lblTarifTransaksi.setText(tarifTerpilih);
-
-            // 3. Pindah ke Laman Transaksi
-            java.awt.CardLayout card = (java.awt.CardLayout) panelUtama.getLayout();
-            card.show(panelUtama, "kartu_transaksi");
-
-            // Jangan lupa reset tombol sidebar agar sesuai menu yang aktif
-            resetTombol();
-            btnTransaksi.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/btn_transaksi_on.png")));
+            JOptionPane.showMessageDialog(this, "Silakan pilih PC dari tabel dulu!");
         }
-        */
     }//GEN-LAST:event_btnPilihMouseClicked
 
     private void txtTarifKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTarifKeyTyped
@@ -1755,6 +2015,21 @@ public class Beranda extends javax.swing.JFrame {
 
     private void btnPlPilihMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnPlPilihMouseClicked
         // TODO add your handling code here:
+        int row = tabelPL.getSelectedRow();
+        if (row != -1) {
+            String nama = tabelPL.getValueAt(row, 1).toString();
+            String telp = tabelPL.getValueAt(row, 3).toString();
+
+            // 1. Karena satu file, panggil fungsinya langsung!
+            setDataPelanggan(nama, telp);
+
+            // 2. Pindah tampilan CardLayout
+            java.awt.CardLayout cl = (java.awt.CardLayout) panelUtama.getLayout();
+            cl.show(panelUtama, "menu_transaksi"); 
+
+        } else {
+            JOptionPane.showMessageDialog(this, "Silakan pilih pelanggan dari tabel!");
+        }
     }//GEN-LAST:event_btnPlPilihMouseClicked
 
     private void btnPlBatalMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnPlBatalMouseClicked
@@ -1812,16 +2087,79 @@ public class Beranda extends javax.swing.JFrame {
         sorter.setRowFilter(RowFilter.regexFilter("(?i)" + txtPCCari.getText()));
     }//GEN-LAST:event_txtPCCariKeyReleased
 
-    private void txtTrTanggalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTrTanggalActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtTrTanggalActionPerformed
-
     private void txtTrDtkMulaiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTrDtkMulaiActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtTrDtkMulaiActionPerformed
 
     private void btnTrDaftarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnTrDaftarMouseClicked
         // TODO add your handling code here:
+        // 1. Ambil ID yang mau didaftarkan
+        String idBaru = txtTrID.getText();
+        DefaultTableModel model = (DefaultTableModel) tabelTr.getModel();
+
+        // 2. LOGIKA IDENTIFIKASI: Cek ke seluruh baris tabel
+        boolean idSudahAda = false;
+        for (int i = 0; i < model.getRowCount(); i++) {
+            String idDiTabel = model.getValueAt(i, 0).toString();
+            if (idBaru.equals(idDiTabel)) {
+                idSudahAda = true;
+                break; // Berhenti cari kalau sudah ketemu yang sama
+            }
+        }
+
+        // 3. EKSEKUSI BERDASARKAN HASIL CEK
+        if (idSudahAda) {
+            JOptionPane.showMessageDialog(this, "ID Transaksi " + idBaru + " sudah ada!\nRefresh untuk ID Baru klik tombol (X) Batal.", "Peringatan", JOptionPane.WARNING_MESSAGE);
+        } else {
+            // PROSES TAMBAH DATA (Jika ID belum ada)
+            if (txtTrNama.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Nama tidak boleh kosong!");
+                return;
+            }
+
+            try {
+                String tgl = ((javax.swing.JTextField)jdTrTanggal.getDateEditor().getUiComponent()).getText();
+                
+                // Gunakan fungsi formatDuaDigit untuk merapikan inputan admin
+                String jamM = formatDuaDigit(txtTrJamMulai.getText()) + ":" + 
+                              formatDuaDigit(txtTrMntMulai.getText()) + ":" + 
+                              formatDuaDigit(txtTrDtkMulai.getText());
+                
+                String jamS = formatDuaDigit(txtTrJamSelesai.getText()) + ":" + 
+                              formatDuaDigit(txtTrMntSelesai.getText()) + ":" + 
+                              formatDuaDigit(txtTrDtkSelesai.getText());
+                
+                String durasi = formatDuaDigit(txtTrJamDurasi.getText()) + ":" + 
+                                formatDuaDigit(txtTrMntDurasi.getText()) + ":" + 
+                                formatDuaDigit(txtTrDtkDurasi.getText());
+
+                // Masukkan semua field ke tabel
+                model.addRow(new Object[]{
+                    idBaru, 
+                    tgl, 
+                    txtTrNama.getText(), 
+                    txtTrMerek.getText(), 
+                    txtTrTarif.getText(), 
+                    jamM, 
+                    jamS, 
+                    durasi, 
+                    txtTrBiaya.getText(),
+                    txtTrTelpon.getText()
+                });
+
+                JOptionPane.showMessageDialog(this, "Data Berhasil Terdaftar!");
+
+                // 4. Update nomorUrut & Reset ID
+                nomorUrut++; 
+                generateIDOtomatis();
+
+                // 5. Bersihkan field (otomatis manggil reset form)
+                btnTrBatalActionPerformed(null);
+
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Terjadi kesalahan: " + e.getMessage());
+            }
+        }
     }//GEN-LAST:event_btnTrDaftarMouseClicked
 
     private void btnTrDaftarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTrDaftarActionPerformed
@@ -1830,14 +2168,138 @@ public class Beranda extends javax.swing.JFrame {
 
     private void btnTrEditMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnTrEditMouseClicked
         // TODO add your handling code here:
+        int row = tabelTr.getSelectedRow();
+    
+        // 1. CEK APAKAH ADA BARIS YANG DIPILIH
+        if (row == -1) {
+            JOptionPane.showMessageDialog(this, "Silakan pilih data di tabel yang ingin diedit!");
+            return;
+        }
+
+        // 2. VALIDASI INPUT (Jangan sampai ada field penting yang kosong)
+        if (txtTrNama.getText().isEmpty() || txtTrTarif.getText().isEmpty() || txtTrBiaya.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Data (Nama/Tarif/Biaya) tidak boleh kosong!");
+            return; 
+        }
+
+        // 3. JIKA LOLOS VALIDASI, BARU PROSES UPDATE
+        try {
+            DefaultTableModel model = (DefaultTableModel) tabelTr.getModel();
+
+            // Update Kolom Identitas & PC
+            model.setValueAt(txtTrID.getText(), row, 0);
+            model.setValueAt(((javax.swing.JTextField)jdTrTanggal.getDateEditor().getUiComponent()).getText(), row, 1);
+            model.setValueAt(txtTrNama.getText(), row, 2);
+            model.setValueAt(txtTrMerek.getText(), row, 3);
+            model.setValueAt(txtTrTarif.getText(), row, 4);
+
+            // Gabungkan Waktu
+            String jamM = txtTrJamMulai.getText() + ":" + txtTrMntMulai.getText() + ":" + txtTrDtkMulai.getText();
+            String jamS = txtTrJamSelesai.getText() + ":" + txtTrMntSelesai.getText() + ":" + txtTrDtkSelesai.getText();
+            String durasi = txtTrJamDurasi.getText() + ":" + txtTrMntDurasi.getText() + ":" + txtTrDtkDurasi.getText();
+
+            // Update Kolom Waktu & Biaya
+            model.setValueAt(jamM, row, 5);
+            model.setValueAt(jamS, row, 6);
+            model.setValueAt(durasi, row, 7);
+            model.setValueAt(txtTrBiaya.getText(), row, 8);
+
+            JOptionPane.showMessageDialog(this, "Data Berhasil Diperbarui!");
+
+            // 4. RESET TAMPILAN (Kembali ke ID Antrean Baru)
+            btnTrBatalActionPerformed(null); 
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Terjadi kesalahan saat update: " + e.getMessage());
+        }
     }//GEN-LAST:event_btnTrEditMouseClicked
 
     private void btnTrHapusMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnTrHapusMouseClicked
         // TODO add your handling code here:
+        int row = tabelTr.getSelectedRow();
+
+        if (row != -1) {
+            int confirm = JOptionPane.showConfirmDialog(this, "Yakin ingin menghapus data ini?", "Konfirmasi", JOptionPane.YES_NO_OPTION);
+
+            if (confirm == JOptionPane.YES_OPTION) {
+                DefaultTableModel model = (DefaultTableModel) tabelTr.getModel();
+                model.removeRow(row);
+
+                JOptionPane.showMessageDialog(this, "Data Berhasil Dihapus!");
+
+                // Panggil si penyelamat kita buat reset ID ke antrean baru
+                btnTrBatalActionPerformed(null); 
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Pilih data di tabel yang ingin dihapus!");
+        }
     }//GEN-LAST:event_btnTrHapusMouseClicked
 
     private void tabelTrMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelTrMouseClicked
-        // TODO add your handling code here:
+        // TODO add your handling code here:                                   
+            int baris = tabelTr.getSelectedRow();
+
+            // Pastikan baris yang diklik ada datanya
+            if (baris != -1 && tabelTr.getValueAt(baris, 0) != null) {
+
+            // 1. Tarik Data Utama (ID, Nama, Merek, Tarif, Biaya)
+            txtTrID.setText(tabelTr.getValueAt(baris, 0).toString());
+            txtTrNama.setText(tabelTr.getValueAt(baris, 2).toString());
+            txtTrMerek.setText(tabelTr.getValueAt(baris, 3).toString());
+            txtTrTarif.setText(tabelTr.getValueAt(baris, 4).toString());
+            txtTrBiaya.setText(tabelTr.getValueAt(baris, 8).toString());
+            // TARIK NO TELPON DARI KOLOM RAHASIA (INDEX 9)
+            txtTrTelpon.setText(tabelTr.getValueAt(baris, 9).toString());
+
+            // 2. Tarik & Set Tanggal
+            try {
+                java.util.Date tgl = new java.text.SimpleDateFormat("dd-MM-yyyy").parse(tabelTr.getValueAt(baris, 1).toString());
+                jdTrTanggal.setDate(tgl);
+            } catch (Exception e) { }
+
+            // 3. Pecah Jam Mulai (Logika Anti-Error)
+            String dataJamM = tabelTr.getValueAt(baris, 5).toString();
+            if (dataJamM.contains(":")) {
+                String[] jM = dataJamM.split(":");
+                txtTrJamMulai.setText(jM[0]);
+                txtTrMntMulai.setText(jM.length > 1 ? jM[1] : "00");
+                txtTrDtkMulai.setText(jM.length > 2 ? jM[2] : "00");
+            } else {
+                txtTrJamMulai.setText(dataJamM);
+                txtTrMntMulai.setText("00");
+                txtTrDtkMulai.setText("00");
+            }
+
+            // 4. Pecah Jam Selesai (Logika Anti-Error)
+            String dataJamS = tabelTr.getValueAt(baris, 6).toString();
+            if (dataJamS.contains(":")) {
+                String[] jS = dataJamS.split(":");
+                txtTrJamSelesai.setText(jS[0]);
+                txtTrMntSelesai.setText(jS.length > 1 ? jS[1] : "00");
+                txtTrDtkSelesai.setText(jS.length > 2 ? jS[2] : "00");
+            } else {
+                txtTrJamSelesai.setText(dataJamS);
+                txtTrMntSelesai.setText("00");
+                txtTrDtkSelesai.setText("00");
+            }
+
+            // 5. Pecah Durasi (Logika Anti-Error)
+            String dataDur = tabelTr.getValueAt(baris, 7).toString();
+            if (dataDur.contains(":")) {
+                String[] dur = dataDur.split(":");
+                txtTrJamDurasi.setText(dur[0]);
+                txtTrMntDurasi.setText(dur.length > 1 ? dur[1] : "00");
+                txtTrDtkDurasi.setText(dur.length > 2 ? dur[2] : "00");
+            } else {
+                txtTrJamDurasi.setText(dataDur);
+                txtTrMntDurasi.setText("00");
+                txtTrDtkDurasi.setText("00");
+            }
+
+            // Kunci ID biar gak diedit manual
+            txtTrID.setEditable(false);
+        }
+      
     }//GEN-LAST:event_tabelTrMouseClicked
 
     private void txtTrCariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTrCariActionPerformed
@@ -1850,31 +2312,34 @@ public class Beranda extends javax.swing.JFrame {
 
     private void btnPilih1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnPilih1MouseClicked
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnPilih1MouseClicked
+        // 1. Ambil baris yang dipilih di tabel transaksi
+        int baris = tabelTr.getSelectedRow();
 
-    private void btnTrBatalMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnTrBatalMouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnTrBatalMouseClicked
+        if (baris != -1) {
+            // 2. Ambil data dari kolom-kolom tabel
+            
+            String id = tabelTr.getValueAt(baris, 0).toString();
+            String nama = tabelTr.getValueAt(baris, 2).toString();
+            String pc = tabelTr.getValueAt(baris, 3).toString();
+            String jamS = tabelTr.getValueAt(baris, 6).toString(); // Jam Selesai
+
+            // 3. Panggil fungsi sakti pembuat slot
+            buatSlotAlarmOtomatis(id, nama, pc, jamS);
+
+            // 4. Teleport ke Laman Alarm
+            CardLayout cl = (CardLayout) panelUtama.getLayout();
+            cl.show(panelUtama, "menu_alarm"); 
+
+            JOptionPane.showMessageDialog(this, "Alarm untuk " + nama + " berhasil diaktifkan!");
+
+        } else {
+            JOptionPane.showMessageDialog(this, "Klik dulu data transaksinya di tabel!");
+        }
+    }//GEN-LAST:event_btnPilih1MouseClicked
 
     private void txtTrIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTrIDActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtTrIDActionPerformed
-
-    private void txtTrNamaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTrNamaActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtTrNamaActionPerformed
-
-    private void txtTrTelponActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTrTelponActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtTrTelponActionPerformed
-
-    private void txtTrMerekActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTrMerekActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtTrMerekActionPerformed
-
-    private void txtTrTarifActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTrTarifActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtTrTarifActionPerformed
 
     private void txtTrJamMulaiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTrJamMulaiActionPerformed
         // TODO add your handling code here:
@@ -1907,61 +2372,6 @@ public class Beranda extends javax.swing.JFrame {
     private void txtTrDtkDurasiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTrDtkDurasiActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtTrDtkDurasiActionPerformed
-
-    private void btnTrJamMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnTrJamMouseClicked
-        // TODO add your handling code here:
-        long mulai = keDetik(txtTrJamMulai.getText(), txtTrMntMulai.getText(), txtTrDtkMulai.getText());
-        long selesai = keDetik(txtTrJamSelesai.getText(), txtTrMntSelesai.getText(), txtTrDtkSelesai.getText());
-
-        if (selesai < mulai) {
-            JOptionPane.showMessageDialog(this, "Sistem ini hanya mendukung durasi dalam 1 hari yang sama (Max 24 Jam).");
-            return;
-        }
-
-        long selisih = selesai - mulai;
-        keField(selisih, txtTrJamDurasi, txtTrMntDurasi, txtTrDtkDurasi);
-
-        int biaya = (int) ((double) selisih / 3600 * 10000);
-        txtTrBiaya.setText(String.valueOf(biaya));
-    }//GEN-LAST:event_btnTrJamMouseClicked
-
-    private void btnTrDurasiMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnTrDurasiMouseClicked
-        // TODO add your handling code here:
-        long mulai = keDetik(txtTrJamMulai.getText(), txtTrMntMulai.getText(), txtTrDtkMulai.getText());
-        long durasi = (Long.parseLong(txtTrJamDurasi.getText()) * 3600) + 
-                      (Long.parseLong(txtTrMntDurasi.getText()) * 60) + 
-                       Long.parseLong(txtTrDtkDurasi.getText());
-
-        long selesai = mulai + durasi;
-
-        // Rata kanan: Jika lewat jam 24:00, mentokkan di 23:59:59
-        if (selesai > 86399) { // 86399 adalah total detik dalam 23:59:59
-            selesai = 86399;
-            JOptionPane.showMessageDialog(this, "Durasi melebihi hari ini. Jam Selesai diset ke 23:59:59");
-        }
-
-        keField(selesai, txtTrJamSelesai, txtTrMntSelesai, txtTrDtkSelesai);
-
-        int biaya = (int) ((double) durasi / 3600 * 10000);
-        txtTrBiaya.setText(String.valueOf(biaya));
-    }//GEN-LAST:event_btnTrDurasiMouseClicked
-
-    private void btnTrBiayaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnTrBiayaMouseClicked
-        // TODO add your handling code here:
-        try {
-            int uang = Integer.parseInt(txtTrBiaya.getText());
-            long mulai = keDetik(txtTrJamMulai.getText(), txtTrMntMulai.getText(), txtTrDtkMulai.getText());
-
-            // Cari durasi: (Uang / 10000) * 3600 detik
-            long durasi = (long) ((double) uang / 10000 * 3600);
-            long selesai = mulai + durasi;
-
-            keField(durasi, txtTrJamDurasi, txtTrMntDurasi, txtTrDtkDurasi);
-            keField(selesai, txtTrJamSelesai, txtTrMntSelesai, txtTrDtkSelesai);
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Masukkan jumlah biaya dalam angka!");
-        }
-    }//GEN-LAST:event_btnTrBiayaMouseClicked
 
     private void txtTrJamMulaiKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTrJamMulaiKeyTyped
         // TODO add your handling code here:
@@ -2002,7 +2412,240 @@ public class Beranda extends javax.swing.JFrame {
         // TODO add your handling code here:
         satpamInput(evt, txtTrDtkDurasi, 59);
     }//GEN-LAST:event_txtTrDtkDurasiKeyTyped
+
+    private void btnTrDurasiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTrDurasiActionPerformed
+        // TODO add your handling code here:
+        // 1. CEK KELENGKAPAN JAM MULAI
+        if (txtTrJamMulai.getText().isEmpty() || txtTrMntMulai.getText().isEmpty() || txtTrDtkMulai.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Jam Mulai tidak lengkap!");
+            return;
+        }
+
+        // 2. CEK KELENGKAPAN DURASI
+        if (txtTrJamDurasi.getText().isEmpty() || txtTrMntDurasi.getText().isEmpty() || txtTrDtkDurasi.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Durasi tidak lengkap!");
+            return;
+        }
+
+        // 3. CEK APAKAH PC SUDAH DIPILIH (Cek tarif kosong)
+        if (txtTrTarif.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Pilih PC yang digunakan!");
+            // Opsional: Langsung lempar user ke menu PC kalau mau
+            return;
+        }
+
+        // 4. JIKA SEMUA LENGKAP, BARU PROSES HITUNG
+        try {
+            long mulai = keDetik(txtTrJamMulai.getText(), txtTrMntMulai.getText(), txtTrDtkMulai.getText());
+
+            long jamD = Long.parseLong(txtTrJamDurasi.getText());
+            long mntD = Long.parseLong(txtTrMntDurasi.getText());
+            long dtkD = Long.parseLong(txtTrDtkDurasi.getText());
+
+            long durasiDetik = (jamD * 3600) + (mntD * 60) + dtkD;
+
+            long selesai = mulai + durasiDetik;
+
+            if (selesai > 86399) { 
+                selesai = 86399;
+                JOptionPane.showMessageDialog(this, "Durasi melebihi hari ini. Jam Selesai diset ke 23:59:59");
+            }
+
+            keField(selesai, txtTrJamSelesai, txtTrMntSelesai, txtTrDtkSelesai);
+
+            // --- PROSES PEMBERSIH & HITUNG BIAYA ---
     
+            // A. Bersihkan tarif (Unformat) dari "Rp. 5.000" jadi 5000
+            String tarifBersih = txtTrTarif.getText().replaceAll("[^0-9]", "");
+            int tarifPerJam = Integer.parseInt(tarifBersih);
+
+            // B. Hitung Biaya secara dinamis
+            int biaya = (int) ((double) durasiDetik / 3600 * tarifPerJam);
+
+            // C. Tampilkan Biaya dengan format Rupiah (Bungkus)
+            txtTrBiaya.setText(toRupiah(biaya));
+            
+            // JURUS BIAR ENTENG: Paksa UI buat update tampilan
+            txtTrBiaya.repaint();
+            txtTrJamSelesai.repaint();
+
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Input harus berupa angka!");
+        }
+    }//GEN-LAST:event_btnTrDurasiActionPerformed
+
+    private void btnTrJamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTrJamActionPerformed
+        // TODO add your handling code here:
+        // 1. VALIDASI
+        if (txtTrJamMulai.getText().isEmpty() || txtTrMntMulai.getText().isEmpty() || txtTrDtkMulai.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Jam Mulai belum diisi!");
+            return;
+        }
+        if (txtTrJamSelesai.getText().isEmpty() || txtTrMntSelesai.getText().isEmpty() || txtTrDtkSelesai.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Jam Selesai belum diisi!");
+            return;
+        }
+        if (txtTrTarif.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Pilih PC untuk menentukan tarif!");
+            return;
+        }
+
+        // 2. PROSES HITUNG
+        try {
+            long mulai = keDetik(txtTrJamMulai.getText(), txtTrMntMulai.getText(), txtTrDtkMulai.getText());
+            long selesai = keDetik(txtTrJamSelesai.getText(), txtTrMntSelesai.getText(), txtTrDtkSelesai.getText());
+
+            if (selesai < mulai) {
+                JOptionPane.showMessageDialog(this, "Jam Selesai tidak boleh sebelum Jam Mulai!");
+                return;
+            }
+
+            long selisih = selesai - mulai;
+            keField(selisih, txtTrJamDurasi, txtTrMntDurasi, txtTrDtkDurasi);
+
+            // --- PROSES PEMBERSIH & HITUNG BIAYA ---
+
+            // A. Bersihkan tarif dari format Rp. (Unformat)
+            String tarifBersih = txtTrTarif.getText().replaceAll("[^0-9]", "");
+            int tarif = Integer.parseInt(tarifBersih);
+
+            // B. Hitung Biaya
+            int biaya = (int) ((double) selisih / 3600 * tarif);
+
+            // C. Tampilkan Biaya dengan format Rupiah lagi (Bungkus)
+            txtTrBiaya.setText(toRupiah(biaya));
+
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Pastikan input berupa angka!");
+        }
+    }//GEN-LAST:event_btnTrJamActionPerformed
+
+    private void btnTrBiayaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTrBiayaActionPerformed
+        // TODO add your handling code here:
+        // 1. VALIDASI
+        if (txtTrJamMulai.getText().isEmpty() || txtTrMntMulai.getText().isEmpty() || txtTrDtkMulai.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Isi Jam Mulai terlebih dahulu!");
+            return;
+        }
+        if (txtTrBiaya.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Masukkan jumlah biaya/uang!");
+            return;
+        }
+        if (txtTrTarif.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Pilih PC terlebih dahulu!");
+            return;
+        }
+
+        // 2. PROSES HITUNG
+        try {
+            // --- JURUS PEMBERSIH (UNFORMAT) ---
+            // Bersihkan Rp dan titik dari input Biaya dan Tarif
+            String biayaBersih = txtTrBiaya.getText().replaceAll("[^0-9]", "");
+            String tarifBersih = txtTrTarif.getText().replaceAll("[^0-9]", "");
+
+            int uang = Integer.parseInt(biayaBersih);
+            int tarif = Integer.parseInt(tarifBersih);
+
+            long mulai = keDetik(txtTrJamMulai.getText(), txtTrMntMulai.getText(), txtTrDtkMulai.getText());
+
+            // Cari durasi: (Uang / Tarif) * 3600 detik
+            long durasi = (long) ((double) uang / tarif * 3600);
+            long selesai = mulai + durasi;
+
+            // Batasi jika tembus hari esok
+            if (selesai > 86399) {
+                selesai = 86399;
+                JOptionPane.showMessageDialog(this, "Durasi mencapai batas maksimal hari ini (23:59:59)");
+            }
+
+            // Tampilkan hasil ke field durasi dan selesai
+            keField(durasi, txtTrJamDurasi, txtTrMntDurasi, txtTrDtkDurasi);
+            keField(selesai, txtTrJamSelesai, txtTrMntSelesai, txtTrDtkSelesai);
+
+            // --- JURUS BUNGKUS ULANG ---
+            // Setelah dihitung, format kembali txtTrBiaya agar muncul "Rp. 10.000"
+            txtTrBiaya.setText(toRupiah(uang));
+
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Masukkan jumlah biaya dalam angka!");
+        }
+    }//GEN-LAST:event_btnTrBiayaActionPerformed
+
+    private void btnTrBatalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTrBatalActionPerformed
+        // TODO add your handling code here:
+        // 1. Kosongkan semua JTextField
+        txtTrNama.setText("");
+        txtTrMerek.setText("");
+        txtTrTarif.setText("");
+        txtTrJamMulai.setText(""); txtTrMntMulai.setText(""); txtTrDtkMulai.setText("");
+        txtTrJamSelesai.setText(""); txtTrMntSelesai.setText(""); txtTrDtkSelesai.setText("");
+        txtTrJamDurasi.setText(""); txtTrMntDurasi.setText(""); txtTrDtkDurasi.setText("");
+        txtTrBiaya.setText("");
+        txtTrTelpon.setText(""); // Jangan lupa yang ini!
+
+        // 2. Reset Tanggal ke hari ini
+        jdTrTanggal.setDate(new java.util.Date());
+
+        // 3. Panggil ID Otomatis lagi (biar dapet ID baru/antrean)
+        generateIDOtomatis();
+
+        // 4. Kembalikan fokus ke Nama (biar admin tinggal ketik)
+        txtTrNama.requestFocus();
+        tabelTr.clearSelection();
+    }//GEN-LAST:event_btnTrBatalActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        // TODO add your handling code here:
+        // 1. Pindah ke Laman C (Data Pelanggan)
+        // Asumsi nama card Laman C kamu adalah "cardPelanggan"
+        CardLayout cl = (CardLayout) panelUtama.getLayout();
+        cl.show(panelUtama, "menu_pelanggan");
+
+        // 2. Kasih pesan singkat biar admin nggak bingung
+        JOptionPane.showMessageDialog(this, "Silahkan pilih pelanggan dalam tabel, lalu klik tombol kuning PILIH!");
+    }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        // TODO add your handling code here:
+        // 1. Pindah ke Laman D (Data PC)
+        // Asumsi nama card Laman D kamu adalah "cardPC"
+        CardLayout cl = (CardLayout) panelUtama.getLayout();
+        cl.show(panelUtama, "menu_pc");
+
+        // 2. Kasih pesan singkat
+        JOptionPane.showMessageDialog(this, "Silahkan pilih PC yang tersedia lalu, klik tombol kuning PILIH!");
+    }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void btnKeTransaksiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnKeTransaksiActionPerformed
+        // TODO add your handling code here:
+        // Teleport balik ke Laman Transaksi
+        CardLayout cl = (CardLayout) panelUtama.getLayout();
+        cl.show(panelUtama, "menu_transaksi");
+        
+        JOptionPane.showMessageDialog(this, "Silahkan pilih transaksi dalam tabel, lalu klik tombol kuning PILIH!");
+    }//GEN-LAST:event_btnKeTransaksiActionPerformed
+
+    private void btnLogoutMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnLogoutMouseClicked
+        // TODO add your handling code here:
+        int konfirmasi = JOptionPane.showConfirmDialog(this, 
+            "Apakah Anda yakin ingin Logout? (Alarm akan tetap berjalan di latar belakang)", 
+            "Konfirmasi Logout", JOptionPane.YES_NO_OPTION);
+            
+        if (konfirmasi == JOptionPane.YES_OPTION) {
+            // PINDAH KE HALAMAN LOGIN (Gunakan CardLayout)
+            java.awt.CardLayout cl = (java.awt.CardLayout) panelUtama.getLayout();
+            cl.show(panelUtama, "laman_login"); 
+
+            // Bersihkan input login sebelumnya agar aman
+            txtUsername.setText("");
+            txtPassword.setText("");
+
+            // Opsional: Berikan tanda di header kalau admin sedang logout
+            lblStatusAdmin.setText("Status: Offline (Monitoring Active)");
+        }
+    }//GEN-LAST:event_btnLogoutMouseClicked
+    
+    //------------------------------------------------------------------di bawah event
     //buat menghindari duplikasi data di tabel pelanggan
     private boolean isPelangganExist(String namaBaru, String telpBaru) {
         for (int i = 0; i < tabelPL.getRowCount(); i++) {
@@ -2068,6 +2711,8 @@ public class Beranda extends javax.swing.JFrame {
             evt.consume();
         }
     }
+    
+    //------------------------------------------------------------------------------------------------
     /**
      * @param args the command line arguments
      */
@@ -2113,6 +2758,7 @@ public class Beranda extends javax.swing.JFrame {
     private javax.swing.JButton btnDaftar;
     private javax.swing.JButton btnEdit;
     private javax.swing.JButton btnHapus;
+    private javax.swing.JButton btnKeTransaksi;
     private javax.swing.JLabel btnLogout;
     private javax.swing.JLabel btnPC;
     private javax.swing.JLabel btnPelanggan;
@@ -2136,6 +2782,7 @@ public class Beranda extends javax.swing.JFrame {
     private javax.swing.JLabel head;
     private javax.swing.JLabel head1;
     private javax.swing.JLabel head2;
+    private javax.swing.JLabel head3;
     private javax.swing.JLabel instagramlogo;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
@@ -2161,7 +2808,6 @@ public class Beranda extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel27;
     private javax.swing.JLabel jLabel28;
     private javax.swing.JLabel jLabel29;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel30;
     private javax.swing.JLabel jLabel31;
     private javax.swing.JLabel jLabel32;
@@ -2172,12 +2818,11 @@ public class Beranda extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel37;
     private javax.swing.JLabel jLabel38;
     private javax.swing.JLabel jLabel39;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel40;
     private javax.swing.JLabel jLabel41;
     private javax.swing.JLabel jLabel42;
     private javax.swing.JLabel jLabel43;
-    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel44;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
@@ -2190,25 +2835,34 @@ public class Beranda extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPaneAlarm;
     private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JTextArea jTextArea2;
+    private com.toedter.calendar.JDateChooser jdTrTanggal;
     private javax.swing.JLabel jdlTransaksi;
     private javax.swing.JLabel judulPC;
+    private javax.swing.JLabel judulPC1;
     private javax.swing.JLabel judulPl;
     private javax.swing.JLabel lblAlamat;
+    private javax.swing.JLabel lblAlamat1;
     private javax.swing.JLabel lblBackground;
+    private javax.swing.JLabel lblHtnSlt;
     private javax.swing.JLabel lblTanggal;
+    private javax.swing.JLabel lblTime;
     private javax.swing.JLabel lblWelcome;
     private javax.swing.JLabel logo;
     private javax.swing.JScrollPane paneText;
     private javax.swing.JPanel panelHeader;
     private javax.swing.JPanel panelKiri;
+    private javax.swing.JPanel panelListAlarm;
     private javax.swing.JPanel panelMenuAlarm;
     private javax.swing.JPanel panelMenuBeranda;
     private javax.swing.JPanel panelMenuPC;
     private javax.swing.JPanel panelMenuPelanggan;
-    private javax.swing.JPanel panelMenuTransaksi;
-    private javax.swing.JPanel panelMenuTransaksi3;
-    private javax.swing.JPanel panelUtama;
+    public javax.swing.JPanel panelMenuTransaksi;
+    public javax.swing.JPanel panelUtama;
+    private javax.swing.JPanel panelWadahSlot;
     private javax.swing.JTable tabelPC;
     private javax.swing.JTable tabelPL;
     private javax.swing.JTable tabelTr;
@@ -2237,7 +2891,6 @@ public class Beranda extends javax.swing.JFrame {
     private javax.swing.JTextField txtTrMntMulai;
     private javax.swing.JTextField txtTrMntSelesai;
     private javax.swing.JTextField txtTrNama;
-    private javax.swing.JTextField txtTrTanggal;
     private javax.swing.JTextField txtTrTarif;
     private javax.swing.JTextField txtTrTelpon;
     // End of variables declaration//GEN-END:variables
