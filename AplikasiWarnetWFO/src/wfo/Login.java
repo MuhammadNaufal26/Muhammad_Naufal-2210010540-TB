@@ -9,14 +9,42 @@ package wfo;
  * @author Muhammad Naufal 2210010540
  */
 public class Login extends javax.swing.JFrame {
-
+    // Baris sakti agar Login bisa dipanggil dari mana saja
+    public static Login instance; 
     /**
      * Creates new form Login
      */
     public Login() {
         initComponents();
-    }
+        instance = this; // Simpan alamat frame ini ke variabel instance
+        
 
+        // 1. Format untuk Jam (Contoh: 20:45:01)
+        java.time.format.DateTimeFormatter formatJam = java.time.format.DateTimeFormatter.ofPattern("HH:mm:ss");
+
+        // 2. Setup Timer untuk update lblTime setiap 1 detik (1000 ms)
+        javax.swing.Timer timerJam = new javax.swing.Timer(1000, e -> {
+            java.time.LocalTime sekarang = java.time.LocalTime.now();
+            lbltime.setText(sekarang.format(formatJam));
+        });
+
+        // 3. Jalankan Timernya
+        timerJam.start();
+        
+        // 4. Date
+        java.time.LocalDate tgl = java.time.LocalDate.now();
+        java.time.format.DateTimeFormatter format = java.time.format.DateTimeFormatter.ofPattern("dd MMM yyyy");
+        lbldate.setText(tgl.format(format));
+    }
+    public void setStatus(String teks) {
+        lblStatusAdmin.setText(teks);
+    }
+    // bersihkan text bekas login sblmnya
+    public void resetForm() {
+        txtUsername.setText("");
+        txtPassword.setText("");
+        lblInformasi.setText(""); 
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -35,6 +63,8 @@ public class Login extends javax.swing.JFrame {
         lblPass = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         lblStatusAdmin = new javax.swing.JLabel();
+        lbldate = new javax.swing.JLabel();
+        lbltime = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -48,6 +78,11 @@ public class Login extends javax.swing.JFrame {
                 btnLoginActionPerformed(evt);
             }
         });
+        btnLogin.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                btnLoginKeyPressed(evt);
+            }
+        });
 
         lblInformasi.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
 
@@ -59,7 +94,18 @@ public class Login extends javax.swing.JFrame {
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/logowfo.png"))); // NOI18N
 
+        lblStatusAdmin.setForeground(new java.awt.Color(255, 255, 51));
         lblStatusAdmin.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+
+        lbldate.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lbldate.setForeground(new java.awt.Color(255, 255, 255));
+        lbldate.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lbldate.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 2));
+
+        lbltime.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lbltime.setForeground(new java.awt.Color(255, 255, 255));
+        lbltime.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lbltime.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 2));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -68,7 +114,7 @@ public class Login extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(67, 67, 67)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(btnLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblInformasi, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1)
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -80,12 +126,22 @@ public class Login extends javax.swing.JFrame {
                             .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(txtUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(lblStatusAdmin, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(66, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(33, 33, 33)
+                .addComponent(lbltime, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 67, Short.MAX_VALUE)
+                .addComponent(lbldate, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(34, 34, 34))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(41, 41, 41)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(25, 25, 25)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lbldate, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbltime, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -101,21 +157,18 @@ public class Login extends javax.swing.JFrame {
                 .addComponent(btnLogin)
                 .addGap(18, 18, 18)
                 .addComponent(lblStatusAdmin, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(35, Short.MAX_VALUE))
+                .addGap(60, 60, 60))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -126,26 +179,35 @@ public class Login extends javax.swing.JFrame {
         try {
             // 1. Ambil teks dari inputan user
             String user = txtUsername.getText();
-            String pass = String.valueOf(txtPassword.getPassword()); // Khusus JPasswordField
+            String pass = String.valueOf(txtPassword.getPassword());
 
-            // 2. Query SQL untuk mencari admin
-            String sql = "SELECT * FROM users WHERE username='" + user + "' AND password='" + pass + "'";
+            // 2. Query SQL (Gunakan Prepared Statement agar lebih aman dari SQL Injection)
+            String sql = "SELECT * FROM users WHERE username=? AND password=?";
 
             // 3. Eksekusi query
             java.sql.Connection conn = Koneksi.configDB();
-            java.sql.Statement stm = conn.createStatement();
-            java.sql.ResultSet res = stm.executeQuery(sql);
+            java.sql.PreparedStatement pst = conn.prepareStatement(sql);
+            pst.setString(1, user);
+            pst.setString(2, pass);
+            java.sql.ResultSet res = pst.executeQuery();
 
             // 4. Cek hasil
             if (res.next()) {
-                // JIKA LOGIN BENAR
                 javax.swing.JOptionPane.showMessageDialog(null, "Login Berhasil!");
 
-                // Pindah ke Laman B (Beranda)
-                new Beranda().setVisible(true); 
-                this.dispose(); // Tutup layar login
+                // --- LOGIKA AGAR ALARM TIDAK HILANG ---
+                if (Beranda.instance != null) {
+                    // Jika Beranda sudah pernah dibuka (lagi jalan di background)
+                    Beranda.instance.setVisible(true);
+                } else {
+                    // Jika aplikasi baru pertama kali dijalankan
+                    new Beranda().setVisible(true);
+                }
+
+                // TUTUP login, tapi Beranda tetap hidup di memory karena variabel instance-nya static
+                this.setVisible(false); 
+
             } else {
-                // JIKA LOGIN SALAH (Sesuai konsepmu: tampil di bawah tombol)
                 lblInformasi.setText("Username atau Password salah!");
                 lblInformasi.setForeground(java.awt.Color.RED);
             }
@@ -153,6 +215,15 @@ public class Login extends javax.swing.JFrame {
             javax.swing.JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
         }
     }//GEN-LAST:event_btnLoginActionPerformed
+
+    private void btnLoginKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_btnLoginKeyPressed
+        // TODO add your handling code here:
+        // Cek apakah tombol yang ditekan adalah ENTER
+        if (evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER) {
+            // Panggil fungsi login yang sudah kamu buat tadi
+            btnLoginActionPerformed(null); 
+        }
+    }//GEN-LAST:event_btnLoginKeyPressed
 
     /**
      * @param args the command line arguments
@@ -197,6 +268,8 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JLabel lblPass;
     private javax.swing.JLabel lblStatusAdmin;
     private javax.swing.JLabel lblUser;
+    private javax.swing.JLabel lbldate;
+    private javax.swing.JLabel lbltime;
     private javax.swing.JPasswordField txtPassword;
     private javax.swing.JTextField txtUsername;
     // End of variables declaration//GEN-END:variables

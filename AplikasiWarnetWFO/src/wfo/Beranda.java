@@ -22,11 +22,14 @@ import java.awt.event.*;
  */
 public class Beranda extends javax.swing.JFrame {
     int nomorUrut = 1; // Variabel untuk menyimpan urutan (mulai dari 1)
+    // Baris sakti agar Beranda yang "berisi alarm" bisa dipanggil balik
+    public static Beranda instance;
     /**
      * Creates new form Beranda
      */
     public Beranda() {
         initComponents();
+        instance = this; // Simpan alamat frame ini
         // Sesuaikan "/assets/nama_file.jpg" dengan nama file aslimu di package assets
         try {
             java.net.URL imgURL = getClass().getResource("/assets/wallpaper.jpeg");
@@ -2627,21 +2630,26 @@ public class Beranda extends javax.swing.JFrame {
 
     private void btnLogoutMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnLogoutMouseClicked
         // TODO add your handling code here:
-        int konfirmasi = JOptionPane.showConfirmDialog(this, 
-            "Apakah Anda yakin ingin Logout? (Alarm akan tetap berjalan di latar belakang)", 
-            "Konfirmasi Logout", JOptionPane.YES_NO_OPTION);
+        // 1. Cek apakah frame Login masih ada di memori
+        if (Login.instance != null) {
+            // beberes text sblmnya
+            Login.instance.resetForm();
             
-        if (konfirmasi == JOptionPane.YES_OPTION) {
-            // PINDAH KE HALAMAN LOGIN (Gunakan CardLayout)
-            java.awt.CardLayout cl = (java.awt.CardLayout) panelUtama.getLayout();
-            cl.show(panelUtama, "laman_login"); 
+            // 2. Ubah label status yang ada di Frame Login
+            Login.instance.setStatus("Status: Sesi Berakhir (Alarm Tetap Berjalan)");
 
-            // Bersihkan input login sebelumnya agar aman
-            txtUsername.setText("");
-            txtPassword.setText("");
+            // 3. Tampilkan kembali Frame Login
+            Login.instance.setVisible(true);
 
-            // Opsional: Berikan tanda di header kalau admin sedang logout
-            lblStatusAdmin.setText("Status: Offline (Monitoring Active)");
+            // 4. Sembunyikan Beranda (JANGAN dispose() agar data alarm tidak hilang!)
+            this.setVisible(false); 
+
+            // Catatan: Karena Beranda cuma setVisible(false), 
+            // semua Timer alarm di dalamnya tetap jalan di background.
+        } else {
+            // Jika karena suatu hal Login.instance hilang, baru buat baru
+            new Login().setVisible(true);
+            this.dispose();
         }
     }//GEN-LAST:event_btnLogoutMouseClicked
     
