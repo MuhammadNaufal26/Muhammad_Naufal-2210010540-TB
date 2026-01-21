@@ -86,6 +86,12 @@ public class Login extends javax.swing.JFrame {
 
         lblInformasi.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
 
+        txtPassword.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtPasswordKeyPressed(evt);
+            }
+        });
+
         lblUser.setForeground(new java.awt.Color(255, 255, 255));
         lblUser.setText("Username");
 
@@ -224,6 +230,15 @@ public class Login extends javax.swing.JFrame {
             btnLoginActionPerformed(null); 
         }
     }//GEN-LAST:event_btnLoginKeyPressed
+
+    private void txtPasswordKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPasswordKeyPressed
+        // TODO add your handling code here:
+        // Cek apakah tombol yang ditekan adalah ENTER
+        if (evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER) {
+            // Panggil fungsi login yang sudah kamu buat tadi
+            btnLoginActionPerformed(null); 
+        }
+    }//GEN-LAST:event_txtPasswordKeyPressed
 
     /**
      * @param args the command line arguments

@@ -21,9 +21,13 @@ import java.awt.event.*;
  * @author Sudirwo
  */
 public class Beranda extends javax.swing.JFrame {
-    int nomorUrut = 1; // Variabel untuk menyimpan urutan (mulai dari 1)
+   // urutan generate id
+    private int urutTransaksi = 1;
+    private int urutPelanggan = 1;
     // Baris sakti agar Beranda yang "berisi alarm" bisa dipanggil balik
     public static Beranda instance;
+    // Musik Alarm
+    private javax.sound.sampled.Clip clipAlarm;
     /**
      * Creates new form Beranda
      */
@@ -94,8 +98,10 @@ public class Beranda extends javax.swing.JFrame {
         //tabel pelanggan
         DefaultTableModel modelP = (DefaultTableModel) tabelPL.getModel();
         modelP.setRowCount(0); // Membersihkan baris kosong bawaan
-        modelP.addRow(new Object[]{"PLG001", "Adinata", "Laki-laki", "081234567890", "Jl. Jalan Didu Tamol, Banjarmasin", "adiadita@gmail.com"});
-    
+        modelP.addRow(new Object[]{"PL26010001", "Adinata", "Laki-laki", "081234567890", "Jl. Jalan Didu Tamol, Banjarmasin", "adiadita@gmail.com"});
+                urutPelanggan = 2; 
+                generateID("PL", "PELANGGAN");
+                
         //tabel transaksi
         modelTr.addRow(new Object[]{"TR26010001", "19-Jan-2026", "Adinata", "Asus", "Rp. 10.000", "10:00:00", "12:00:00", "02:00:00", "Rp. 20.000", "081234567890"}); 
 
@@ -103,8 +109,8 @@ public class Beranda extends javax.swing.JFrame {
         jdTrTanggal.setDate(new java.util.Date()); 
         
         // Transaksi
-        nomorUrut = 2;
-        generateIDOtomatis();
+        urutTransaksi = 2;
+        generateID("TR", "TRANSAKSI");
         
         
     }
@@ -137,15 +143,19 @@ public class Beranda extends javax.swing.JFrame {
         txtTrTarif.setText(tarif);
     }
    
-    public void generateIDOtomatis() {
-        // Ambil Tahun (26) dan Bulan (01)
+    public void generateID(String prefix, String kategori) {
+        // Ambil Tahun dan Bulan (Misal: 2601)
         String tahunBulan = new java.text.SimpleDateFormat("yyMM").format(new java.util.Date());
-        
-        // Format angka jadi 4 digit (0001)
-        String formatUrut = String.format("%04d", nomorUrut);
-        
-        // Set ke kotak ID
-        txtTrID.setText("TR" + tahunBulan + formatUrut);
+
+        String formatUrut = "";
+
+        if (kategori.equalsIgnoreCase("TRANSAKSI")) {
+            formatUrut = String.format("%04d", urutTransaksi);
+            txtTrID.setText(prefix + tahunBulan + formatUrut);
+        } else if (kategori.equalsIgnoreCase("PELANGGAN")) {
+            formatUrut = String.format("%04d", urutPelanggan);
+            txtPlID.setText(prefix + tahunBulan + formatUrut); // Sesuaikan nama textField-mu
+        }
     }
     
     private String formatDuaDigit(String teks) {
@@ -167,8 +177,7 @@ public class Beranda extends javax.swing.JFrame {
         slot.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(100, 100, 100), 2));
         slot.setLayout(null); 
 
-        // ANTI-GLITCH: Agar tidak mencuri kontrol scroll
-        slot.setFocusable(false);
+        slot.setFocusable(false); // ANTI-GLITCH
 
         // 2. Label & Data
         JLabel lblID = new JLabel("ID Transaksi            :  " + id);
@@ -190,24 +199,50 @@ public class Beranda extends javax.swing.JFrame {
         btnDelete.setBackground(new java.awt.Color(140, 0, 155));
         btnDelete.setForeground(java.awt.Color.WHITE);
 
-        // 3. TIMER
+        // 3. TIMER PER SLOT
         javax.swing.Timer timerAlarm = new javax.swing.Timer(1000, e -> {
             try {
                 java.time.LocalTime sekarang = java.time.LocalTime.now();
                 java.time.LocalTime akhir = java.time.LocalTime.parse(jamSelesai);
                 java.time.Duration durasi = java.time.Duration.between(sekarang, akhir);
                 long detik = durasi.getSeconds();
+
                 if (detik > 0) {
-                    long h = detik / 3600; long m = (detik % 3600) / 60; long s = detik % 60;
+                    long h = detik / 3600; 
+                    long m = (detik % 3600) / 60; 
+                    long s = detik % 60;
                     lblSisa.setText(String.format("sisa %02d jam %02d menit %02d detik", h, m, s));
                 } else {
+                    // --- AKSI SAAT WAKTU HABIS ---
                     ((javax.swing.Timer)e.getSource()).stop();
                     lblSisa.setText("WAKTU HABIS!");
                     lblSisa.setForeground(java.awt.Color.RED);
-                    // Efek Bunyi atau Pop-up bisa ditaruh di sini
-                    javax.swing.JOptionPane.showMessageDialog(null, "Waktu Selesai: " + nama + " (PC: " + pc + ")");
+
+                    // 1. Matikan & Reset Suara (Agar jika ada alarm lain yang sedang bunyi langsung digantikan yang baru)
+                    if (clipAlarm != null) {
+                        clipAlarm.stop();
+                        clipAlarm.close(); 
+                    }
+
+                    // 2. Jalankan Bunyi Terbaru
+                    putarSuara();
+
+                    // 3. Munculkan Pop-up
+                    // Baris ini akan MEM-BLOCK (menahan) baris selanjutnya sampai user klik OK
+                    javax.swing.JOptionPane.showMessageDialog(null, 
+                        "Waktu Selesai: " + nama + " (PC: " + pc + ")", 
+                        "Pemberitahuan Alarm", 
+                        javax.swing.JOptionPane.WARNING_MESSAGE);
+
+                    // 4. MATIKAN SUARA (Hanya akan jalan tepat setelah user klik OK)
+                    if (clipAlarm != null && clipAlarm.isRunning()) {
+                        clipAlarm.stop();
+                        clipAlarm.close(); // Tutup agar resource audio dilepaskan dari RAM
+                    }
                 }
-            } catch (Exception ex) { }
+            } catch (Exception ex) { 
+                // Abaikan parse error jika jamSelesai tidak valid
+            }
         });
         timerAlarm.start();
 
@@ -215,7 +250,7 @@ public class Beranda extends javax.swing.JFrame {
         btnDelete.addActionListener(e -> {
             timerAlarm.stop();
             panelWadahSlot.remove(slot);
-            refreshScroll(); // Panggil fungsi hitung manual
+            refreshScroll(); // Update Counter jumlah slot dan tinggi scroll
         });
 
         // 5. Rakit
@@ -223,15 +258,35 @@ public class Beranda extends javax.swing.JFrame {
         slot.add(lblJam); slot.add(lblSisa); slot.add(btnDelete);
         panelWadahSlot.add(slot);
 
-        // 6. Jalankan Formula Scroll Manual
+        // 6. Jalankan Formula Scroll & Counter
         refreshScroll();
 
-        // Scroll otomatis ke bawah agar slot baru terlihat
+        // Scroll otomatis ke bawah agar slot terbaru terlihat
         javax.swing.SwingUtilities.invokeLater(() -> {
             jScrollPaneAlarm.getVerticalScrollBar().setValue(jScrollPaneAlarm.getVerticalScrollBar().getMaximum());
         });
     }
     
+    private void putarSuara() {
+        try {
+            // JIKA ADA SUARA LAGI BUNYI, MATIKAN DULU (Agar tidak double)
+            if (clipAlarm != null && clipAlarm.isRunning()) {
+                clipAlarm.stop();
+                clipAlarm.close();
+            }
+
+            java.net.URL url = this.getClass().getResource("/assets/alarmmusic.wav");
+            if (url == null) return;
+
+            javax.sound.sampled.AudioInputStream stream = javax.sound.sampled.AudioSystem.getAudioInputStream(url);
+            clipAlarm = javax.sound.sampled.AudioSystem.getClip();
+            clipAlarm.open(stream);
+            clipAlarm.start();
+
+        } catch (Exception e) {
+            System.err.println("Gagal putar suara: " + e.getMessage());
+        }
+    }
     private void refreshScroll() {
         int jumlahSlot = panelWadahSlot.getComponentCount();
         int tinggiBingkai = jScrollPaneAlarm.getHeight();
@@ -1137,11 +1192,6 @@ public class Beranda extends javax.swing.JFrame {
                 btnTrDaftarMouseClicked(evt);
             }
         });
-        btnTrDaftar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnTrDaftarActionPerformed(evt);
-            }
-        });
         panelMenuTransaksi.add(btnTrDaftar, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 231, 150, 20));
 
         btnTrEdit.setBackground(new java.awt.Color(51, 102, 255));
@@ -1945,7 +1995,7 @@ public class Beranda extends javax.swing.JFrame {
             // PROSES SIMPAN...
             DefaultTableModel model = (DefaultTableModel) tabelPL.getModel();
             model.addRow(new Object[]{
-                "AUTO", // Sementara tulis AUTO karena nanti di SQL ini otomatis
+                txtPlID.getText(),
                 nama,
                 cmbPlGender.getSelectedItem().toString(),
                 telp,
@@ -1953,6 +2003,9 @@ public class Beranda extends javax.swing.JFrame {
                 txtPlEmail.getText()
             });
             JOptionPane.showMessageDialog(this, "Pelanggan Berhasil Didaftarkan!");
+            
+                urutPelanggan++; 
+                generateID("PL", "PELANGGAN");
             btnPlBatalMouseClicked(null); 
         }
        
@@ -2043,6 +2096,7 @@ public class Beranda extends javax.swing.JFrame {
         txtPlAlamat.setText("");
         txtPlEmail.setText("");
         cmbPlGender.setSelectedIndex(0);
+                generateID("PL", "PELANGGAN");
         tabelPL.clearSelection();
  
     }//GEN-LAST:event_btnPlBatalMouseClicked
@@ -2153,8 +2207,8 @@ public class Beranda extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "Data Berhasil Terdaftar!");
 
                 // 4. Update nomorUrut & Reset ID
-                nomorUrut++; 
-                generateIDOtomatis();
+                urutTransaksi++; 
+                generateID("TR", "TRANSAKSI");
 
                 // 5. Bersihkan field (otomatis manggil reset form)
                 btnTrBatalActionPerformed(null);
@@ -2164,10 +2218,6 @@ public class Beranda extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_btnTrDaftarMouseClicked
-
-    private void btnTrDaftarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTrDaftarActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnTrDaftarActionPerformed
 
     private void btnTrEditMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnTrEditMouseClicked
         // TODO add your handling code here:
@@ -2590,7 +2640,7 @@ public class Beranda extends javax.swing.JFrame {
         jdTrTanggal.setDate(new java.util.Date());
 
         // 3. Panggil ID Otomatis lagi (biar dapet ID baru/antrean)
-        generateIDOtomatis();
+        generateID("TR", "TRANSAKSI");
 
         // 4. Kembalikan fokus ke Nama (biar admin tinggal ketik)
         txtTrNama.requestFocus();
