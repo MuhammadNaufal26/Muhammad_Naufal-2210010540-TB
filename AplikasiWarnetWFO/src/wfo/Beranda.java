@@ -15,6 +15,21 @@ import java.text.SimpleDateFormat;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.Paragraph;
+import com.itextpdf.layout.properties.TextAlignment;
+import java.io.File;
+import java.io.FileOutputStream;
+import javax.swing.JFileChooser;
+
+import java.awt.Desktop;
+import com.itextpdf.kernel.font.PdfFont;
+import com.itextpdf.kernel.font.PdfFontFactory;
+import com.itextpdf.io.font.constants.StandardFonts;
+import java.io.IOException;
+
 
 /**
  *
@@ -341,6 +356,199 @@ public class Beranda extends javax.swing.JFrame {
 
         return kursIndonesia.format(angka);
     }
+    
+    public void eksporKeExcel(javax.swing.JTable table, String namaFileDefault) {
+        // 1. Siapkan JFileChooser (Jendela Pemilih File)
+        javax.swing.JFileChooser fileChooser = new javax.swing.JFileChooser();
+        fileChooser.setDialogTitle("Pilih Lokasi Simpan Laporan");
+
+        // Set nama file default agar admin tidak capek ngetik
+        fileChooser.setSelectedFile(new java.io.File(namaFileDefault + ".csv"));
+
+        // 2. Munculkan Popup Save Dialog
+        int userSelection = fileChooser.showSaveDialog(null);
+
+        if (userSelection == javax.swing.JFileChooser.APPROVE_OPTION) {
+            java.io.File fileSimpan = fileChooser.getSelectedFile();
+
+            // Pastikan file berakhir dengan .csv
+            String filePath = fileSimpan.getAbsolutePath();
+            if (!filePath.toLowerCase().endsWith(".csv")) {
+                fileSimpan = new java.io.File(filePath + ".csv");
+            }
+
+            try {
+                java.io.FileWriter fw = new java.io.FileWriter(fileSimpan);
+                java.io.BufferedWriter bw = new java.io.BufferedWriter(fw);
+
+                // 3. Ambil Header Tabel
+                for (int i = 0; i < table.getColumnCount(); i++) {
+                    bw.write(table.getColumnName(i) + ";");
+                }
+                bw.newLine();
+
+                // 4. Ambil Isi Data (DENGAN PERBAIKAN FORMAT NO TELP)
+                for (int i = 0; i < table.getRowCount(); i++) {
+                    for (int j = 0; j < table.getColumnCount(); j++) {
+                        Object val = table.getValueAt(i, j);
+                        String data = (val != null ? val.toString() : "");
+
+                        // CEK: Jika data diawali angka '0' atau '62' dan isinya panjang (seperti No HP)
+                        // Kita tambahkan petik satu agar Excel menganggapnya TEXT
+                        if (data.startsWith("0") || data.startsWith("62")) {
+                            bw.write("'" + data + ";");
+                        } else {
+                            bw.write(data + ";");
+                        }
+                    }
+                    bw.newLine();
+                }
+
+                bw.close();
+                fw.close();
+
+                // 5. Berhasil! Tanya mau buka filenya sekarang?
+                int buka = javax.swing.JOptionPane.showConfirmDialog(null, 
+                        "Laporan berhasil disimpan!\nBuka file sekarang?", 
+                        "Sukses", javax.swing.JOptionPane.YES_NO_OPTION);
+
+                if (buka == javax.swing.JOptionPane.YES_OPTION) {
+                    java.awt.Desktop.getDesktop().open(fileSimpan);
+                }
+
+            } catch (Exception e) {
+                javax.swing.JOptionPane.showMessageDialog(null, "Terjadi kesalahan: " + e.getMessage());
+            }
+        }
+    }
+    
+    private void cetakStrukPDF(int row) {
+        // 1. Ambil Data Lengkap (Sesuaikan index kolom tabel kamu)
+        String idTr = tabelTr.getValueAt(row, 0).toString();
+        String nama = tabelTr.getValueAt(row, 2).toString();
+        String pc = tabelTr.getValueAt(row, 3).toString();
+        // Ambil data waktu & durasi jika ada di tabel, jika tidak gunakan teks default/tambah kolom
+        String jamMulai = tabelTr.getValueAt(row, 5).toString(); 
+        String jamSelesai = tabelTr.getValueAt(row, 6).toString(); 
+        String durasi = tabelTr.getValueAt(row, 7).toString(); 
+        String biaya = tabelTr.getValueAt(row, 8).toString();
+
+        String namaFile = idTr + "_" + nama.replace(" ", "") + ".pdf";
+
+        javax.swing.JFileChooser chooser = new javax.swing.JFileChooser();
+        chooser.setSelectedFile(new java.io.File(namaFile));
+
+        if (chooser.showSaveDialog(null) == javax.swing.JFileChooser.APPROVE_OPTION) {
+            String path = chooser.getSelectedFile().getAbsolutePath();
+
+            try {
+                // 2. Setting Ukuran Kertas Struk (58mm x 116mm)
+                float width = 58 * 2.83465f;
+                float height = 116 * 2.83465f;
+                com.itextpdf.kernel.geom.PageSize strukSize = new com.itextpdf.kernel.geom.PageSize(width, height);
+
+                // 3. Siapkan Font
+                com.itextpdf.kernel.font.PdfFont bold = com.itextpdf.kernel.font.PdfFontFactory.createFont(com.itextpdf.io.font.constants.StandardFonts.HELVETICA_BOLD);
+                com.itextpdf.kernel.font.PdfFont italic = com.itextpdf.kernel.font.PdfFontFactory.createFont(com.itextpdf.io.font.constants.StandardFonts.HELVETICA_OBLIQUE);
+                com.itextpdf.kernel.font.PdfFont normal = com.itextpdf.kernel.font.PdfFontFactory.createFont(com.itextpdf.io.font.constants.StandardFonts.HELVETICA);
+
+                // 4. Mulai proses tulis PDF dengan Ukuran Custom
+                try (com.itextpdf.kernel.pdf.PdfWriter writer = new com.itextpdf.kernel.pdf.PdfWriter(path);
+                     com.itextpdf.kernel.pdf.PdfDocument pdf = new com.itextpdf.kernel.pdf.PdfDocument(writer);
+                     com.itextpdf.layout.Document document = new com.itextpdf.layout.Document(pdf, strukSize)) {
+
+                    document.setMargins(10, 10, 10, 10); // Margin agar tidak mepet
+
+                    // --- BAGIAN KOP ---
+                    try {
+                        // 1. Ambil Gambar dari Package Asset
+                        // Ganti "/asset/logo.png" dengan path dan nama file kamu yang sebenarnya
+                        java.net.URL logoUrl = getClass().getResource("/assets/logowfo.png"); 
+
+                        if (logoUrl != null) {
+                            com.itextpdf.io.image.ImageData imageData = com.itextpdf.io.image.ImageDataFactory.create(logoUrl);
+                            com.itextpdf.layout.element.Image logo = new com.itextpdf.layout.element.Image(imageData);
+
+                            // 2. Atur Ukuran Logo (Smooth)
+                            // Coba pakai lebar 30f atau 40f supaya pas dengan lebar struk 58mm
+                            logo.setWidth(40f); 
+
+                            // 3. Buat Logo ke Tengah
+                            logo.setHorizontalAlignment(com.itextpdf.layout.properties.HorizontalAlignment.CENTER);
+
+                            // Tambahkan ke dokumen
+                            document.add(logo);
+                        }
+                    } catch (Exception e) {
+                        // Jika logo gagal dimuat, aplikasi tidak akan crash, hanya logonya saja yang tidak muncul
+                        System.out.println("Logo tidak ditemukan: " + e.getMessage());
+                    }
+                    // Judul Warnet
+                    document.add(new com.itextpdf.layout.element.Paragraph("WARNET FAL OPAL")
+                            .setFont(bold)
+                            .setFontSize(10)
+                            .setTextAlignment(com.itextpdf.layout.properties.TextAlignment.CENTER)
+                            .setMarginBottom(0f) // <--- Hapus jarak bawah judul
+                            .setFixedLeading(9f)); // <--- Mengatur jarak antar baris secara manual (angka lebih kecil = lebih rapat)
+
+                    // Alamat
+                    document.add(new com.itextpdf.layout.element.Paragraph("Jl. Antara Ada dan Tiada, Desa Air, Banjarmasin")
+                            .setFont(normal)
+                            .setFontSize(7)
+                            .setTextAlignment(com.itextpdf.layout.properties.TextAlignment.CENTER)
+                            .setMarginTop(0f) // <--- Hapus jarak atas alamat
+                            .setFixedLeading(7f)); // <--- Mengatur jarak antar baris secara manual
+                    document.add(new com.itextpdf.layout.element.Paragraph("-------------------------------------------------------------").setFontSize(7));
+
+                    // --- DATA TRANSAKSI ---
+                    // Buat tabel dengan 3 kolom. Kolom 1 untuk label, kolom 2 untuk titik dua, kolom 3 untuk nilai.
+                    float[] columnWidths = {40f, 5f, 75f}; 
+                    com.itextpdf.layout.element.Table table = new com.itextpdf.layout.element.Table(columnWidths);
+                    table.setWidth(com.itextpdf.layout.properties.UnitValue.createPercentValue(100));
+
+                    // Fungsi pembantu supaya tidak tulis kode berulang
+                    addTableCell(table, "ID TR", idTr, normal);
+                    addTableCell(table, "NAMA", nama, normal);
+                    addTableCell(table, "PC", pc, normal);
+                    addTableCell(table, "MULAI", jamMulai, normal);
+                    addTableCell(table, "SELESAI", jamSelesai, normal);
+                    addTableCell(table, "DURASI", durasi, normal);
+
+                    document.add(table);
+                    document.add(new com.itextpdf.layout.element.Paragraph("-------------------------------------------------------------").setFontSize(7));
+
+                    // --- TOTAL BIAYA ---
+                    document.add(new com.itextpdf.layout.element.Paragraph("TOTAL BIAYA : " + biaya)
+                            .setFont(bold).setFontSize(8));
+
+                    document.add(new com.itextpdf.layout.element.Paragraph("-------------------------------------------------------------").setFontSize(7));
+
+                    // --- PENUTUP ---
+                    document.add(new com.itextpdf.layout.element.Paragraph("Terima Kasih, ditunggu Kunjungan Anda Berikutnya!")
+                            .setFont(italic).setFontSize(7).setTextAlignment(com.itextpdf.layout.properties.TextAlignment.CENTER));
+
+                    // 5. Notifikasi & Buka Otomatis
+                    javax.swing.JOptionPane.showMessageDialog(null, "Struk PDF Berhasil Dibuat!");
+                    java.awt.Desktop.getDesktop().open(new java.io.File(path));
+                }
+            } catch (java.io.IOException e) {
+                javax.swing.JOptionPane.showMessageDialog(null, "Gagal membuat PDF: " + e.getMessage());
+                e.printStackTrace();
+            }
+        }
+    }
+    
+    private void addTableCell(com.itextpdf.layout.element.Table table, String label, String value, com.itextpdf.kernel.font.PdfFont font) {
+        // Kolom 1: Label
+        table.addCell(new com.itextpdf.layout.element.Cell().add(new com.itextpdf.layout.element.Paragraph(label).setFont(font).setFontSize(7))
+                .setBorder(com.itextpdf.layout.borders.Border.NO_BORDER).setPadding(0));
+        // Kolom 2: Titik Dua
+        table.addCell(new com.itextpdf.layout.element.Cell().add(new com.itextpdf.layout.element.Paragraph(":").setFont(font).setFontSize(7))
+                .setBorder(com.itextpdf.layout.borders.Border.NO_BORDER).setPadding(0));
+        // Kolom 3: Nilai/Isi
+        table.addCell(new com.itextpdf.layout.element.Cell().add(new com.itextpdf.layout.element.Paragraph(value).setFont(font).setFontSize(7))
+                .setBorder(com.itextpdf.layout.borders.Border.NO_BORDER).setPadding(0));
+}
     //*------------------------------------------------------------------------------------------------
     /**
      * This method is called from within the constructor to initialize the form.
@@ -432,7 +640,7 @@ public class Beranda extends javax.swing.JFrame {
         jLabel20 = new javax.swing.JLabel();
         jLabel22 = new javax.swing.JLabel();
         txtTrDtkMulai = new javax.swing.JTextField();
-        btnCetak1 = new javax.swing.JButton();
+        btnCetakTr = new javax.swing.JButton();
         btnTrDaftar = new javax.swing.JButton();
         btnTrEdit = new javax.swing.JButton();
         btnTrHapus = new javax.swing.JButton();
@@ -780,6 +988,11 @@ public class Beranda extends javax.swing.JFrame {
         btnCetak.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         btnCetak.setText("Cetak");
         btnCetak.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        btnCetak.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCetakActionPerformed(evt);
+            }
+        });
         panelMenuPC.add(btnCetak, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 470, 80, 30));
 
         btnDaftar.setBackground(new java.awt.Color(51, 102, 255));
@@ -988,6 +1201,11 @@ public class Beranda extends javax.swing.JFrame {
         btnPlCetak.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         btnPlCetak.setText("Cetak");
         btnPlCetak.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        btnPlCetak.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPlCetakActionPerformed(evt);
+            }
+        });
         panelMenuPelanggan.add(btnPlCetak, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 470, 80, 30));
 
         btnPlDaftar.setBackground(new java.awt.Color(51, 102, 255));
@@ -1175,11 +1393,16 @@ public class Beranda extends javax.swing.JFrame {
         });
         panelMenuTransaksi.add(txtTrDtkMulai, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 130, 30, -1));
 
-        btnCetak1.setBackground(new java.awt.Color(204, 204, 204));
-        btnCetak1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        btnCetak1.setText("Cetak");
-        btnCetak1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        panelMenuTransaksi.add(btnCetak1, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 470, 80, 30));
+        btnCetakTr.setBackground(new java.awt.Color(204, 204, 204));
+        btnCetakTr.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        btnCetakTr.setText("Cetak");
+        btnCetakTr.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        btnCetakTr.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCetakTrActionPerformed(evt);
+            }
+        });
+        panelMenuTransaksi.add(btnCetakTr, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 470, 80, 30));
 
         btnTrDaftar.setBackground(new java.awt.Color(51, 102, 255));
         btnTrDaftar.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
@@ -2702,6 +2925,45 @@ public class Beranda extends javax.swing.JFrame {
             this.dispose();
         }
     }//GEN-LAST:event_btnLogoutMouseClicked
+
+    private void btnCetakActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCetakActionPerformed
+        // TODO add your handling code here:
+        eksporKeExcel(tabelPC, "Data_PC_WarnetWFO");
+    }//GEN-LAST:event_btnCetakActionPerformed
+
+    private void btnPlCetakActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPlCetakActionPerformed
+        // TODO add your handling code here:
+        String tgl = new java.text.SimpleDateFormat("ddMMyy").format(new java.util.Date());
+        eksporKeExcel(tabelPL, "Laporan_Pelanggan_WFO" + tgl);
+    }//GEN-LAST:event_btnPlCetakActionPerformed
+
+    private void btnCetakTrActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCetakTrActionPerformed
+        // TODO add your handling code here:
+        int barisTerpilih = tabelTr.getSelectedRow();
+
+        if (barisTerpilih == -1) {
+            // SCENARIO A: Cetak Semua (Excel/CSV)
+            int konfirmasi = JOptionPane.showConfirmDialog(null, 
+                    "Tidak ada data dipilih. Cetak semua laporan transaksi ke Excel?", 
+                    "Cetak Laporan", JOptionPane.YES_NO_OPTION);
+
+            if (konfirmasi == JOptionPane.YES_OPTION) {
+                eksporKeExcel(tabelTr, "Laporan_Transaksi_WFO_All");
+            }
+        } else {
+            // SCENARIO B: Cetak Struk Personal (PDF)
+            // Ambil ID dari kolom pertama (index 0) di baris yang diklik
+            String idTerpilih = tabelTr.getValueAt(barisTerpilih, 0).toString();
+
+            int konfirmasi = JOptionPane.showConfirmDialog(null, 
+                    "Cetak Struk untuk ID: " + idTerpilih + "?", 
+                    "Cetak Struk", JOptionPane.YES_NO_OPTION);
+
+            if (konfirmasi == JOptionPane.YES_OPTION) {
+                cetakStrukPDF(barisTerpilih);
+            }
+        }
+    }//GEN-LAST:event_btnCetakTrActionPerformed
     
     //------------------------------------------------------------------di bawah event
     //buat menghindari duplikasi data di tabel pelanggan
@@ -2812,7 +3074,7 @@ public class Beranda extends javax.swing.JFrame {
     private javax.swing.JButton btnBatal;
     private javax.swing.JLabel btnBeranda;
     private javax.swing.JButton btnCetak;
-    private javax.swing.JButton btnCetak1;
+    private javax.swing.JButton btnCetakTr;
     private javax.swing.JButton btnDaftar;
     private javax.swing.JButton btnEdit;
     private javax.swing.JButton btnHapus;
