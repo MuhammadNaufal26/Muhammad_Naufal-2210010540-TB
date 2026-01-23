@@ -310,7 +310,7 @@ public class Beranda extends javax.swing.JFrame {
         int lebarTetap = 740; // Sesuaikan dengan lebar JScrollPane kamu
         
         // Tampilkan ke label jumlah
-        lblHtnSlt.setText("Jumlah : " + jumlahSlot);
+        lblHtnSlt.setText(jumlahSlot + " : Jumlah");
 
         if (jumlahSlot <= 0) {
             // Jika kosong, set ukuran pas dengan bingkai agar scrollbar hilang
@@ -605,6 +605,7 @@ public class Beranda extends javax.swing.JFrame {
         jLabel11 = new javax.swing.JLabel();
         txtTarif = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
         panelMenuPelanggan = new javax.swing.JPanel();
         judulPl = new javax.swing.JLabel();
         head1 = new javax.swing.JLabel();
@@ -702,6 +703,7 @@ public class Beranda extends javax.swing.JFrame {
         panelWadahSlot = new javax.swing.JPanel();
         btnKeTransaksi = new javax.swing.JButton();
         lblHtnSlt = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
         lblBackground = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -922,16 +924,15 @@ public class Beranda extends javax.swing.JFrame {
         panelMenuBeranda.add(lblWelcome, new org.netbeans.lib.awtextra.AbsoluteConstraints(66, 53, -1, -1));
 
         jTextArea1.setEditable(false);
-        jTextArea1.setBackground(new java.awt.Color(0, 0, 0));
+        jTextArea1.setBackground(new java.awt.Color(51, 51, 51));
         jTextArea1.setColumns(20);
         jTextArea1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jTextArea1.setForeground(new java.awt.Color(204, 204, 204));
+        jTextArea1.setForeground(new java.awt.Color(225, 225, 225));
         jTextArea1.setLineWrap(true);
         jTextArea1.setRows(5);
         jTextArea1.setText("Di sini menyediakan penyewaan PC dengan harga yang terjangkau se-Banjarmasin.\n\nMau :\n- Ngegame\n- Internetan\n- Nugas\n- Ngetik\ndan lain-lain.\n\nWFO tempatnya. Yuk ramaikan keseruanmu di sosial media, dan tag\n        @WarnetFO\n\nKami usahakan memberikan pelayanan yang terbaik. Anda sopan kami senang.\nTerima kasih\n");
         jTextArea1.setWrapStyleWord(true);
         jTextArea1.setFocusable(false);
-        jTextArea1.setOpaque(false);
         paneText.setViewportView(jTextArea1);
 
         panelMenuBeranda.add(paneText, new org.netbeans.lib.awtextra.AbsoluteConstraints(58, 101, 651, 350));
@@ -1128,6 +1129,9 @@ public class Beranda extends javax.swing.JFrame {
 
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/print.png"))); // NOI18N
         panelMenuPC.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 470, -1, 30));
+
+        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/kiisae.png"))); // NOI18N
+        panelMenuPC.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 50, 240, 330));
 
         panelUtama.add(panelMenuPC, "menu_pc");
 
@@ -1907,7 +1911,7 @@ public class Beranda extends javax.swing.JFrame {
 
         jScrollPaneAlarm.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         jScrollPaneAlarm.setMaximumSize(new java.awt.Dimension(740, 32767));
-        jScrollPaneAlarm.setPreferredSize(new java.awt.Dimension(740, 100));
+        jScrollPaneAlarm.setPreferredSize(new java.awt.Dimension(740, 420));
         jScrollPaneAlarm.setViewportView(panelWadahSlot);
 
         panelWadahSlot.setBackground(new java.awt.Color(30, 30, 30));
@@ -1930,11 +1934,14 @@ public class Beranda extends javax.swing.JFrame {
                 btnKeTransaksiActionPerformed(evt);
             }
         });
-        panelMenuAlarm.add(btnKeTransaksi, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 40, 140, -1));
+        panelMenuAlarm.add(btnKeTransaksi, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 50, 140, -1));
 
         lblHtnSlt.setForeground(new java.awt.Color(255, 255, 255));
-        lblHtnSlt.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        panelMenuAlarm.add(lblHtnSlt, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 10, 140, 20));
+        lblHtnSlt.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        panelMenuAlarm.add(lblHtnSlt, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 20, 140, 20));
+
+        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/clock.png"))); // NOI18N
+        panelMenuAlarm.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, -110, -1, -1));
 
         panelUtama.add(panelMenuAlarm, "menu_alarm");
 
@@ -3128,6 +3135,7 @@ public class Beranda extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel27;
     private javax.swing.JLabel jLabel28;
     private javax.swing.JLabel jLabel29;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel30;
     private javax.swing.JLabel jLabel31;
     private javax.swing.JLabel jLabel32;
@@ -3138,6 +3146,7 @@ public class Beranda extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel37;
     private javax.swing.JLabel jLabel38;
     private javax.swing.JLabel jLabel39;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel40;
     private javax.swing.JLabel jLabel41;
     private javax.swing.JLabel jLabel42;
