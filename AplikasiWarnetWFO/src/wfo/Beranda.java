@@ -36,9 +36,7 @@ import java.io.IOException;
  * @author Sudirwo
  */
 public class Beranda extends javax.swing.JFrame {
-   // urutan generate id
-    private int urutTransaksi = 1;
-    private int urutPelanggan = 1;
+    
     // Baris sakti agar Beranda yang "berisi alarm" bisa dipanggil balik
     public static Beranda instance;
     // Musik Alarm
@@ -48,7 +46,10 @@ public class Beranda extends javax.swing.JFrame {
      */
     public Beranda() {
         initComponents();
+        
+
         instance = this; // Simpan alamat frame ini
+        
         // Sesuaikan "/assets/nama_file.jpg" dengan nama file aslimu di package assets
         try {
             java.net.URL imgURL = getClass().getResource("/assets/wallpaper.jpeg");
@@ -106,28 +107,24 @@ public class Beranda extends javax.swing.JFrame {
         model.setRowCount(0); 
         modelTr.setRowCount(0);
 
-        // Baru kemudian isi data dummy
-        model.addRow(new Object[]{"PC26001", "Asus", "Intel i5", "Rp. 10.000"});
-        model.addRow(new Object[]{"PC26002", "Acer", "Intel i3", "Rp. 8.000"});
+   
         
         //tabel pelanggan
         DefaultTableModel modelP = (DefaultTableModel) tabelPL.getModel();
         modelP.setRowCount(0); // Membersihkan baris kosong bawaan
-        modelP.addRow(new Object[]{"PL26010001", "Adinata", "Laki-laki", "081234567890", "Jl. Jalan Didu Tamol, Banjarmasin", "adiadita@gmail.com"});
-                urutPelanggan = 2; 
-                generateID("PL", "PELANGGAN");
-                
-        //tabel transaksi
-        modelTr.addRow(new Object[]{"TR26010001", "19-Jan-2026", "Adinata", "Asus", "Rp. 10.000", "10:00:00", "12:00:00", "02:00:00", "Rp. 20.000", "081234567890"}); 
 
+                
         // Set Tanggal Hari Ini ke JDateChooser
         jdTrTanggal.setDate(new java.util.Date()); 
-        
-        // Transaksi
-        urutTransaksi = 2;
+
+        // generate ID
         generateID("TR", "TRANSAKSI");
+        generateID("PL", "PELANGGAN");
+        generateID("PC", "PC");
         
-        
+        loadDataPC();        // sql pc
+        loadDataPelanggan(); // sql pl
+        loadDataTransaksi(); // sql tr
     }
     
     //*-----------------ini sdh luar constructor--------------------------------------------------------------
@@ -146,6 +143,126 @@ public class Beranda extends javax.swing.JFrame {
         label.setIcon(new ImageIcon(img));
     }
     
+    // 1. Memuat data PC dari SQL ke jTable
+    private void loadDataPC() {
+        // 1. Buat model tabel baru
+        DefaultTableModel model = new DefaultTableModel();
+        model.addColumn("ID PC");
+        model.addColumn("Merek");
+        model.addColumn("Processor");
+        model.addColumn("Tarif/Jam");
+
+        try {
+            // 2. Koneksi ke database
+            java.sql.Connection conn = (java.sql.Connection)Koneksi.configDB();
+
+            // 3. Query ambil data (Pastikan nama tabel 'pc' sama dengan di phpMyAdmin)
+            String sql = "SELECT * FROM pc"; 
+            java.sql.Statement stm = conn.createStatement();
+            java.sql.ResultSet res = stm.executeQuery(sql);
+
+            // 4. Ambil data baris demi baris
+            while(res.next()) {
+                // "id_pc", "merek", "processor", "tarif_per_jam" harus PERSIS seperti di phpMyAdmin
+                model.addRow(new Object[]{
+                    res.getString("id_pc"), 
+                    res.getString("merek"), 
+                    res.getString("processor"), 
+                    toRupiah(res.getInt("tarif_per_jam")) 
+                });
+            }
+
+            // 5. HUBUNGKAN model yang sudah diisi data tadi ke tabel fisik di JFrame
+            tabelPC.setModel(model); 
+
+            System.out.println("Data berhasil dimuat dari SQL ke JTable!"); // Muncul di Output NetBeans jika berhasil
+
+        } catch (Exception e) {
+            // Jika error (misal salah nama kolom), dia akan kasih tau di sini
+            JOptionPane.showMessageDialog(this, "Gagal ambil data SQL: " + e.getMessage());
+        }
+    }
+
+    // 2. Memuat data Pelanggan
+    private void loadDataPelanggan() {
+        // 1. Definisikan kolom tabel secara manual agar aman
+        DefaultTableModel model = new DefaultTableModel();
+        model.addColumn("ID Pelanggan");
+        model.addColumn("Nama");
+        model.addColumn("Gender"); // Jenis Kelamin
+        model.addColumn("Email");
+        model.addColumn("Telepon");
+        model.addColumn("Alamat");
+
+        try {
+            java.sql.Connection conn = (java.sql.Connection)Koneksi.configDB();
+            // Pastikan nama tabel di SQL adalah 'pelanggan'
+            String sql = "SELECT * FROM pelanggan";
+            java.sql.Statement stm = conn.createStatement();
+            java.sql.ResultSet res = stm.executeQuery(sql);
+
+            while (res.next()) {
+                model.addRow(new Object[]{
+                    res.getString("id_pelanggan"),
+                    res.getString("nama"),
+                    res.getString("jenis_kelamin"),
+                    res.getString("email"),
+                    res.getString("telepon"),
+                    res.getString("alamat")
+                });
+            }
+            // Pasang model ke JTable Pelanggan
+            tabelPL.setModel(model);
+
+        } catch (Exception e) {
+            System.out.println("Error Load Pelanggan: " + e.getMessage());
+        }
+    }
+
+    // 3. Memuat data Transaksi
+    private void loadDataTransaksi() {
+       DefaultTableModel model = new DefaultTableModel();
+        // 1. Definisikan Kolom Baru (Urutan Sesuai Request)
+        model.addColumn("ID TR");       // 0
+        model.addColumn("TANGGAL");     // 1
+        model.addColumn("ID PL");       // 2
+        model.addColumn("NAMA");        // 3
+        model.addColumn("TELEPON");     // 4
+        model.addColumn("ID PC");       // 5
+        model.addColumn("MEREK PC");    // 6
+        model.addColumn("TARIF");       // 7
+        model.addColumn("MULAI");       // 8
+        model.addColumn("SELESAI");     // 9
+        model.addColumn("DURASI");      // 10
+        model.addColumn("TOTAL");       // 11 
+
+        try {
+            java.sql.Connection conn = (java.sql.Connection)Koneksi.configDB();
+            // Pastikan query mengambil semua kolom
+            java.sql.ResultSet res = conn.createStatement().executeQuery("SELECT * FROM transaksi");
+
+            while (res.next()) {
+                model.addRow(new Object[]{
+                    res.getString("id_tr"),
+                    res.getString("tanggal"),        
+                    res.getString("id_pelanggan"),
+                    res.getString("nama_pelanggan"),
+                    res.getString("no_telepon"),
+                    res.getString("id_pc"),           
+                    res.getString("merek_pc"),
+                    toRupiah(res.getInt("tarif_per_jam")), 
+                    res.getString("jam_mulai"),
+                    res.getString("jam_selesai"),
+                    res.getString("durasi"),
+                    toRupiah(res.getInt("total_biaya")) 
+                });
+            }
+            tabelTr.setModel(model);
+        } catch (Exception e) { 
+            System.out.println("Error Load Transaksi: " + e.getMessage()); 
+        }
+    }
+    
     // Fungsi ini akan dipanggil oleh Laman Pelanggan
     public void setDataPelanggan(String nama, String telp) {
         txtTrNama.setText(nama);
@@ -159,18 +276,43 @@ public class Beranda extends javax.swing.JFrame {
     }
    
     public void generateID(String prefix, String kategori) {
-        // Ambil Tahun dan Bulan (Misal: 2601)
         String tahunBulan = new java.text.SimpleDateFormat("yyMM").format(new java.util.Date());
+        String sql = "";
 
-        String formatUrut = "";
-
+        // Tentukan tabel mana yang mau dicek
         if (kategori.equalsIgnoreCase("TRANSAKSI")) {
-            formatUrut = String.format("%04d", urutTransaksi);
-            txtTrID.setText(prefix + tahunBulan + formatUrut);
+            sql = "SELECT id_tr FROM transaksi WHERE id_tr LIKE '" + prefix + tahunBulan + "%' ORDER BY id_tr DESC LIMIT 1";
         } else if (kategori.equalsIgnoreCase("PELANGGAN")) {
-            formatUrut = String.format("%04d", urutPelanggan);
-            txtPlID.setText(prefix + tahunBulan + formatUrut); // Sesuaikan nama textField-mu
+            sql = "SELECT id_pelanggan FROM pelanggan WHERE id_pelanggan LIKE '" + prefix + tahunBulan + "%' ORDER BY id_pelanggan DESC LIMIT 1";
+        } else if (kategori.equalsIgnoreCase("PC")) {
+            sql = "SELECT id_pc FROM pc WHERE id_pc LIKE '" + prefix + tahunBulan + "%' ORDER BY id_pc DESC LIMIT 1";
         }
+
+        try {
+            java.sql.Connection conn = Koneksi.configDB();
+            java.sql.ResultSet res = conn.createStatement().executeQuery(sql);
+
+            if (res.next()) {
+                // Jika ada data (misal: TR26010005)
+                String lastID = res.getString(1);
+                // Ambil 4 digit terakhir (0005), ubah ke angka, lalu + 1
+                int sisaAngka = Integer.parseInt(lastID.substring(lastID.length() - 4)) + 1;
+                String formatUrut = String.format("%04d", sisaAngka);
+                setIDField(kategori, prefix + tahunBulan + formatUrut);
+            } else {
+                // Jika tabel kosong atau ganti bulan baru, mulai dari 0001
+                setIDField(kategori, prefix + tahunBulan + "0001");
+            }
+        } catch (Exception e) {
+            System.out.println("Error Auto ID: " + e.getMessage());
+        }
+    }
+
+    // Fungsi bantu biar kodenya gak kepanjangan
+    private void setIDField(String kategori, String idKomplit) {
+        if (kategori.equalsIgnoreCase("TRANSAKSI")) txtTrID.setText(idKomplit);
+        else if (kategori.equalsIgnoreCase("PELANGGAN")) txtPlID.setText(idKomplit);
+        else if (kategori.equalsIgnoreCase("PC")) txtID.setText(idKomplit);
     }
     
     private String formatDuaDigit(String teks) {
@@ -182,6 +324,24 @@ public class Beranda extends javax.swing.JFrame {
             return teks; // Sudah 2 digit (misal "12") tetap "12"
         }
     
+    //simpanfiledouble
+        private java.io.File getUniqueFilePath(java.io.File file) {
+            String absolutePath = file.getAbsolutePath();
+            String pathWithoutExtension = absolutePath.substring(0, absolutePath.lastIndexOf("."));
+            String extension = absolutePath.substring(absolutePath.lastIndexOf("."));
+
+            java.io.File uniqueFile = file;
+            int count = 1;
+
+            // Selama file dengan nama tersebut sudah ada, tambah angka (1), (2), dst.
+            while (uniqueFile.exists()) {
+                String newName = pathWithoutExtension + "(" + count + ")" + extension;
+                uniqueFile = new java.io.File(newName);
+                count++;
+            }
+            return uniqueFile;
+        }
+        
     public void buatSlotAlarmOtomatis(String id, String nama, String pc, String jamSelesai) {
         // 1. Desain Kotak Slot
         JPanel slot = new JPanel();
@@ -358,46 +518,56 @@ public class Beranda extends javax.swing.JFrame {
     }
     
     public void eksporKeExcel(javax.swing.JTable table, String namaFileDefault) {
-        // 1. Siapkan JFileChooser (Jendela Pemilih File)
         javax.swing.JFileChooser fileChooser = new javax.swing.JFileChooser();
         fileChooser.setDialogTitle("Pilih Lokasi Simpan Laporan");
-
-        // Set nama file default agar admin tidak capek ngetik
         fileChooser.setSelectedFile(new java.io.File(namaFileDefault + ".csv"));
 
-        // 2. Munculkan Popup Save Dialog
         int userSelection = fileChooser.showSaveDialog(null);
 
         if (userSelection == javax.swing.JFileChooser.APPROVE_OPTION) {
             java.io.File fileSimpan = fileChooser.getSelectedFile();
 
-            // Pastikan file berakhir dengan .csv
+            // Pastikan extensi .csv tetap ada
             String filePath = fileSimpan.getAbsolutePath();
             if (!filePath.toLowerCase().endsWith(".csv")) {
                 fileSimpan = new java.io.File(filePath + ".csv");
             }
 
+            // --- TAMBAHAN: Cek duplikat nama file ---
+            java.io.File fileFinal = getUniqueFilePath(fileSimpan);
+
             try {
-                java.io.FileWriter fw = new java.io.FileWriter(fileSimpan);
+                java.io.FileWriter fw = new java.io.FileWriter(fileFinal);
                 java.io.BufferedWriter bw = new java.io.BufferedWriter(fw);
 
-                // 3. Ambil Header Tabel
+                // 1. Tulis Header
                 for (int i = 0; i < table.getColumnCount(); i++) {
                     bw.write(table.getColumnName(i) + ";");
                 }
                 bw.newLine();
 
-                // 4. Ambil Isi Data (DENGAN PERBAIKAN FORMAT NO TELP)
+                // 2. Tulis Data dengan Logika Spesifik
                 for (int i = 0; i < table.getRowCount(); i++) {
                     for (int j = 0; j < table.getColumnCount(); j++) {
+                        String namaKolom = table.getColumnName(j).toUpperCase();
                         Object val = table.getValueAt(i, j);
                         String data = (val != null ? val.toString() : "");
 
-                        // CEK: Jika data diawali angka '0' atau '62' dan isinya panjang (seperti No HP)
-                        // Kita tambahkan petik satu agar Excel menganggapnya TEXT
-                        if (data.startsWith("0") || data.startsWith("62")) {
-                            bw.write("'" + data + ";");
-                        } else {
+                        // LOGIKA A: Khusus Telepon (Beri petik satu agar nol tidak hilang)
+                        if (namaKolom.contains("TELEPON") || namaKolom.contains("TELP")) {
+                            if (data.startsWith("0") || data.startsWith("62")) {
+                                bw.write("'" + data + ";");
+                            } else {
+                                bw.write(data + ";");
+                            }
+                        } 
+                        // LOGIKA B: Khusus Biaya/Tarif (Hapus Rp dan Titik agar jadi angka murni)
+                        else if (namaKolom.contains("TARIF") || namaKolom.contains("TOTAL") || namaKolom.contains("BIAYA")) {
+                            String angkaMurni = data.replaceAll("[^0-9]", ""); 
+                            bw.write(angkaMurni + ";");
+                        } 
+                        // LOGIKA C: Data lainnya (Waktu, Nama, ID, dll) biarkan apa adanya
+                        else {
                             bw.write(data + ";");
                         }
                     }
@@ -407,7 +577,6 @@ public class Beranda extends javax.swing.JFrame {
                 bw.close();
                 fw.close();
 
-                // 5. Berhasil! Tanya mau buka filenya sekarang?
                 int buka = javax.swing.JOptionPane.showConfirmDialog(null, 
                         "Laporan berhasil disimpan!\nBuka file sekarang?", 
                         "Sukses", javax.swing.JOptionPane.YES_NO_OPTION);
@@ -422,118 +591,109 @@ public class Beranda extends javax.swing.JFrame {
         }
     }
     
-    private void cetakStrukPDF(int row) {
-        // 1. Ambil Data Lengkap (Sesuaikan index kolom tabel kamu)
-        String idTr = tabelTr.getValueAt(row, 0).toString();
-        String nama = tabelTr.getValueAt(row, 2).toString();
-        String pc = tabelTr.getValueAt(row, 3).toString();
-        // Ambil data waktu & durasi jika ada di tabel, jika tidak gunakan teks default/tambah kolom
-        String jamMulai = tabelTr.getValueAt(row, 5).toString(); 
-        String jamSelesai = tabelTr.getValueAt(row, 6).toString(); 
-        String durasi = tabelTr.getValueAt(row, 7).toString(); 
-        String biaya = tabelTr.getValueAt(row, 8).toString();
+   private void cetakStrukPDF(int row) {
+        // 1. Ambil Data dari tabel (Pastikan urutan indeks 0-11 sesuai JTable-mu)
+        String idTr   = tabelTr.getValueAt(row, 0).toString();
+        String idPl   = tabelTr.getValueAt(row, 2).toString();
+        String nama   = tabelTr.getValueAt(row, 3).toString();
+        String idPc   = tabelTr.getValueAt(row, 5).toString(); 
+        String tarif  = tabelTr.getValueAt(row, 7).toString();
+        String jamM   = tabelTr.getValueAt(row, 8).toString(); 
+        String jamS   = tabelTr.getValueAt(row, 9).toString(); 
+        String durasi = tabelTr.getValueAt(row, 10).toString(); 
+        String total  = tabelTr.getValueAt(row, 11).toString();
 
+        // --- LOGIKA TRANSFORMASI TEKS ---
+        // A. Durasi: "02:00:00" -> "02 jam 00 menit 00 detik"
+        String durasiLengkap = "-";
+        if (durasi.contains(":")) {
+            String[] d = durasi.split(":");
+            durasiLengkap = d[0] + " jam " + d[1] + " menit " + d[2] + " detik";
+        }
+
+        // B. Tarif: "Rp 5.000" -> "Rp 5.000 / jam"
+        String tarifPerJam = tarif + " / jam";
+
+        // C. Nama File: idTr_NamaPelanggan.pdf
         String namaFile = idTr + "_" + nama.replace(" ", "") + ".pdf";
 
         javax.swing.JFileChooser chooser = new javax.swing.JFileChooser();
         chooser.setSelectedFile(new java.io.File(namaFile));
 
         if (chooser.showSaveDialog(null) == javax.swing.JFileChooser.APPROVE_OPTION) {
-            String path = chooser.getSelectedFile().getAbsolutePath();
+            java.io.File fileTerpilih = chooser.getSelectedFile();
 
+            // --- TAMBAHAN: Cek duplikat nama file ---
+            java.io.File fileFinal = getUniqueFilePath(fileTerpilih);
+            String path = fileFinal.getAbsolutePath();
             try {
-                // 2. Setting Ukuran Kertas Struk (58mm x 116mm)
+                // 2. Setting Kertas (58mm x 116mm)
                 float width = 58 * 2.83465f;
                 float height = 116 * 2.83465f;
                 com.itextpdf.kernel.geom.PageSize strukSize = new com.itextpdf.kernel.geom.PageSize(width, height);
 
-                // 3. Siapkan Font
+                // 3. Font
                 com.itextpdf.kernel.font.PdfFont bold = com.itextpdf.kernel.font.PdfFontFactory.createFont(com.itextpdf.io.font.constants.StandardFonts.HELVETICA_BOLD);
                 com.itextpdf.kernel.font.PdfFont italic = com.itextpdf.kernel.font.PdfFontFactory.createFont(com.itextpdf.io.font.constants.StandardFonts.HELVETICA_OBLIQUE);
                 com.itextpdf.kernel.font.PdfFont normal = com.itextpdf.kernel.font.PdfFontFactory.createFont(com.itextpdf.io.font.constants.StandardFonts.HELVETICA);
 
-                // 4. Mulai proses tulis PDF dengan Ukuran Custom
                 try (com.itextpdf.kernel.pdf.PdfWriter writer = new com.itextpdf.kernel.pdf.PdfWriter(path);
                      com.itextpdf.kernel.pdf.PdfDocument pdf = new com.itextpdf.kernel.pdf.PdfDocument(writer);
                      com.itextpdf.layout.Document document = new com.itextpdf.layout.Document(pdf, strukSize)) {
 
-                    document.setMargins(10, 10, 10, 10); // Margin agar tidak mepet
+                    document.setMargins(10, 10, 10, 10);
 
-                    // --- BAGIAN KOP ---
+                    // --- LOGO ---
                     try {
-                        // 1. Ambil Gambar dari Package Asset
-                        // Ganti "/asset/logo.png" dengan path dan nama file kamu yang sebenarnya
                         java.net.URL logoUrl = getClass().getResource("/assets/logowfo.png"); 
-
                         if (logoUrl != null) {
-                            com.itextpdf.io.image.ImageData imageData = com.itextpdf.io.image.ImageDataFactory.create(logoUrl);
-                            com.itextpdf.layout.element.Image logo = new com.itextpdf.layout.element.Image(imageData);
-
-                            // 2. Atur Ukuran Logo (Smooth)
-                            // Coba pakai lebar 30f atau 40f supaya pas dengan lebar struk 58mm
-                            logo.setWidth(40f); 
-
-                            // 3. Buat Logo ke Tengah
-                            logo.setHorizontalAlignment(com.itextpdf.layout.properties.HorizontalAlignment.CENTER);
-
-                            // Tambahkan ke dokumen
+                            com.itextpdf.layout.element.Image logo = new com.itextpdf.layout.element.Image(com.itextpdf.io.image.ImageDataFactory.create(logoUrl));
+                            logo.setWidth(40f).setHorizontalAlignment(com.itextpdf.layout.properties.HorizontalAlignment.CENTER);
                             document.add(logo);
                         }
-                    } catch (Exception e) {
-                        // Jika logo gagal dimuat, aplikasi tidak akan crash, hanya logonya saja yang tidak muncul
-                        System.out.println("Logo tidak ditemukan: " + e.getMessage());
-                    }
-                    // Judul Warnet
-                    document.add(new com.itextpdf.layout.element.Paragraph("WARNET FAL OPAL")
-                            .setFont(bold)
-                            .setFontSize(10)
-                            .setTextAlignment(com.itextpdf.layout.properties.TextAlignment.CENTER)
-                            .setMarginBottom(0f) // <--- Hapus jarak bawah judul
-                            .setFixedLeading(9f)); // <--- Mengatur jarak antar baris secara manual (angka lebih kecil = lebih rapat)
+                    } catch (Exception e) {}
 
-                    // Alamat
+                    // --- HEADER ---
+                    document.add(new com.itextpdf.layout.element.Paragraph("WARNET FAL OPAL")
+                            .setFont(bold).setFontSize(10).setTextAlignment(com.itextpdf.layout.properties.TextAlignment.CENTER).setFixedLeading(9f));
+
                     document.add(new com.itextpdf.layout.element.Paragraph("Jl. Antara Ada dan Tiada, Desa Air, Banjarmasin")
-                            .setFont(normal)
-                            .setFontSize(7)
-                            .setTextAlignment(com.itextpdf.layout.properties.TextAlignment.CENTER)
-                            .setMarginTop(0f) // <--- Hapus jarak atas alamat
-                            .setFixedLeading(7f)); // <--- Mengatur jarak antar baris secara manual
+                            .setFont(normal).setFontSize(7).setTextAlignment(com.itextpdf.layout.properties.TextAlignment.CENTER).setFixedLeading(7f));
+
                     document.add(new com.itextpdf.layout.element.Paragraph("-------------------------------------------------------------").setFontSize(7));
 
                     // --- DATA TRANSAKSI ---
-                    // Buat tabel dengan 3 kolom. Kolom 1 untuk label, kolom 2 untuk titik dua, kolom 3 untuk nilai.
-                    float[] columnWidths = {40f, 5f, 75f}; 
+                    float[] columnWidths = {35f, 5f, 80f}; 
                     com.itextpdf.layout.element.Table table = new com.itextpdf.layout.element.Table(columnWidths);
                     table.setWidth(com.itextpdf.layout.properties.UnitValue.createPercentValue(100));
 
-                    // Fungsi pembantu supaya tidak tulis kode berulang
                     addTableCell(table, "ID TR", idTr, normal);
+                    addTableCell(table, "ID PL", idPl, normal);
                     addTableCell(table, "NAMA", nama, normal);
-                    addTableCell(table, "PC", pc, normal);
-                    addTableCell(table, "MULAI", jamMulai, normal);
-                    addTableCell(table, "SELESAI", jamSelesai, normal);
-                    addTableCell(table, "DURASI", durasi, normal);
+                    addTableCell(table, "ID PC", idPc, normal);
+                    addTableCell(table, "TARIF", tarifPerJam, normal);
+                    addTableCell(table, "MULAI", jamM, normal);
+                    addTableCell(table, "SELESAI", jamS, normal);
+                    addTableCell(table, "DURASI", durasiLengkap, normal);
 
                     document.add(table);
                     document.add(new com.itextpdf.layout.element.Paragraph("-------------------------------------------------------------").setFontSize(7));
 
-                    // --- TOTAL BIAYA ---
-                    document.add(new com.itextpdf.layout.element.Paragraph("TOTAL BIAYA : " + biaya)
+                    // --- TOTAL ---
+                    document.add(new com.itextpdf.layout.element.Paragraph("TOTAL BIAYA : " + total)
                             .setFont(bold).setFontSize(8));
 
                     document.add(new com.itextpdf.layout.element.Paragraph("-------------------------------------------------------------").setFontSize(7));
 
-                    // --- PENUTUP ---
+                    // --- PENUTUP (Sesuai aslimu) ---
                     document.add(new com.itextpdf.layout.element.Paragraph("Terima Kasih, ditunggu Kunjungan Anda Berikutnya!")
                             .setFont(italic).setFontSize(7).setTextAlignment(com.itextpdf.layout.properties.TextAlignment.CENTER));
 
-                    // 5. Notifikasi & Buka Otomatis
                     javax.swing.JOptionPane.showMessageDialog(null, "Struk PDF Berhasil Dibuat!");
                     java.awt.Desktop.getDesktop().open(new java.io.File(path));
                 }
-            } catch (java.io.IOException e) {
+            } catch (Exception e) {
                 javax.swing.JOptionPane.showMessageDialog(null, "Gagal membuat PDF: " + e.getMessage());
-                e.printStackTrace();
             }
         }
     }
@@ -548,7 +708,7 @@ public class Beranda extends javax.swing.JFrame {
         // Kolom 3: Nilai/Isi
         table.addCell(new com.itextpdf.layout.element.Cell().add(new com.itextpdf.layout.element.Paragraph(value).setFont(font).setFontSize(7))
                 .setBorder(com.itextpdf.layout.borders.Border.NO_BORDER).setPadding(0));
-}
+    }
     //*------------------------------------------------------------------------------------------------
     /**
      * This method is called from within the constructor to initialize the form.
@@ -709,7 +869,6 @@ public class Beranda extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         setMinimumSize(new java.awt.Dimension(1000, 650));
-        setPreferredSize(new java.awt.Dimension(1000, 650));
         setResizable(false);
         setSize(new java.awt.Dimension(1000, 650));
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -1002,11 +1161,6 @@ public class Beranda extends javax.swing.JFrame {
         btnDaftar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/person_add.png"))); // NOI18N
         btnDaftar.setText("Daftar");
         btnDaftar.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        btnDaftar.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnDaftarMouseClicked(evt);
-            }
-        });
         btnDaftar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnDaftarActionPerformed(evt);
@@ -1020,9 +1174,9 @@ public class Beranda extends javax.swing.JFrame {
         btnEdit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/edit.png"))); // NOI18N
         btnEdit.setText("Edit");
         btnEdit.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        btnEdit.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnEditMouseClicked(evt);
+        btnEdit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditActionPerformed(evt);
             }
         });
         panelMenuPC.add(btnEdit, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 231, 150, 20));
@@ -1033,9 +1187,9 @@ public class Beranda extends javax.swing.JFrame {
         btnHapus.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/buang.png"))); // NOI18N
         btnHapus.setText("Hapus");
         btnHapus.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        btnHapus.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnHapusMouseClicked(evt);
+        btnHapus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnHapusActionPerformed(evt);
             }
         });
         panelMenuPC.add(btnHapus, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 231, 150, 20));
@@ -1218,11 +1372,6 @@ public class Beranda extends javax.swing.JFrame {
         btnPlDaftar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/person_add.png"))); // NOI18N
         btnPlDaftar.setText("Daftar");
         btnPlDaftar.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        btnPlDaftar.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnPlDaftarMouseClicked(evt);
-            }
-        });
         btnPlDaftar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnPlDaftarActionPerformed(evt);
@@ -1236,9 +1385,9 @@ public class Beranda extends javax.swing.JFrame {
         btnPlEdit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/edit.png"))); // NOI18N
         btnPlEdit.setText("Edit");
         btnPlEdit.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        btnPlEdit.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnPlEditMouseClicked(evt);
+        btnPlEdit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPlEditActionPerformed(evt);
             }
         });
         panelMenuPelanggan.add(btnPlEdit, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 231, 150, 20));
@@ -1249,9 +1398,9 @@ public class Beranda extends javax.swing.JFrame {
         btnPlHapus.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/buang.png"))); // NOI18N
         btnPlHapus.setText("Hapus");
         btnPlHapus.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        btnPlHapus.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnPlHapusMouseClicked(evt);
+        btnPlHapus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPlHapusActionPerformed(evt);
             }
         });
         panelMenuPelanggan.add(btnPlHapus, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 231, 150, 20));
@@ -1427,9 +1576,9 @@ public class Beranda extends javax.swing.JFrame {
         btnTrEdit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/edit.png"))); // NOI18N
         btnTrEdit.setText("Edit");
         btnTrEdit.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        btnTrEdit.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnTrEditMouseClicked(evt);
+        btnTrEdit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTrEditActionPerformed(evt);
             }
         });
         panelMenuTransaksi.add(btnTrEdit, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 231, 150, 20));
@@ -1440,9 +1589,9 @@ public class Beranda extends javax.swing.JFrame {
         btnTrHapus.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/buang.png"))); // NOI18N
         btnTrHapus.setText("Hapus");
         btnTrHapus.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        btnTrHapus.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnTrHapusMouseClicked(evt);
+        btnTrHapus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTrHapusActionPerformed(evt);
             }
         });
         panelMenuTransaksi.add(btnTrHapus, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 231, 150, 20));
@@ -1452,17 +1601,17 @@ public class Beranda extends javax.swing.JFrame {
 
         tabelTr.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null}
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "ID", "Tanggal", "Nama", "Merek PC", "Tarif/jam", "Jam Mulai", "Jam Selesai", "Durasi", "Biaya", "No. Telp"
+                "ID TR", "Tanggal", "ID PL", "Nama", "No. Telp", "ID PC", "Merek PC", "Tarif/jam", "Jam Mulai", "Jam Selesai", "Durasi", "Biaya"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                true, true, true, true, true, true, true, true, true, false
+                true, true, true, true, false, true, true, true, true, true, true, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -1477,9 +1626,12 @@ public class Beranda extends javax.swing.JFrame {
         });
         jScrollPane3.setViewportView(tabelTr);
         if (tabelTr.getColumnModel().getColumnCount() > 0) {
-            tabelTr.getColumnModel().getColumn(9).setMinWidth(0);
-            tabelTr.getColumnModel().getColumn(9).setPreferredWidth(0);
-            tabelTr.getColumnModel().getColumn(9).setMaxWidth(0);
+            tabelTr.getColumnModel().getColumn(4).setMinWidth(0);
+            tabelTr.getColumnModel().getColumn(4).setPreferredWidth(0);
+            tabelTr.getColumnModel().getColumn(4).setMaxWidth(0);
+            tabelTr.getColumnModel().getColumn(5).setMinWidth(0);
+            tabelTr.getColumnModel().getColumn(5).setPreferredWidth(0);
+            tabelTr.getColumnModel().getColumn(5).setMaxWidth(0);
         }
 
         jPanel3.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 40, 620, 150));
@@ -2076,91 +2228,14 @@ public class Beranda extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_tabelPCMouseClicked
 
-    private void btnDaftarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDaftarActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnDaftarActionPerformed
-
-    private void btnDaftarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnDaftarMouseClicked
-        // TODO add your handling code here:
-        // Validasi: Cek apakah SEMUA field kosong (0/4)
-        if (txtID.getText().isEmpty() && txtMerek.getText().isEmpty() && 
-            txtProcessor.getText().isEmpty() && txtTarif.getText().isEmpty()) {
-
-            // Jika 0/4 diisi, munculkan peringatan
-            JOptionPane.showMessageDialog(this, "Minimal isi salah satu data (ID, Merek, Processor, atau Tarif)!", "Peringatan", JOptionPane.WARNING_MESSAGE);
-
-        } else {
-            // Jika minimal 1/4 diisi, data masuk ke tabel
-            DefaultTableModel model = (DefaultTableModel) tabelPC.getModel();
-            // --- PROSES RUPIAH ---
-            String tarifInput = txtTarif.getText();
-            String tarifTampilan;
-
-            try {
-                // Cek apakah tarif diisi angka. Jika iya, format ke Rupiah
-                int angkaTarif = Integer.parseInt(tarifInput);
-                tarifTampilan = toRupiah(angkaTarif); 
-            } catch (Exception e) {
-                // Jika tarif kosong atau bukan angka, biarkan sesuai input user
-                tarifTampilan = tarifInput;
-            }
-
-            model.addRow(new Object[]{
-                txtID.getText(), 
-                txtMerek.getText(), 
-                txtProcessor.getText(), 
-                tarifTampilan // <-- Sekarang tampilannya cantik "Rp. 5.000"
-            });
-
-            JOptionPane.showMessageDialog(this, "Data PC Berhasil Didaftarkan!", "Sukses", JOptionPane.INFORMATION_MESSAGE);
-
-            // Opsional: Kosongkan field setelah daftar agar bisa input data baru
-            btnBatalMouseClicked(null); 
-        }
-    }//GEN-LAST:event_btnDaftarMouseClicked
-
-    private void btnEditMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnEditMouseClicked
-        // TODO add your handling code here:
-        int i = tabelPC.getSelectedRow();
-        DefaultTableModel model = (DefaultTableModel) tabelPC.getModel();
-
-        if (i >= 0) {
-            model.setValueAt(txtID.getText(), i, 0);
-            model.setValueAt(txtMerek.getText(), i, 1);
-            model.setValueAt(txtProcessor.getText(), i, 2);
-            model.setValueAt(txtTarif.getText(), i, 3);
-
-            JOptionPane.showMessageDialog(this, "Data PC Berhasil Diperbarui!", "Update Sukses", JOptionPane.INFORMATION_MESSAGE);
-        } else {
-            JOptionPane.showMessageDialog(this, "Pilih baris yang ingin diedit di tabel terlebih dahulu!", "Kesalahan", JOptionPane.ERROR_MESSAGE);
-        }
-    }//GEN-LAST:event_btnEditMouseClicked
-
-    private void btnHapusMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnHapusMouseClicked
-        // TODO add your handling code here:
-        int i = tabelPC.getSelectedRow();
-        DefaultTableModel model = (DefaultTableModel) tabelPC.getModel();
-
-        if (i >= 0) {
-            // Tanya konfirmasi
-            int tanya = JOptionPane.showConfirmDialog(this, "Yakin ingin menghapus data PC ini?", "Konfirmasi Hapus", JOptionPane.YES_NO_OPTION);
-
-            if (tanya == JOptionPane.YES_OPTION) {
-                model.removeRow(i);
-                JOptionPane.showMessageDialog(this, "Data Berhasil Dihapus.");
-                btnBatalMouseClicked(null);
-            }
-        } else {
-            JOptionPane.showMessageDialog(this, "Pilih data yang mau dihapus!");
-        }
-    }//GEN-LAST:event_btnHapusMouseClicked
-
     private void btnBatalMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnBatalMouseClicked
         // TODO add your handling code here:
         txtID.setText("");
         txtMerek.setText("");
         txtProcessor.setText("");
         txtTarif.setText("");
+        generateID("PC", "PC");
+        txtID.setEditable(false);
         tabelPC.clearSelection();
     }//GEN-LAST:event_btnBatalMouseClicked
 
@@ -2205,93 +2280,85 @@ public class Beranda extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtPlNamaActionPerformed
 
-    private void btnPlDaftarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnPlDaftarMouseClicked
+    private void btnPlDaftarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPlDaftarActionPerformed
         // TODO add your handling code here:
         String nama = txtPlNama.getText();
         String telp = txtPlTelpon.getText();
         int indexGender = cmbPlGender.getSelectedIndex();
 
+        // 1. VALIDASI INPUT
         if (nama.isEmpty() || telp.isEmpty() || indexGender == 0) {
             JOptionPane.showMessageDialog(this, "Nama, No. Telpon, dan Gender wajib diisi!");
-        } 
-        // CEK DUPLIKAT BERDASARKAN NAMA & TELP
-        else if (isPelangganExist(nama, telp)) { 
-            JOptionPane.showMessageDialog(this, "Pelanggan dengan Nama dan No. Telpon ini sudah terdaftar!", "Data Ganda", JOptionPane.ERROR_MESSAGE);
         } 
         else if (telp.length() < 11) {
             JOptionPane.showMessageDialog(this, "Nomor Telpon minimal 11 angka!");
         } 
         else {
-            // PROSES SIMPAN...
-            DefaultTableModel model = (DefaultTableModel) tabelPL.getModel();
-            model.addRow(new Object[]{
-                txtPlID.getText(),
-                nama,
-                cmbPlGender.getSelectedItem().toString(),
-                telp,
-                txtPlAlamat.getText(),
-                txtPlEmail.getText()
-            });
-            JOptionPane.showMessageDialog(this, "Pelanggan Berhasil Didaftarkan!");
-            
-                urutPelanggan++; 
-                generateID("PL", "PELANGGAN");
-            btnPlBatalMouseClicked(null); 
-        }
-       
-    }//GEN-LAST:event_btnPlDaftarMouseClicked
+            try {
+                java.sql.Connection conn = (java.sql.Connection)Koneksi.configDB();
 
-    private void btnPlDaftarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPlDaftarActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnPlDaftarActionPerformed
+                // 2. CEK DUPLIKAT KE SQL
+                String sqlCek = "SELECT * FROM pelanggan WHERE nama=? AND telepon=?";
+                java.sql.PreparedStatement pstCek = conn.prepareStatement(sqlCek);
+                pstCek.setString(1, nama);
+                pstCek.setString(2, telp);
+                java.sql.ResultSet rs = pstCek.executeQuery();
 
-    private void btnPlEditMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnPlEditMouseClicked
-        // TODO add your handling code here:
-        int i = tabelPL.getSelectedRow();
-        DefaultTableModel model = (DefaultTableModel) tabelPL.getModel();
+                if (rs.next()) {
+                    JOptionPane.showMessageDialog(this, "Pelanggan dengan Nama dan No. Telpon ini sudah terdaftar di database!", "Data Ganda", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    // 3. PROSES SIMPAN KE SQL
+                    String sqlSimpan = "INSERT INTO pelanggan (id_pelanggan, nama, jenis_kelamin, telepon, alamat, email) VALUES (?, ?, ?, ?, ?, ?)";
+                    java.sql.PreparedStatement pstSimpan = conn.prepareStatement(sqlSimpan);
 
-        if (i != -1) {
-            model.setValueAt(txtPlID.getText(), i, 0);
-            model.setValueAt(txtPlNama.getText(), i, 1);
-            model.setValueAt(cmbPlGender.getSelectedItem().toString(), i, 2);
-            model.setValueAt(txtPlTelpon.getText(), i, 3);
-            model.setValueAt(txtPlAlamat.getText(), i, 4);
-            model.setValueAt(txtPlEmail.getText(), i, 5);
+                    pstSimpan.setString(1, txtPlID.getText());
+                    pstSimpan.setString(2, nama);
+                    pstSimpan.setString(3, cmbPlGender.getSelectedItem().toString());
+                    pstSimpan.setString(4, telp);
+                    pstSimpan.setString(5, txtPlAlamat.getText());
+                    pstSimpan.setString(6, txtPlEmail.getText());
 
-            JOptionPane.showMessageDialog(this, "Data Pelanggan Berhasil Diperbarui!");
-        } else {
-            JOptionPane.showMessageDialog(this, "Pilih pelanggan di tabel yang ingin diedit!");
-        }
-    }//GEN-LAST:event_btnPlEditMouseClicked
+                    pstSimpan.execute();
 
-    private void btnPlHapusMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnPlHapusMouseClicked
-        // TODO add your handling code here:
-        int i = tabelPL.getSelectedRow();
-        DefaultTableModel model = (DefaultTableModel) tabelPL.getModel();
+                    JOptionPane.showMessageDialog(this, "Pelanggan Berhasil Didaftarkan!");
 
-        if (i != -1) {
-            int konfirmasi = JOptionPane.showConfirmDialog(this, "Hapus data pelanggan: " + txtPlNama.getText() + "?", "Konfirmasi Hapus", JOptionPane.YES_NO_OPTION);
+                    // 4. REFRESH DATA & ID
+                    loadDataPelanggan(); // Ambil data terbaru dari SQL ke JTable
 
-            if (konfirmasi == JOptionPane.YES_OPTION) {
-                model.removeRow(i);
-                JOptionPane.showMessageDialog(this, "Data telah dihapus.");
-                btnPlBatalMouseClicked(null);
+                    // Update urutan ID otomatis kamu
+                    generateID("PL", "PELANGGAN");
+
+                    btnPlBatalMouseClicked(null); // Kosongkan field
+                }
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Terjadi Kesalahan: " + e.getMessage());
             }
-        } else {
-            JOptionPane.showMessageDialog(this, "Pilih data yang ingin dihapus pada tabel!");
         }
-    }//GEN-LAST:event_btnPlHapusMouseClicked
+    }//GEN-LAST:event_btnPlDaftarActionPerformed
 
     private void tabelPLMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelPLMouseClicked
         // TODO add your handling code here:
         int i = tabelPL.getSelectedRow();
-        if (i != -1 && tabelPL.getValueAt(i, 0) != null) {
+    
+        // Pastikan baris dipilih dan tidak kosong
+        if (i != -1) {
+            // Index 0 = ID Pelanggan
             txtPlID.setText(tabelPL.getValueAt(i, 0).toString());
+
+            // Index 1 = Nama
             txtPlNama.setText(tabelPL.getValueAt(i, 1).toString());
+
+            // Index 2 = Jenis Kelamin (ComboBox)
             cmbPlGender.setSelectedItem(tabelPL.getValueAt(i, 2).toString());
-            txtPlTelpon.setText(tabelPL.getValueAt(i, 3).toString());
-            txtPlAlamat.setText(tabelPL.getValueAt(i, 4).toString());
-            txtPlEmail.setText(tabelPL.getValueAt(i, 5).toString());
+
+            // Index 3 = Email (Sesuai urutan loadDataPelanggan)
+            txtPlEmail.setText(tabelPL.getValueAt(i, 3).toString());
+
+            // Index 4 = Telepon
+            txtPlTelpon.setText(tabelPL.getValueAt(i, 4).toString());
+
+            // Index 5 = Alamat
+            txtPlAlamat.setText(tabelPL.getValueAt(i, 5).toString());
         }
     }//GEN-LAST:event_tabelPLMouseClicked
 
@@ -2304,7 +2371,7 @@ public class Beranda extends javax.swing.JFrame {
         int row = tabelPL.getSelectedRow();
         if (row != -1) {
             String nama = tabelPL.getValueAt(row, 1).toString();
-            String telp = tabelPL.getValueAt(row, 3).toString();
+            String telp = tabelPL.getValueAt(row, 4).toString();
 
             // 1. Karena satu file, panggil fungsinya langsung!
             setDataPelanggan(nama, telp);
@@ -2326,7 +2393,8 @@ public class Beranda extends javax.swing.JFrame {
         txtPlAlamat.setText("");
         txtPlEmail.setText("");
         cmbPlGender.setSelectedIndex(0);
-                generateID("PL", "PELANGGAN");
+        generateID("PL", "PELANGGAN");
+        txtPlID.setEditable(false);
         tabelPL.clearSelection();
  
     }//GEN-LAST:event_btnPlBatalMouseClicked
@@ -2380,68 +2448,82 @@ public class Beranda extends javax.swing.JFrame {
 
     private void btnTrDaftarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnTrDaftarMouseClicked
         // TODO add your handling code here:
-        // 1. Ambil ID yang mau didaftarkan
+        // 1. Ambil ID
         String idBaru = txtTrID.getText();
         DefaultTableModel model = (DefaultTableModel) tabelTr.getModel();
 
-        // 2. LOGIKA IDENTIFIKASI: Cek ke seluruh baris tabel
+        // 2. LOGIKA IDENTIFIKASI (Cek SQL agar lebih akurat dibanding cek tabel)
         boolean idSudahAda = false;
-        for (int i = 0; i < model.getRowCount(); i++) {
-            String idDiTabel = model.getValueAt(i, 0).toString();
-            if (idBaru.equals(idDiTabel)) {
+        try {
+            java.sql.Connection conn = Koneksi.configDB();
+            String cekSql = "SELECT id_tr FROM transaksi WHERE id_tr = '" + idBaru + "'";
+            java.sql.ResultSet res = conn.createStatement().executeQuery(cekSql);
+            if (res.next()) {
                 idSudahAda = true;
-                break; // Berhenti cari kalau sudah ketemu yang sama
             }
+        } catch (Exception e) {
+            System.out.println("Cek ID Gagal: " + e.getMessage());
         }
 
-        // 3. EKSEKUSI BERDASARKAN HASIL CEK
+        // 3. EKSEKUSI
         if (idSudahAda) {
-            JOptionPane.showMessageDialog(this, "ID Transaksi " + idBaru + " sudah ada!\nRefresh untuk ID Baru klik tombol (X) Batal.", "Peringatan", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "ID Transaksi " + idBaru + " sudah ada di database!", "Peringatan", JOptionPane.WARNING_MESSAGE);
         } else {
-            // PROSES TAMBAH DATA (Jika ID belum ada)
             if (txtTrNama.getText().isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Nama tidak boleh kosong!");
                 return;
             }
 
             try {
+                // Logika Format Waktu & Tanggal aslimu
                 String tgl = ((javax.swing.JTextField)jdTrTanggal.getDateEditor().getUiComponent()).getText();
-                
-                // Gunakan fungsi formatDuaDigit untuk merapikan inputan admin
                 String jamM = formatDuaDigit(txtTrJamMulai.getText()) + ":" + 
-                              formatDuaDigit(txtTrMntMulai.getText()) + ":" + 
-                              formatDuaDigit(txtTrDtkMulai.getText());
-                
+                                formatDuaDigit(txtTrMntMulai.getText()) + ":" + 
+                                formatDuaDigit(txtTrDtkMulai.getText());
+
                 String jamS = formatDuaDigit(txtTrJamSelesai.getText()) + ":" + 
-                              formatDuaDigit(txtTrMntSelesai.getText()) + ":" + 
-                              formatDuaDigit(txtTrDtkSelesai.getText());
+                               formatDuaDigit(txtTrMntSelesai.getText()) + ":" + 
+                               formatDuaDigit(txtTrDtkSelesai.getText());
+
+                String durasiStr = formatDuaDigit(txtTrJamDurasi.getText()) + ":" + 
+                                   formatDuaDigit(txtTrMntDurasi.getText()) + ":" + 
+                                   formatDuaDigit(txtTrDtkDurasi.getText());
                 
-                String durasi = formatDuaDigit(txtTrJamDurasi.getText()) + ":" + 
-                                formatDuaDigit(txtTrMntDurasi.getText()) + ":" + 
-                                formatDuaDigit(txtTrDtkDurasi.getText());
+                // --- PROSES SIMPAN KE SQL ---
+                try {
+                    String sql = "INSERT INTO transaksi VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
+                    java.sql.Connection conn = Koneksi.configDB();
+                    java.sql.PreparedStatement pst = conn.prepareStatement(sql);
 
-                // Masukkan semua field ke tabel
-                model.addRow(new Object[]{
-                    idBaru, 
-                    tgl, 
-                    txtTrNama.getText(), 
-                    txtTrMerek.getText(), 
-                    txtTrTarif.getText(), 
-                    jamM, 
-                    jamS, 
-                    durasi, 
-                    txtTrBiaya.getText(),
-                    txtTrTelpon.getText()
-                });
+                    pst.setString(1, idBaru);
+                    pst.setString(2, tgl);                   // Kolom baru
+                    pst.setString(3, txtPlID.getText());
+                    pst.setString(4, txtTrNama.getText());
+                    pst.setString(5, txtTrTelpon.getText());
+                    pst.setString(6, txtID.getText());     // Kolom baru (id pc)
+                    pst.setString(7, txtTrMerek.getText());
+                    pst.setString(8, txtTrTarif.getText().replaceAll("[^0-9]", ""));
+                    pst.setString(9, jamM);
+                    pst.setString(10, jamS);
+                    pst.setString(11, durasiStr);
+                    pst.setString(12, txtTrBiaya.getText().replaceAll("[^0-9]", ""));
 
-                JOptionPane.showMessageDialog(this, "Data Berhasil Terdaftar!");
+                    pst.execute();
 
-                // 4. Update nomorUrut & Reset ID
-                urutTransaksi++; 
-                generateID("TR", "TRANSAKSI");
+                    // --- UPDATE TAMPILAN JTABLE ---
+                    loadDataTransaksi(); // Memanggil fungsi load SQL agar tabel sinkron
 
-                // 5. Bersihkan field (otomatis manggil reset form)
-                btnTrBatalActionPerformed(null);
+                    JOptionPane.showMessageDialog(null, "Transaksi Berhasil Tersimpan!");
+
+                    // 4. Update nomorUrut & Reset ID (Logika aslimu) 
+                    generateID("TR", "TRANSAKSI");
+
+                    // 5. Bersihkan field
+                    btnTrBatalActionPerformed(null);
+
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(this, "Gagal Simpan ke SQL: " + e.getMessage());
+                }
 
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(this, "Terjadi kesalahan: " + e.getMessage());
@@ -2449,142 +2531,43 @@ public class Beranda extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnTrDaftarMouseClicked
 
-    private void btnTrEditMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnTrEditMouseClicked
-        // TODO add your handling code here:
-        int row = tabelTr.getSelectedRow();
-    
-        // 1. CEK APAKAH ADA BARIS YANG DIPILIH
-        if (row == -1) {
-            JOptionPane.showMessageDialog(this, "Silakan pilih data di tabel yang ingin diedit!");
-            return;
-        }
-
-        // 2. VALIDASI INPUT (Jangan sampai ada field penting yang kosong)
-        if (txtTrNama.getText().isEmpty() || txtTrTarif.getText().isEmpty() || txtTrBiaya.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Data (Nama/Tarif/Biaya) tidak boleh kosong!");
-            return; 
-        }
-
-        // 3. JIKA LOLOS VALIDASI, BARU PROSES UPDATE
-        try {
-            DefaultTableModel model = (DefaultTableModel) tabelTr.getModel();
-
-            // Update Kolom Identitas & PC
-            model.setValueAt(txtTrID.getText(), row, 0);
-            model.setValueAt(((javax.swing.JTextField)jdTrTanggal.getDateEditor().getUiComponent()).getText(), row, 1);
-            model.setValueAt(txtTrNama.getText(), row, 2);
-            model.setValueAt(txtTrMerek.getText(), row, 3);
-            model.setValueAt(txtTrTarif.getText(), row, 4);
-
-            // Gabungkan Waktu
-            String jamM = txtTrJamMulai.getText() + ":" + txtTrMntMulai.getText() + ":" + txtTrDtkMulai.getText();
-            String jamS = txtTrJamSelesai.getText() + ":" + txtTrMntSelesai.getText() + ":" + txtTrDtkSelesai.getText();
-            String durasi = txtTrJamDurasi.getText() + ":" + txtTrMntDurasi.getText() + ":" + txtTrDtkDurasi.getText();
-
-            // Update Kolom Waktu & Biaya
-            model.setValueAt(jamM, row, 5);
-            model.setValueAt(jamS, row, 6);
-            model.setValueAt(durasi, row, 7);
-            model.setValueAt(txtTrBiaya.getText(), row, 8);
-
-            JOptionPane.showMessageDialog(this, "Data Berhasil Diperbarui!");
-
-            // 4. RESET TAMPILAN (Kembali ke ID Antrean Baru)
-            btnTrBatalActionPerformed(null); 
-
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Terjadi kesalahan saat update: " + e.getMessage());
-        }
-    }//GEN-LAST:event_btnTrEditMouseClicked
-
-    private void btnTrHapusMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnTrHapusMouseClicked
-        // TODO add your handling code here:
-        int row = tabelTr.getSelectedRow();
-
-        if (row != -1) {
-            int confirm = JOptionPane.showConfirmDialog(this, "Yakin ingin menghapus data ini?", "Konfirmasi", JOptionPane.YES_NO_OPTION);
-
-            if (confirm == JOptionPane.YES_OPTION) {
-                DefaultTableModel model = (DefaultTableModel) tabelTr.getModel();
-                model.removeRow(row);
-
-                JOptionPane.showMessageDialog(this, "Data Berhasil Dihapus!");
-
-                // Panggil si penyelamat kita buat reset ID ke antrean baru
-                btnTrBatalActionPerformed(null); 
-            }
-        } else {
-            JOptionPane.showMessageDialog(this, "Pilih data di tabel yang ingin dihapus!");
-        }
-    }//GEN-LAST:event_btnTrHapusMouseClicked
-
     private void tabelTrMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelTrMouseClicked
         // TODO add your handling code here:                                   
-            int baris = tabelTr.getSelectedRow();
+        int baris = tabelTr.getSelectedRow();
 
-            // Pastikan baris yang diklik ada datanya
-            if (baris != -1 && tabelTr.getValueAt(baris, 0) != null) {
+    if (baris != -1) {
+        txtTrID.setText(tabelTr.getValueAt(baris, 0).toString());
+        // Tanggal (indeks 1)
+        try {
+                java.util.Date date = new java.text.SimpleDateFormat("dd MMM yyyy").parse(tabelTr.getValueAt(baris, 1).toString());
+                jdTrTanggal.setDate(date);
+            } catch (Exception e) { jdTrTanggal.setDate(null); }
 
-            // 1. Tarik Data Utama (ID, Nama, Merek, Tarif, Biaya)
-            txtTrID.setText(tabelTr.getValueAt(baris, 0).toString());
-            txtTrNama.setText(tabelTr.getValueAt(baris, 2).toString());
-            txtTrMerek.setText(tabelTr.getValueAt(baris, 3).toString());
-            txtTrTarif.setText(tabelTr.getValueAt(baris, 4).toString());
-            txtTrBiaya.setText(tabelTr.getValueAt(baris, 8).toString());
-            // TARIK NO TELPON DARI KOLOM RAHASIA (INDEX 9)
-            txtTrTelpon.setText(tabelTr.getValueAt(baris, 9).toString());
+            txtPlID.setText(tabelTr.getValueAt(baris, 2).toString()); 
+            txtTrNama.setText(tabelTr.getValueAt(baris, 3).toString());
+            txtTrTelpon.setText(tabelTr.getValueAt(baris, 4).toString());
+            txtID.setText(tabelTr.getValueAt(baris, 5).toString());     // ID PC
+            txtTrMerek.setText(tabelTr.getValueAt(baris, 6).toString());
+            txtTrTarif.setText(tabelTr.getValueAt(baris, 7).toString());
 
-            // 2. Tarik & Set Tanggal
-            try {
-                java.util.Date tgl = new java.text.SimpleDateFormat("dd-MM-yyyy").parse(tabelTr.getValueAt(baris, 1).toString());
-                jdTrTanggal.setDate(tgl);
-            } catch (Exception e) { }
+            // Split Waktu (Urutan baru: 8 Mulai, 9 Selesai, 10 Durasi)
+            splitWaktu(tabelTr.getValueAt(baris, 8).toString(), txtTrJamMulai, txtTrMntMulai, txtTrDtkMulai);
+            splitWaktu(tabelTr.getValueAt(baris, 9).toString(), txtTrJamSelesai, txtTrMntSelesai, txtTrDtkSelesai);
+            splitWaktu(tabelTr.getValueAt(baris, 10).toString(), txtTrJamDurasi, txtTrMntDurasi, txtTrDtkDurasi);
 
-            // 3. Pecah Jam Mulai (Logika Anti-Error)
-            String dataJamM = tabelTr.getValueAt(baris, 5).toString();
-            if (dataJamM.contains(":")) {
-                String[] jM = dataJamM.split(":");
-                txtTrJamMulai.setText(jM[0]);
-                txtTrMntMulai.setText(jM.length > 1 ? jM[1] : "00");
-                txtTrDtkMulai.setText(jM.length > 2 ? jM[2] : "00");
-            } else {
-                txtTrJamMulai.setText(dataJamM);
-                txtTrMntMulai.setText("00");
-                txtTrDtkMulai.setText("00");
-            }
-
-            // 4. Pecah Jam Selesai (Logika Anti-Error)
-            String dataJamS = tabelTr.getValueAt(baris, 6).toString();
-            if (dataJamS.contains(":")) {
-                String[] jS = dataJamS.split(":");
-                txtTrJamSelesai.setText(jS[0]);
-                txtTrMntSelesai.setText(jS.length > 1 ? jS[1] : "00");
-                txtTrDtkSelesai.setText(jS.length > 2 ? jS[2] : "00");
-            } else {
-                txtTrJamSelesai.setText(dataJamS);
-                txtTrMntSelesai.setText("00");
-                txtTrDtkSelesai.setText("00");
-            }
-
-            // 5. Pecah Durasi (Logika Anti-Error)
-            String dataDur = tabelTr.getValueAt(baris, 7).toString();
-            if (dataDur.contains(":")) {
-                String[] dur = dataDur.split(":");
-                txtTrJamDurasi.setText(dur[0]);
-                txtTrMntDurasi.setText(dur.length > 1 ? dur[1] : "00");
-                txtTrDtkDurasi.setText(dur.length > 2 ? dur[2] : "00");
-            } else {
-                txtTrJamDurasi.setText(dataDur);
-                txtTrMntDurasi.setText("00");
-                txtTrDtkDurasi.setText("00");
-            }
-
-            // Kunci ID biar gak diedit manual
+            txtTrBiaya.setText(tabelTr.getValueAt(baris, 11).toString()); // Total Biaya
             txtTrID.setEditable(false);
         }
-      
     }//GEN-LAST:event_tabelTrMouseClicked
-
+    // Helper untuk pecah waktu agar kode tidak berulang-ulang
+    private void splitWaktu(String waktu, JTextField jam, JTextField mnt, JTextField dtk) {
+        if (waktu.contains(":")) {
+            String[] p = waktu.split(":");
+            jam.setText(p[0]);
+            mnt.setText(p.length > 1 ? p[1] : "00");
+            dtk.setText(p.length > 2 ? p[2] : "00");
+        }
+    }
     private void txtTrCariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTrCariActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtTrCariActionPerformed
@@ -2602,9 +2585,9 @@ public class Beranda extends javax.swing.JFrame {
             // 2. Ambil data dari kolom-kolom tabel
             
             String id = tabelTr.getValueAt(baris, 0).toString();
-            String nama = tabelTr.getValueAt(baris, 2).toString();
-            String pc = tabelTr.getValueAt(baris, 3).toString();
-            String jamS = tabelTr.getValueAt(baris, 6).toString(); // Jam Selesai
+            String nama = tabelTr.getValueAt(baris, 3).toString();
+            String pc = tabelTr.getValueAt(baris, 6).toString();
+            String jamS = tabelTr.getValueAt(baris, 9).toString(); // Jam Selesai
 
             // 3. Panggil fungsi sakti pembuat slot
             buatSlotAlarmOtomatis(id, nama, pc, jamS);
@@ -2856,25 +2839,33 @@ public class Beranda extends javax.swing.JFrame {
 
     private void btnTrBatalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTrBatalActionPerformed
         // TODO add your handling code here:
-        // 1. Kosongkan semua JTextField
+        // 1. Kosongkan semua JTextField (Termasuk ID Pelanggan dan ID PC baru)
+        txtPlID.setText("");      // ID Pelanggan harus kosong
         txtTrNama.setText("");
+        txtTrTelpon.setText("");
+        txtID.setText("");        // ID PC (txtID) harus kosong
         txtTrMerek.setText("");
         txtTrTarif.setText("");
+
+        // Reset Waktu (Mulai, Selesai, Durasi)
         txtTrJamMulai.setText(""); txtTrMntMulai.setText(""); txtTrDtkMulai.setText("");
         txtTrJamSelesai.setText(""); txtTrMntSelesai.setText(""); txtTrDtkSelesai.setText("");
         txtTrJamDurasi.setText(""); txtTrMntDurasi.setText(""); txtTrDtkDurasi.setText("");
+
         txtTrBiaya.setText("");
-        txtTrTelpon.setText(""); // Jangan lupa yang ini!
 
         // 2. Reset Tanggal ke hari ini
         jdTrTanggal.setDate(new java.util.Date());
 
-        // 3. Panggil ID Otomatis lagi (biar dapet ID baru/antrean)
+        // 3. Panggil ID Otomatis & Aktifkan kembali field ID (jika tadi dimatikan saat Edit)
         generateID("TR", "TRANSAKSI");
+        txtTrID.setEditable(false); // ID biasanya tetap tidak bisa diedit manual
 
-        // 4. Kembalikan fokus ke Nama (biar admin tinggal ketik)
-        txtTrNama.requestFocus();
+        // 4. Bersihkan seleksi di tabel
         tabelTr.clearSelection();
+
+        // 5. Kembalikan fokus ke Nama
+        txtTrNama.requestFocus();
     }//GEN-LAST:event_btnTrBatalActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
@@ -2935,13 +2926,14 @@ public class Beranda extends javax.swing.JFrame {
 
     private void btnCetakActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCetakActionPerformed
         // TODO add your handling code here:
-        eksporKeExcel(tabelPC, "Data_PC_WarnetWFO");
+        String tgl = new java.text.SimpleDateFormat("ddMMyy").format(new java.util.Date());
+        eksporKeExcel(tabelPL, "Laporan_PC_WFO_" + tgl);
     }//GEN-LAST:event_btnCetakActionPerformed
 
     private void btnPlCetakActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPlCetakActionPerformed
         // TODO add your handling code here:
         String tgl = new java.text.SimpleDateFormat("ddMMyy").format(new java.util.Date());
-        eksporKeExcel(tabelPL, "Laporan_Pelanggan_WFO" + tgl);
+        eksporKeExcel(tabelPL, "Laporan_Pelanggan_WFO_" + tgl);
     }//GEN-LAST:event_btnPlCetakActionPerformed
 
     private void btnCetakTrActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCetakTrActionPerformed
@@ -2955,7 +2947,8 @@ public class Beranda extends javax.swing.JFrame {
                     "Cetak Laporan", JOptionPane.YES_NO_OPTION);
 
             if (konfirmasi == JOptionPane.YES_OPTION) {
-                eksporKeExcel(tabelTr, "Laporan_Transaksi_WFO_All");
+                String tgl = new java.text.SimpleDateFormat("ddMMyy").format(new java.util.Date());
+                eksporKeExcel(tabelPL, "Laporan_Transaksi_WFO_" + tgl);
             }
         } else {
             // SCENARIO B: Cetak Struk Personal (PDF)
@@ -2971,6 +2964,237 @@ public class Beranda extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_btnCetakTrActionPerformed
+
+    private void btnDaftarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDaftarActionPerformed
+        // TODO add your handling code here:
+        // Validasi: Cek apakah field kosong
+        if (txtID.getText().isEmpty() && txtMerek.getText().isEmpty() && 
+            txtProcessor.getText().isEmpty() && txtTarif.getText().isEmpty()) {
+
+            JOptionPane.showMessageDialog(this, "Minimal isi salah satu data!", "Peringatan", JOptionPane.WARNING_MESSAGE);
+        } else {
+            try {
+                // Kita simpan angka murni ke database agar bisa dihitung nantinya
+                // Kita bersihkan dulu jika ada titik atau simbol Rp agar tidak error di database
+                String angkaMurni = txtTarif.getText().replaceAll("[^0-9]", ""); 
+
+                String sql = "INSERT INTO pc (id_pc, merek, processor, tarif_per_jam) VALUES (?, ?, ?, ?)";
+                java.sql.Connection conn = (java.sql.Connection)Koneksi.configDB();
+                java.sql.PreparedStatement pst = conn.prepareStatement(sql);
+
+                pst.setString(1, txtID.getText());
+                pst.setString(2, txtMerek.getText());
+                pst.setString(3, txtProcessor.getText());
+                pst.setString(4, angkaMurni);
+
+                pst.execute();
+
+                JOptionPane.showMessageDialog(this, "Data PC Berhasil Tersimpan ke Database!", "Sukses", JOptionPane.INFORMATION_MESSAGE);
+
+                loadDataPC(); // Memperbarui JTable dari SQL
+                generateID("PC", "PC"); //generate ID PC
+                btnBatalMouseClicked(null); // Kosongkan field
+
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Gagal simpan: " + e.getMessage());
+            }
+        }
+    }//GEN-LAST:event_btnDaftarActionPerformed
+
+    private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
+        // TODO add your handling code here:
+        int i = tabelPC.getSelectedRow();
+        if (i >= 0) {
+            try {
+                String angkaMurni = txtTarif.getText().replaceAll("[^0-9]", "");
+
+                // Query UPDATE berdasarkan ID
+                String sql = "UPDATE pc SET merek=?, processor=?, tarif_per_jam=? WHERE id_pc=?";
+                java.sql.Connection conn = (java.sql.Connection)Koneksi.configDB();
+                java.sql.PreparedStatement pst = conn.prepareStatement(sql);
+
+                pst.setString(1, txtMerek.getText());
+                pst.setString(2, txtProcessor.getText());
+                pst.setString(3, angkaMurni);
+                pst.setString(4, txtID.getText());
+
+                pst.execute();
+
+                JOptionPane.showMessageDialog(this, "Data PC Berhasil Diperbarui di Database!", "Update Sukses", JOptionPane.INFORMATION_MESSAGE);
+
+                loadDataPC(); // Refresh tabel
+                btnBatalMouseClicked(null);
+
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Gagal Edit: " + e.getMessage());
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Pilih baris di tabel dulu!");
+        }
+    }//GEN-LAST:event_btnEditActionPerformed
+
+    private void btnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHapusActionPerformed
+        // TODO add your handling code here:
+        int i = tabelPC.getSelectedRow();
+        if (i >= 0) {
+            int tanya = JOptionPane.showConfirmDialog(this, "Yakin ingin menghapus data PC ini dari Database?", "Konfirmasi Hapus", JOptionPane.YES_NO_OPTION);
+
+            if (tanya == JOptionPane.YES_OPTION) {
+                try {
+                    String sql = "DELETE FROM pc WHERE id_pc=?";
+                    java.sql.Connection conn = (java.sql.Connection)Koneksi.configDB();
+                    java.sql.PreparedStatement pst = conn.prepareStatement(sql);
+
+                    pst.setString(1, txtID.getText());
+                    pst.execute();
+
+                    JOptionPane.showMessageDialog(this, "Data Berhasil Dihapus dari Database.");
+
+                    loadDataPC(); // Refresh tabel
+                    btnBatalMouseClicked(null);
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(this, "Gagal Hapus: " + e.getMessage());
+                }
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Pilih data yang mau dihapus!");
+        }
+    }//GEN-LAST:event_btnHapusActionPerformed
+
+    private void btnPlEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPlEditActionPerformed
+        // TODO add your handling code here:
+        int i = tabelPL.getSelectedRow();
+    
+        if (i != -1) {
+            try {
+                // Perintah SQL untuk mengubah data berdasarkan ID
+                String sql = "UPDATE pelanggan SET nama=?, jenis_kelamin=?, telepon=?, alamat=?, email=? WHERE id_pelanggan=?";
+                java.sql.Connection conn = (java.sql.Connection)Koneksi.configDB();
+                java.sql.PreparedStatement pst = conn.prepareStatement(sql);
+
+                pst.setString(1, txtPlNama.getText());
+                pst.setString(2, cmbPlGender.getSelectedItem().toString());
+                pst.setString(3, txtPlTelpon.getText());
+                pst.setString(4, txtPlAlamat.getText());
+                pst.setString(5, txtPlEmail.getText());
+                pst.setString(6, txtPlID.getText()); // ID sebagai acuan posisi data
+
+                pst.execute();
+
+                JOptionPane.showMessageDialog(this, "Data Pelanggan Berhasil Diperbarui di Database!");
+
+                loadDataPelanggan(); // Refresh tabel dari SQL
+                btnPlBatalMouseClicked(null); // Bersihkan form
+
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Gagal Edit: " + e.getMessage());
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Pilih pelanggan di tabel yang ingin diedit!");
+        }
+    }//GEN-LAST:event_btnPlEditActionPerformed
+
+    private void btnPlHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPlHapusActionPerformed
+        // TODO add your handling code here:
+        int i = tabelPL.getSelectedRow();
+
+        if (i != -1) {
+            int konfirmasi = JOptionPane.showConfirmDialog(this, "Hapus data pelanggan: " + txtPlNama.getText() + " dari database?", "Konfirmasi Hapus", JOptionPane.YES_NO_OPTION);
+
+            if (konfirmasi == JOptionPane.YES_OPTION) {
+                try {
+                    String sql = "DELETE FROM pelanggan WHERE id_pelanggan=?";
+                    java.sql.Connection conn = (java.sql.Connection)Koneksi.configDB();
+                    java.sql.PreparedStatement pst = conn.prepareStatement(sql);
+
+                    pst.setString(1, txtPlID.getText());
+                    pst.execute();
+
+                    JOptionPane.showMessageDialog(this, "Data telah dihapus dari Database.");
+
+                    loadDataPelanggan(); // Refresh tampilan tabel
+
+                    // Supaya ID otomatis kamu tetap sinkron
+                    generateID("PL", "PELANGGAN"); 
+                    btnPlBatalMouseClicked(null);
+
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(this, "Gagal Hapus: " + e.getMessage());
+                }
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Pilih data yang ingin dihapus pada tabel!");
+        }
+    }//GEN-LAST:event_btnPlHapusActionPerformed
+
+    private void btnTrEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTrEditActionPerformed
+        // TODO add your handling code here:
+        try {
+            String tgl = ((javax.swing.JTextField)jdTrTanggal.getDateEditor().getUiComponent()).getText();
+            String jamM = formatDuaDigit(txtTrJamMulai.getText()) + ":" + 
+               formatDuaDigit(txtTrMntMulai.getText()) + ":" + 
+               formatDuaDigit(txtTrDtkMulai.getText());
+
+            String jamS = formatDuaDigit(txtTrJamSelesai.getText()) + ":" + 
+                           formatDuaDigit(txtTrMntSelesai.getText()) + ":" + 
+                           formatDuaDigit(txtTrDtkSelesai.getText());
+
+            String durasiStr = formatDuaDigit(txtTrJamDurasi.getText()) + ":" + 
+                               formatDuaDigit(txtTrMntDurasi.getText()) + ":" + 
+                               formatDuaDigit(txtTrDtkDurasi.getText());
+            // ID TR ditaruh di ujung (WHERE), sisanya urut sesuai permintaanmu
+            String sql = "UPDATE transaksi SET tanggal=?, id_pelanggan=?, nama_pelanggan=?, no_telepon=?, "
+                       + "id_pc=?, merek_pc=?, tarif_per_jam=?, jam_mulai=?, jam_selesai=?, durasi=?, "
+                       + "total_biaya=? WHERE id_tr=?";
+
+            java.sql.Connection conn = Koneksi.configDB();
+            java.sql.PreparedStatement pst = conn.prepareStatement(sql);
+
+            // Samakan urutannya dengan yang kamu tulis tadi:
+            pst.setString(1, tgl);                                           // tanggal
+            pst.setString(2, txtPlID.getText());                             // id_pel
+            pst.setString(3, txtTrNama.getText());                           // nama
+            pst.setString(4, txtTrTelpon.getText());                         // telepon
+            pst.setString(5, txtID.getText());                               // id_pc (sesuai variabelmu: txtID)
+            pst.setString(6, txtTrMerek.getText());                          // merek_pc
+            pst.setString(7, txtTrTarif.getText().replaceAll("[^0-9]", ""));  // tarif
+            pst.setString(8, jamM);                                          // mulai
+            pst.setString(9, jamS);                                          // selesai
+            pst.setString(10, durasiStr);                                    // durasi
+            pst.setString(11, txtTrBiaya.getText().replaceAll("[^0-9]", "")); // total
+            pst.setString(12, txtTrID.getText());                            // WHERE id_tr (Kunci Utama)
+
+            pst.execute();
+            JOptionPane.showMessageDialog(null, "Update Berhasil!");
+            loadDataTransaksi();
+            btnTrBatalActionPerformed(null);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Gagal Update: " + e.getMessage());
+        }
+    }//GEN-LAST:event_btnTrEditActionPerformed
+
+    private void btnTrHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTrHapusActionPerformed
+        // TODO add your handling code here:
+        int row = tabelTr.getSelectedRow();
+        if (row != -1) {
+            int confirm = JOptionPane.showConfirmDialog(this, "Hapus transaksi ini?", "Konfirmasi", JOptionPane.YES_NO_OPTION);
+            if (confirm == JOptionPane.YES_OPTION) {
+                try {
+                    String sql = "DELETE FROM transaksi WHERE id_tr = ?";
+                    java.sql.Connection conn = Koneksi.configDB();
+                    java.sql.PreparedStatement pst = conn.prepareStatement(sql);
+                    pst.setString(1, txtTrID.getText());
+                    pst.execute();
+
+                    JOptionPane.showMessageDialog(this, "Data Berhasil Dihapus!");
+                    loadDataTransaksi(); // Sinkronkan JTable
+                    btnTrBatalActionPerformed(null);
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(this, "Gagal Hapus: " + e.getMessage());
+                }
+            }
+        }
+    }//GEN-LAST:event_btnTrHapusActionPerformed
     
     //------------------------------------------------------------------di bawah event
     //buat menghindari duplikasi data di tabel pelanggan
