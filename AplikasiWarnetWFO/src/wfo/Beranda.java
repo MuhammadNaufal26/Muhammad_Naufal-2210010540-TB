@@ -522,51 +522,41 @@ public class Beranda extends javax.swing.JFrame {
         fileChooser.setDialogTitle("Pilih Lokasi Simpan Laporan");
         fileChooser.setSelectedFile(new java.io.File(namaFileDefault + ".csv"));
 
-        int userSelection = fileChooser.showSaveDialog(null);
-
-        if (userSelection == javax.swing.JFileChooser.APPROVE_OPTION) {
+        if (fileChooser.showSaveDialog(null) == javax.swing.JFileChooser.APPROVE_OPTION) {
             java.io.File fileSimpan = fileChooser.getSelectedFile();
 
-            // Pastikan extensi .csv tetap ada
+            // Pastikan ekstensi .csv
             String filePath = fileSimpan.getAbsolutePath();
             if (!filePath.toLowerCase().endsWith(".csv")) {
                 fileSimpan = new java.io.File(filePath + ".csv");
             }
 
-            // --- TAMBAHAN: Cek duplikat nama file ---
+            // Cek duplikat nama file (Gunakan fungsi getUniqueFilePath yg sudah dibuat)
             java.io.File fileFinal = getUniqueFilePath(fileSimpan);
 
-            try {
-                java.io.FileWriter fw = new java.io.FileWriter(fileFinal);
-                java.io.BufferedWriter bw = new java.io.BufferedWriter(fw);
-
-                // 1. Tulis Header
+            try (java.io.BufferedWriter bw = new java.io.BufferedWriter(new java.io.FileWriter(fileFinal))) {
+                // 1. Tulis Header (Ambil dari JTable langsung)
                 for (int i = 0; i < table.getColumnCount(); i++) {
                     bw.write(table.getColumnName(i) + ";");
                 }
                 bw.newLine();
 
-                // 2. Tulis Data dengan Logika Spesifik
+                // 2. Tulis Data (Ambil dari Baris & Kolom JTable)
                 for (int i = 0; i < table.getRowCount(); i++) {
                     for (int j = 0; j < table.getColumnCount(); j++) {
                         String namaKolom = table.getColumnName(j).toUpperCase();
                         Object val = table.getValueAt(i, j);
                         String data = (val != null ? val.toString() : "");
 
-                        // LOGIKA A: Khusus Telepon (Beri petik satu agar nol tidak hilang)
-                        if (namaKolom.contains("TELEPON") || namaKolom.contains("TELP")) {
-                            if (data.startsWith("0") || data.startsWith("62")) {
-                                bw.write("'" + data + ";");
-                            } else {
-                                bw.write(data + ";");
-                            }
+                        // Logika Format Telepon
+                        if (namaKolom.contains("TELP") || namaKolom.contains("TELEPON")) {
+                            bw.write("'" + data + ";");
                         } 
-                        // LOGIKA B: Khusus Biaya/Tarif (Hapus Rp dan Titik agar jadi angka murni)
+                        // Logika Angka Murni (Tarif/Total)
                         else if (namaKolom.contains("TARIF") || namaKolom.contains("TOTAL") || namaKolom.contains("BIAYA")) {
-                            String angkaMurni = data.replaceAll("[^0-9]", ""); 
+                            String angkaMurni = data.replaceAll("[^0-9]", "");
                             bw.write(angkaMurni + ";");
                         } 
-                        // LOGIKA C: Data lainnya (Waktu, Nama, ID, dll) biarkan apa adanya
                         else {
                             bw.write(data + ";");
                         }
@@ -574,19 +564,11 @@ public class Beranda extends javax.swing.JFrame {
                     bw.newLine();
                 }
 
-                bw.close();
-                fw.close();
-
-                int buka = javax.swing.JOptionPane.showConfirmDialog(null, 
-                        "Laporan berhasil disimpan!\nBuka file sekarang?", 
-                        "Sukses", javax.swing.JOptionPane.YES_NO_OPTION);
-
-                if (buka == javax.swing.JOptionPane.YES_OPTION) {
-                    java.awt.Desktop.getDesktop().open(fileSimpan);
-                }
+                javax.swing.JOptionPane.showMessageDialog(null, "Laporan berhasil disimpan!");
+                java.awt.Desktop.getDesktop().open(fileFinal);
 
             } catch (Exception e) {
-                javax.swing.JOptionPane.showMessageDialog(null, "Terjadi kesalahan: " + e.getMessage());
+                javax.swing.JOptionPane.showMessageDialog(null, "Gagal Ekspor: " + e.getMessage());
             }
         }
     }
@@ -2938,6 +2920,8 @@ public class Beranda extends javax.swing.JFrame {
 
     private void btnCetakTrActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCetakTrActionPerformed
         // TODO add your handling code here:
+        // Baris sakti buat ngetes:
+        System.out.println("Nama Kolom Pertama: " + tabelTr.getColumnName(0));  
         int barisTerpilih = tabelTr.getSelectedRow();
 
         if (barisTerpilih == -1) {
@@ -2948,7 +2932,7 @@ public class Beranda extends javax.swing.JFrame {
 
             if (konfirmasi == JOptionPane.YES_OPTION) {
                 String tgl = new java.text.SimpleDateFormat("ddMMyy").format(new java.util.Date());
-                eksporKeExcel(tabelPL, "Laporan_Transaksi_WFO_" + tgl);
+                eksporKeExcel(tabelTr, "Laporan_Transaksi_WFO_" + tgl);
             }
         } else {
             // SCENARIO B: Cetak Struk Personal (PDF)
